@@ -3,16 +3,15 @@ package checkworks
 import (
 	"fmt"
 
-	"github.com/virteman/OAcount/controllers"
-	. "github.com/virteman/OAcount/models/checkworks"
-	"github.com/virteman/OAcount/utils"
+	"github.com/Lcfling/OAcount/controllers"
+	. "github.com/Lcfling/OAcount/models/checkworks"
+	"github.com/Lcfling/OAcount/utils"
 	//"os"
 	//"strconv"
 	"strings"
 	"time"
 
 	"github.com/astaxie/beego"
-
 	//"github.com/astaxie/beego/utils/pagination"
 )
 

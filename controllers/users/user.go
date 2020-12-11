@@ -5,13 +5,13 @@ import (
 	"image"
 	"image/jpeg"
 
-	"github.com/virteman/OAcount/controllers"
-	. "github.com/virteman/OAcount/models/albums"
+	"github.com/Lcfling/OAcount/controllers"
+	. "github.com/Lcfling/OAcount/models/albums"
 	//. "github.com/virteman/OPMS/models/groups"
-	. "github.com/virteman/OAcount/models/knowledges"
-	. "github.com/virteman/OAcount/models/projects"
-	. "github.com/virteman/OAcount/models/users"
-	"github.com/virteman/OAcount/utils"
+	. "github.com/Lcfling/OAcount/models/knowledges"
+	. "github.com/Lcfling/OAcount/models/projects"
+	. "github.com/Lcfling/OAcount/models/users"
+	"github.com/Lcfling/OAcount/utils"
 	"os"
 	"strconv"
 	"strings"
@@ -96,25 +96,25 @@ type RegisterController struct {
 	controllers.BaseController
 }
 
-func(this *RegisterController) Get(){
-	pidstring:=this.Ctx.Input.Param(":pid")
-	pid,_:=strconv.ParseInt(pidstring, 10, 64)
-	if !(pid>0) {
-		this.Data["error"]="请联系直属上级生成注册二维码或连接！"+pidstring
+func (this *RegisterController) Get() {
+	pidstring := this.Ctx.Input.Param(":pid")
+	pid, _ := strconv.ParseInt(pidstring, 10, 64)
+	if !(pid > 0) {
+		this.Data["error"] = "请联系直属上级生成注册二维码或连接！" + pidstring
 		this.TplName = "users/error.tpl"
-	}else{
+	} else {
 		this.TplName = "users/register.tpl"
 	}
 
 }
 
-func (this *RegisterController) Post()  {
-	pidstring:=this.Ctx.Input.Param(":pid")
+func (this *RegisterController) Post() {
+	pidstring := this.Ctx.Input.Param(":pid")
 	if "" == pidstring {
 		this.Data["json"] = map[string]interface{}{"code": 0, "message": "请联系上级领导生成注册地址"}
 		this.ServeJSON()
 	}
-	pid,_:=strconv.ParseInt(pidstring, 10, 64)
+	pid, _ := strconv.ParseInt(pidstring, 10, 64)
 	username := this.GetString("username")
 	password := this.GetString("password")
 	repassword := this.GetString("repassword")
@@ -137,21 +137,20 @@ func (this *RegisterController) Post()  {
 		this.ServeJSON()
 	}
 
-
 	var pro UsersProfile
 	var user Users
-	if CheckUsername(username){
+	if CheckUsername(username) {
 		this.Data["json"] = map[string]interface{}{"code": 0, "message": "用户名已经存在"}
 		this.ServeJSON()
 	}
 	//雪花算法ID生成
 	id := utils.SnowFlakeId()
-	pro.Id=id
-	user.Id=id
-	user.Pid=pid
-	user.Username=username
-	user.Password=password
-	err:=AddUserProfile(user,pro)
+	pro.Id = id
+	user.Id = id
+	user.Pid = pid
+	user.Username = username
+	user.Password = password
+	err := AddUserProfile(user, pro)
 	if err == nil {
 		this.SetSession("userLogin", fmt.Sprintf("%d", user.Id)+"||"+user.Username+"||"+user.Avatar)
 		this.Data["json"] = map[string]interface{}{"code": 1, "message": "员工信息添加成功", "id": fmt.Sprintf("%d", id)}
@@ -159,8 +158,6 @@ func (this *RegisterController) Post()  {
 		this.Data["json"] = map[string]interface{}{"code": 0, "message": "员工信息添加失败"}
 	}
 	this.ServeJSON()
-
-
 
 }
 

@@ -2,14 +2,12 @@ package groups
 
 import (
 	"fmt"
-	"github.com/virteman/OAcount/controllers"
-	. "github.com/virteman/OAcount/models/groups"
-	"github.com/virteman/OAcount/utils"
+	"github.com/Lcfling/OAcount/controllers"
+	. "github.com/Lcfling/OAcount/models/groups"
+	"github.com/Lcfling/OAcount/utils"
 	"strconv"
 	"strings"
-
 	//"time"
-
 	//"github.com/astaxie/beego"
 	//"github.com/astaxie/beego/utils/pagination"
 )

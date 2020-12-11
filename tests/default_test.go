@@ -1,9 +1,9 @@
 package test
 
 import (
+	_ "github.com/Lcfling/OAcount/routers"
 	"net/http"
 	"net/http/httptest"
-	_ "github.com/virteman/OAcount/routers"
 	"path/filepath"
 	"runtime"
 	"testing"

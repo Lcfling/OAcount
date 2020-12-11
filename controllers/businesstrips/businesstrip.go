@@ -2,11 +2,11 @@ package businesstrips
 
 import (
 	"fmt"
-	"github.com/virteman/OAcount/controllers"
-	. "github.com/virteman/OAcount/models/businesstrips"
-	. "github.com/virteman/OAcount/models/messages"
-	. "github.com/virteman/OAcount/models/users"
-	"github.com/virteman/OAcount/utils"
+	"github.com/Lcfling/OAcount/controllers"
+	. "github.com/Lcfling/OAcount/models/businesstrips"
+	. "github.com/Lcfling/OAcount/models/messages"
+	. "github.com/Lcfling/OAcount/models/users"
+	"github.com/Lcfling/OAcount/utils"
 	"os"
 	"strconv"
 	"strings"

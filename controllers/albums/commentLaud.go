@@ -2,10 +2,10 @@ package albums
 
 import (
 	"fmt"
-	"github.com/virteman/OAcount/controllers"
-	. "github.com/virteman/OAcount/models/albums"
-	. "github.com/virteman/OAcount/models/messages"
-	"github.com/virteman/OAcount/utils"
+	"github.com/Lcfling/OAcount/controllers"
+	. "github.com/Lcfling/OAcount/models/albums"
+	. "github.com/Lcfling/OAcount/models/messages"
+	"github.com/Lcfling/OAcount/utils"
 )
 
 type AddCommentController struct {

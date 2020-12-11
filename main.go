@@ -1,12 +1,12 @@
 package main
 
 import (
+	_ "github.com/Lcfling/OAcount/initial"
+	"github.com/Lcfling/OAcount/models"
+	_ "github.com/Lcfling/OAcount/routers"
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/context"
 	"github.com/astaxie/beego/plugins/cors"
-	_ "github.com/virteman/OAcount/initial"
-	"github.com/virteman/OAcount/models"
-	_ "github.com/virteman/OAcount/routers"
 	"html/template"
 	"math/rand"
 	"net/http"
@@ -22,11 +22,11 @@ func main() {
 		AllowAllOrigins: true,
 		//可选参数"GET", "POST", "PUT", "DELETE", "OPTIONS" (*为所有)
 		//其中Options跨域复杂请求预检
-		AllowMethods:   []string{"*"},
+		AllowMethods: []string{"*"},
 		//指的是允许的Header的种类
-		AllowHeaders: 	[]string{"*"},
+		AllowHeaders: []string{"*"},
 		//公开的HTTP标头列表
-		ExposeHeaders:	[]string{"Content-Length"},
+		ExposeHeaders: []string{"Content-Length"},
 		//如果设置，则允许共享身份验证凭据，例如cookie
 		AllowCredentials: true,
 	}))

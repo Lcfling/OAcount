@@ -2,9 +2,9 @@ package users
 
 import (
 	"fmt"
+	"github.com/Lcfling/OAcount/models"
+	"github.com/Lcfling/OAcount/utils"
 	"math/rand"
-	"github.com/virteman/OAcount/models"
-	"github.com/virteman/OAcount/utils"
 	"strconv"
 	"time"
 
@@ -15,10 +15,10 @@ import (
 type Users struct {
 	Id       int64         `orm:"pk;column(userid);"`
 	Profile  *UsersProfile `orm:"rel(one);"`
-	Token		string
-	Pid		int64
-	Areaid	int64
-	Pareaid	int64
+	Token    string
+	Pid      int64
+	Areaid   int64
+	Pareaid  int64
 	Username string
 	Password string
 	Avatar   string
@@ -309,8 +309,8 @@ func AddUserProfile(updUser Users, updPro UsersProfile) error {
 	pro.Lognum = 1
 	pro.Ip = updPro.Ip
 	pro.Lasted = time.Now().Unix()
-	_,err:=o.Insert(pro)
-	if err!=nil {
+	_, err := o.Insert(pro)
+	if err != nil {
 		o.Rollback()
 		return err
 	}
@@ -326,7 +326,7 @@ func AddUserProfile(updUser Users, updPro UsersProfile) error {
 	user.Avatar = utils.GetAvatar("")
 	user.Status = 1
 	_, err = o.Insert(user)
-	if err!=nil{
+	if err != nil {
 		o.Rollback()
 		return err
 	}
@@ -406,14 +406,15 @@ func ChangeUserAvatar(id int64, avatar string) error {
 		return err
 	}
 }
+
 //检查用户名是否存在
 func CheckUsername(username string) bool {
 	o := orm.NewOrm()
 	uname := Users{Username: username}
 	err := o.Read(&uname, "username")
-	if err!=nil{
+	if err != nil {
 		return false
-	}else{
+	} else {
 		return true
 	}
 }
@@ -440,14 +441,15 @@ func ListUserFind() (num int64, err error, user []UsersFind) {
 	nums, err := o.Raw(sql).QueryRows(&users)
 	return nums, err, users
 }
+
 //显示所有用户
 func ListMyUser(pid int64) (err error, user []UsersFind) {
-	pidsting:=strconv.FormatInt(pid,10)
+	pidsting := strconv.FormatInt(pid, 10)
 	var users []UsersFind
 	qb, _ := orm.NewQueryBuilder("mysql")
 	qb.Select("upr.userid", "upr.realname", "u.avatar").From("pms_users AS u").
 		LeftJoin("pms_users_profile AS upr").On("upr.userid = u.userid").
-		Where("u.status=1 and u.pid="+pidsting)
+		Where("u.status=1 and u.pid=" + pidsting)
 	sql := qb.String()
 	o := orm.NewOrm()
 	_, err = o.Raw(sql).QueryRows(&users)

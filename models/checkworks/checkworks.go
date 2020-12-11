@@ -3,7 +3,7 @@ package checkworks
 import (
 	//"fmt"
 	//"math/rand"
-	"github.com/virteman/OAcount/models"
+	"github.com/Lcfling/OAcount/models"
 	//"github.com/virteman/OPMS/utils"
 	"time"
 
@@ -15,9 +15,9 @@ type Checkworks struct {
 	Id      int64 `orm:"pk;column(checkid);"`
 	Userid  int64
 	Clock   string
-	Aid 	int64
-	Lng		string
-	Lat 	string
+	Aid     int64
+	Lng     string
+	Lat     string
 	Type    int
 	Ip      string
 	Created int64

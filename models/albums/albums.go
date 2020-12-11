@@ -1,7 +1,7 @@
 package albums
 
 import (
-	"github.com/virteman/OAcount/models"
+	"github.com/Lcfling/OAcount/models"
 	"time"
 
 	"github.com/astaxie/beego"

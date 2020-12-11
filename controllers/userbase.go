@@ -3,8 +3,8 @@ package controllers
 import (
 	//"github.com/virteman/OPMS/initial"
 
+	. "github.com/Lcfling/OAcount/models/users"
 	"github.com/astaxie/beego"
-	. "github.com/virteman/OAcount/models/users"
 	"strconv"
 )
 
@@ -18,22 +18,22 @@ type UserBaseController struct {
 }
 
 func (this *UserBaseController) Prepare() {
-	token:=this.Ctx.Request.Header.Get("token")
-	useridstr:=this.Ctx.Request.Header.Get("userid")
+	token := this.Ctx.Request.Header.Get("token")
+	useridstr := this.Ctx.Request.Header.Get("userid")
 
-	userid,_:=strconv.ParseInt(useridstr,10,64)
-	U,err:=GetUser(userid)
-	if err!=nil{
-		this.Data["json"]=map[string]interface{}{"code": 2, "message": "登录效验失败","data":""}
+	userid, _ := strconv.ParseInt(useridstr, 10, 64)
+	U, err := GetUser(userid)
+	if err != nil {
+		this.Data["json"] = map[string]interface{}{"code": 2, "message": "登录效验失败", "data": ""}
 		this.ServeJSON()
-	}else{
-		if U.Token!=token{
-			this.Data["json"]=map[string]interface{}{"code": 2, "message": "登录效验失败","data":""}
+	} else {
+		if U.Token != token {
+			this.Data["json"] = map[string]interface{}{"code": 2, "message": "登录效验失败", "data": ""}
 			this.ServeJSON()
-		}else {
+		} else {
 			this.UserUserId = U.Id
 			this.UserUsername = U.Username
-			this.UserAvatar=U.Avatar
+			this.UserAvatar = U.Avatar
 		}
 	}
 

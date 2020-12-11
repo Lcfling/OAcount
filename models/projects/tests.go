@@ -2,9 +2,9 @@ package projects
 
 import (
 	"fmt"
-	"github.com/virteman/OAcount/models"
-	"github.com/virteman/OAcount/models/users"
-	"github.com/virteman/OAcount/utils"
+	"github.com/Lcfling/OAcount/models"
+	"github.com/Lcfling/OAcount/models/users"
+	"github.com/Lcfling/OAcount/utils"
 	"time"
 
 	"github.com/astaxie/beego"

@@ -1,12 +1,12 @@
 package tags
 
 import (
+	"github.com/Lcfling/OAcount/models"
 	"github.com/astaxie/beego/orm"
-	"github.com/virteman/OAcount/models"
 )
 
 type Tags struct {
-	Id int64
+	Id   int64
 	Name string
 }
 
@@ -23,29 +23,29 @@ func GetTagsAll() []Tags {
 	qs.All(&tags)
 	return tags
 }
-func Isexsit(name string) (int64,bool){
+func Isexsit(name string) (int64, bool) {
 
-	return 1,false
+	return 1, false
 }
-func AddTags(name string) (id int64,err error) {
+func AddTags(name string) (id int64, err error) {
 	o := orm.NewOrm()
-	if id,ok:=Isexsit(name);ok{
-		return id,nil
-	}else{
-		tag:=new(Tags)
-		tag.Name=name
+	if id, ok := Isexsit(name); ok {
+		return id, nil
+	} else {
+		tag := new(Tags)
+		tag.Name = name
 		return o.Insert(tag)
 	}
 }
-func GetTagNameById(id int64) (string,error) {
+func GetTagNameById(id int64) (string, error) {
 	o := orm.NewOrm()
-	t:= Tags{Id: id}
+	t := Tags{Id: id}
 	err := o.Read(&t)
-	return t.Name,err
+	return t.Name, err
 }
-func GetTagIdByName(name string) (int64,error) {
+func GetTagIdByName(name string) (int64, error) {
 	o := orm.NewOrm()
-	t:= Tags{Name: name}
+	t := Tags{Name: name}
 	err := o.Read(&t)
-	return t.Id,err
+	return t.Id, err
 }

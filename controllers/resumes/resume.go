@@ -2,9 +2,9 @@ package resumes
 
 import (
 	"fmt"
-	"github.com/virteman/OAcount/controllers"
-	. "github.com/virteman/OAcount/models/resumes"
-	"github.com/virteman/OAcount/utils"
+	"github.com/Lcfling/OAcount/controllers"
+	. "github.com/Lcfling/OAcount/models/resumes"
+	"github.com/Lcfling/OAcount/utils"
 	"os"
 	"strconv"
 	"strings"

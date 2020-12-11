@@ -4,8 +4,8 @@ import (
 	//"github.com/virteman/OPMS/initial"
 
 	"fmt"
-	. "github.com/virteman/OAcount/models/groups"
-	. "github.com/virteman/OAcount/models/messages"
+	. "github.com/Lcfling/OAcount/models/groups"
+	. "github.com/Lcfling/OAcount/models/messages"
 	"strconv"
 	"strings"
 
@@ -26,7 +26,7 @@ func (this *BaseController) Prepare() {
 	if userLogin == nil {
 		this.IsLogin = false
 		_, ok := this.Ctx.Input.Session("userLogin").(string)
-		if !ok && !(this.Ctx.Request.RequestURI == "/login" ||strings.Contains(this.Ctx.Request.RequestURI, "/register") ){
+		if !ok && !(this.Ctx.Request.RequestURI == "/login" || strings.Contains(this.Ctx.Request.RequestURI, "/register")) {
 			this.Ctx.Redirect(302, "/login")
 		}
 	} else {

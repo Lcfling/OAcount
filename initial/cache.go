@@ -1,7 +1,7 @@
 package initial
 
 import (
-	"github.com/virteman/OAcount/utils"
+	"github.com/Lcfling/OAcount/utils"
 )
 
 func InitCache() {

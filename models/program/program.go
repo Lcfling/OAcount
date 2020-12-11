@@ -1,23 +1,24 @@
 package program
 
 import (
+	"github.com/Lcfling/OAcount/models"
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/orm"
-	"github.com/virteman/OAcount/models"
 	"time"
 )
 
 type Program struct {
-	Id int64
-	Userid int64
-	Title string
-	Temps string
-	Publish string
-	Pstatus int
-	Counts int64
+	Id       int64
+	Userid   int64
+	Title    string
+	Temps    string
+	Publish  string
+	Pstatus  int
+	Counts   int64
 	Creatime int64
 	Updatime int64
 }
+
 func (this *Program) TableName() string {
 	return models.TableName("program")
 }
@@ -60,12 +61,13 @@ func GetAllpro() []Program {
 	qs = qs.OrderBy("-id")
 	_, err1 := qs.Limit(20).All(&program)
 
-	if err1!=nil{
+	if err1 != nil {
 		return nil
-	}else {
+	} else {
 		return program
 	}
 }
+
 //统计数量
 func CountProgram(condArr map[string]string) int64 {
 	o := orm.NewOrm()
@@ -81,18 +83,18 @@ func CountProgram(condArr map[string]string) int64 {
 	num, _ := qs.SetCond(cond).Count()
 	return num
 }
-func AddProgram(t string) (int64,error) {
+func AddProgram(t string) (int64, error) {
 	o := orm.NewOrm()
 	var p Program
-	p.Title=t
-	p.Creatime=time.Now().Unix()
+	p.Title = t
+	p.Creatime = time.Now().Unix()
 	return o.Insert(p)
 }
-func GetProgram(id int64) (Program,error) {
+func GetProgram(id int64) (Program, error) {
 
 	var p Program
 	o := orm.NewOrm()
 	p = Program{Id: id}
 	err := o.Read(&p)
-	return p,err
+	return p, err
 }

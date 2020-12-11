@@ -2,8 +2,8 @@ package messages
 
 import (
 	"fmt"
-	"github.com/virteman/OAcount/controllers"
-	. "github.com/virteman/OAcount/models/messages"
+	"github.com/Lcfling/OAcount/controllers"
+	. "github.com/Lcfling/OAcount/models/messages"
 	//"github.com/virteman/OPMS/utils"
 	//"strconv"
 	"strings"

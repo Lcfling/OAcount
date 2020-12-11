@@ -1,24 +1,24 @@
 package routers
 
 import (
-	"github.com/virteman/OAcount/controllers/albums"
-	"github.com/virteman/OAcount/controllers/area"
-	"github.com/virteman/OAcount/controllers/businesstrips"
-	"github.com/virteman/OAcount/controllers/checkworks"
-	"github.com/virteman/OAcount/controllers/expenses"
-	"github.com/virteman/OAcount/controllers/files"
-	"github.com/virteman/OAcount/controllers/goouts"
-	"github.com/virteman/OAcount/controllers/groups"
-	"github.com/virteman/OAcount/controllers/knowledges"
-	"github.com/virteman/OAcount/controllers/leaves"
-	"github.com/virteman/OAcount/controllers/messages"
-	"github.com/virteman/OAcount/controllers/mission"
-	"github.com/virteman/OAcount/controllers/oagoods"
-	"github.com/virteman/OAcount/controllers/overtimes"
-	"github.com/virteman/OAcount/controllers/program"
-	"github.com/virteman/OAcount/controllers/projects"
-	"github.com/virteman/OAcount/controllers/resumes"
-	"github.com/virteman/OAcount/controllers/users"
+	"github.com/Lcfling/OAcount/controllers/albums"
+	"github.com/Lcfling/OAcount/controllers/area"
+	"github.com/Lcfling/OAcount/controllers/businesstrips"
+	"github.com/Lcfling/OAcount/controllers/checkworks"
+	"github.com/Lcfling/OAcount/controllers/expenses"
+	"github.com/Lcfling/OAcount/controllers/files"
+	"github.com/Lcfling/OAcount/controllers/goouts"
+	"github.com/Lcfling/OAcount/controllers/groups"
+	"github.com/Lcfling/OAcount/controllers/knowledges"
+	"github.com/Lcfling/OAcount/controllers/leaves"
+	"github.com/Lcfling/OAcount/controllers/messages"
+	"github.com/Lcfling/OAcount/controllers/mission"
+	"github.com/Lcfling/OAcount/controllers/oagoods"
+	"github.com/Lcfling/OAcount/controllers/overtimes"
+	"github.com/Lcfling/OAcount/controllers/program"
+	"github.com/Lcfling/OAcount/controllers/projects"
+	"github.com/Lcfling/OAcount/controllers/resumes"
+	"github.com/Lcfling/OAcount/controllers/users"
 
 	"github.com/astaxie/beego"
 )
@@ -240,7 +240,6 @@ func init() {
 	beego.Router("/permission/add", &groups.FormPermissionController{})
 	beego.Router("/permission/edit/:id", &groups.FormPermissionController{})
 
-
 	//区域操作
 	beego.Router("/area/manage", &area.AreaMangerController{})
 	beego.Router("/area/add/:id", &area.AreaAddController{})
@@ -269,6 +268,5 @@ func init() {
 
 	//文件管理
 	beego.Router("/files/manage", &files.FilesManageController{})
-
 
 }
