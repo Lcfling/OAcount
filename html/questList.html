@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="css/aui.css">
+    <link rel="stylesheet" href="css/style.css">
+    <script src="js/jquery-3.3.1.min.js"></script>
+    <script src="js/init.js"></script>
+    <title>Document</title>
+</head>
+<body>
+<header>
+    <a href="createType.html" class="f1 iconfont color-white">&#xe675</a>
+    <div class="f8 center">创建调查</div>
+    <div class="f1"></div>
+</header>
+<section class="bg-gray">
+    <div class="search bg-white pad-2 border-b-gray color-gray ">
+        <p class="bg-gray pad-1-3 center border-radius-5 pad-l-2 font25 " ><i class="vmid">&#xe645</i>搜索其他用户公开的调查</p>
+        <div class="hidden none">
+            <p class="col-9 fl pad-1-3 bg-gray border-radius-5 flex"><i>&#xe645</i><input class="f1 font25 pad-l-1" type="text" placeholder="搜索问卷调查模板"></p>
+            <span class="cancel fr pad-t-1" >取消</span>
+        </div>
+    </div>
+    <ul class="flex flex-x-s border-b-gray line-h-3 scroll-x">
+        <li class="pad-l-r-2 flex-shrink color-blue">全部</li>
+        <li class="pad-l-r-2 flex-shrink">抗击肺炎疫情</li>
+
+    </ul>
+    <ul class="pad-3 flex flex-r-w flex-stretch space-btw center">
+        <a href="creatTopic.html" class="col-48 bg-white border-radius-1 pad-3 mar-b-2">
+            <i class="font5 block mar-t-b-2">&#xe721</i>
+            <p>从空白创建</p>
+        </a>
+        <!--item-->
+        <!--<li class="col-48 bg-white border-radius-1 pad-3 mar-b-2">
+            <div class="flex flex-y-s">
+                <i class="color-blue">&#xe6a0</i>
+                <p class="pad-l-1 left ellipsis2">企业员工满意度调查</p>
+            </div>
+            <p class="color-gray pad-t-2 font25">共10题</p>
+        </li>-->
+
+    </ul>
+</section>
+
+<script>
+    $(".search >p").click(function () {
+        $(this).hide();
+        $(".search >div").show();
+    })
+
+    $(".search .cancel").click(function () {
+        $(".search >p").show();
+        $(".search >div").hide();
+    })
+</script>
+</body>
+</html>

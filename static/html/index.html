@@ -1,0 +1,206 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="css/aui.css">
+    <link rel="stylesheet" href="css/style.css">
+    <script src="js/jquery-3.3.1.min.js"></script>
+    <script src="js/init.js"></script>
+    <title>Document</title>
+</head>
+<body>
+<header>
+    <div class="f1"></div>
+    <div class="f8 center">我的问卷</div>
+    <div class="f1"></div>
+</header>
+<section class="bg-gray">
+    <div class="bg-white pad-2 flex">
+        <i class="" onclick="isUserinfo($('.userinfo'))">&#xe608</i>
+        <div class="f1 bg-gray border-radius-5 pad-1-2 mar-l-2 mar-r-2 center color-gray">
+            <i class="vmid">&#xe645</i>
+            <span class="font25">搜索问卷</span>
+        </div>
+        <a href="createType.html" class="bg-blue border-radius-5 color-white pad-1-3">创建</a>
+    </div>
+    <ul id="list" class="pad-2" >
+        <!--<li class="bg-white pad-3 border-radius-1 mar-b-1 flex" onclick="showMask()">
+            <div class="f1 border-r-gray">
+                <p class="ellipsis">大学生消费情况调查问卷 </p>
+                <span class="font25 color-gray">未发布</span>
+            </div>
+            <div class="center pad-l-2">
+                <b class="color-blue">0</b>
+                <p class="color-gray font25">问卷数量</p>
+            </div>
+        </li>-->
+
+    </ul>
+</section>
+
+    <!--footmask-->
+    <div id="editMask" class="mask-bot center" style="background:#f6f6f6;">
+        <div>
+            <p class="color-gray font2 pad-2 border-b-gray">大学生消费情况调查问卷(ID:77878115)</p>
+            <ul class="flex flex-r-w flex-x-s pad-t-4 font25">
+                <li onclick="editFun()" class="col-25 mar-b-4">
+                    <i class="iconfont bg-white font5 pad-2 border-radius-1">&#xe60c</i>
+                    <p class="pad-t-2">编辑</p>
+                </li>
+                <li onclick="publish()" class="col-25 mar-b-4">
+                    <i class="iconfont bg-white font5 pad-2 border-radius-1">&#xe737</i>
+                    <p class="pad-t-2">发布</p>
+                </li>
+                <li onclick="share()" class="col-25 mar-b-4">
+                    <i class="iconfont bg-white font5 pad-2 border-radius-1">&#xe684</i>
+                    <p class="pad-t-2">分享</p>
+                </li>
+                <li onclick="preview()" class="col-25 mar-b-4">
+                    <i class="iconfont bg-white font5 pad-2 border-radius-1">&#xe856</i>
+                    <p class="pad-t-2">结果</p>
+                </li>
+<!--                <li class="col-25 mar-b-4">
+                    <i class="iconfont bg-white font5 pad-2 border-radius-1">&#xe668</i>
+                    <p class="pad-t-2">红包</p>
+                </li>
+                <li class="col-25 mar-b-4">
+                    <i class="iconfont bg-white font5 pad-2 border-radius-1">&#xe66e</i>
+                    <p class="pad-t-2">复制</p>
+                </li>
+                <li class="col-25 mar-b-4">
+                    <i class="iconfont bg-white font5 pad-2 border-radius-1">&#xe667</i>
+                    <p class="pad-t-2">删除</p>
+                </li>-->
+            </ul>
+            <div class="bg-white pad-3 pad-2 center" onclick="closeMask()">关闭</div>
+        </div>
+
+    </div>
+
+    <!--userbox-->
+    <ul class="userinfo">
+        <li>
+            <i>&#xe670</i>
+            <span>个人中心</span>
+        </li>
+        <li>
+            <i>&#xe611</i>
+            <span>互填问卷</span>
+        </li>
+        <li>
+            <i>&#xe636</i>
+            <span>回收站</span>
+        </li>
+        <li>
+            <i>&#xe65b</i>
+            <span>退出</span>
+        </li>
+    </ul>
+<script>
+
+    var pid, ispublish;
+    function isUserinfo(e) {
+        e.css('display') == 'block' ? e.hide() : e.show();
+    }
+    function showMask(id,isfabu) {
+        $(".mask").show();
+        $(".mask-bot").show();
+        pid = id;
+        ispublish = isfabu;
+    }
+    function closeMask() {
+        $(".mask").hide();
+        $(".mask-bot").hide();
+    }
+    
+    function editFun() {
+        location.href = 'questEdit.html?id='+pid;
+    }
+    // 发布
+    function publish() {
+        let data = {
+            pid: pid
+        };
+        new AjaxRequest({
+            url: hostUrl + 'publish',
+            data: data,
+            callback: function (res) {
+                close();
+
+                if(res.status == 1){
+
+                    dialog('发布成功，是否立即分享?');
+
+                }else{
+                    toast(res.info);
+                }
+            }
+
+        })
+    }
+    $(document).on('click', '.dia_cancel', function () {
+        $(".mask").hide();
+        $(".mask-box").hide();
+    });
+    $(document).on('click', '.dia_confirm', function () {
+        $(".mask").hide();
+        $(".mask-box").hide();
+        location.href = 'share.html?pid='+pid;
+    });
+
+    function share() {
+        $(".mask").hide();
+        $(".mask-bot").hide();
+        location.href = 'share.html?pid='+pid;
+    }
+    
+    function preview() {
+        close();
+        if(ispublish ==0){  //未发布
+
+            toast('此问卷还没有发布');
+        }
+        if(ispublish ==1){  //已发布
+            location.href = 'result.html?pid='+pid;
+        }
+
+    }
+
+    function loadlist() {
+
+        new AjaxRequest({
+            url: hostUrl + 'project/list',
+            callback: function (res) {
+
+                if(res.status == 1){
+                    let list = res.data;
+                    if(list)
+                        loadItem(list,$("#list"));
+                }
+            }
+
+        })
+    }
+    function loadItem(data,parent) {
+        let list = '';
+        for (let i=0; i<data.length; i++){
+            list += '<li class="bg-white pad-3 border-radius-1 mar-b-1 flex" onclick="showMask('+data[i].id+','+data[i].publish+')" ><div class="f1 border-r-gray"><p class="ellipsis">'+(data[i].title?data[i].title:'标题')+'</p>';
+
+            if(data[i].publish==0)
+                list += '<span class="font25 color-red">未发布</span>';
+            if(data[i].publish==1)
+                list += '<span class="font25 color-green">已发布</span>';
+
+            list += '</div><div class="center pad-l-2"><b class="color-blue">'+(data[i].counts?data[i].counts:0)+'</b><p class="color-gray font25">问卷数量</p></div></li>';
+        }
+        parent.html(list);
+    }
+
+    $(function () {
+        loadlist();
+    })
+</script>
+</body>
+</html>

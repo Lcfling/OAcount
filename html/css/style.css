@@ -1,0 +1,68 @@
+input[type=radio]{
+    width: .3rem;
+    height: .3rem;
+    margin-right: .2rem;
+    vertical-align: middle;
+}
+.userinfo{
+    position: fixed;
+    background: rgba(0,0,0,.7);
+    border-radius: 5px;
+    color: white;
+    left: 5px;
+    top: 2rem;
+    line-height: 2;
+    font-size: 16px;
+    display: none;
+}
+.userinfo li{
+    padding: 0 .8rem 0 .4rem;
+    border-bottom: 1px solid #737373;
+    display: flex;
+    align-items: center;
+}
+.userinfo li:last-child{
+    border-bottom: none;
+}
+.userinfo li span{
+    padding-left: .1rem;
+}
+.userinfo:before{
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 0;
+    border: 8px solid transparent;
+    border-bottom: 8px solid rgba(0,0,0,.7);
+    left: 10px;
+    top: -16px;
+}
+/*questEdit*/
+.quest_class{
+    width: 100vw;
+    min-height: 100vh;
+    top: 100%;
+    left: 0;
+    z-index: 999;
+}
+.questType li, .questType a{
+    width: 25%;
+    padding: .2rem;
+    border-right: 1px solid #e5e5e5;
+    border-bottom: 1px solid #e5e5e5;
+    color: #737373;
+}
+.questType li:nth-child(4n){
+    border-right: none;
+}
+.switch_list i{
+    color: #b8b8b8;
+}
+.switch_btn{
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    margin: auto;
+
+}

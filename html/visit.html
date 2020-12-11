@@ -1,0 +1,357 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="/jquery-3.3.1.min.js?t=1"></script>
+    <title>Document</title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body{
+            font: 15px/2 '微软雅黑';
+            padding: 20px;
+
+        }
+        ul, li{
+            list-style: none;
+        }
+        h1, h3{
+            color: #333;
+        }
+        h1{
+            color: #1ea0fa;
+            text-align: center;
+            font-size: 24px;
+            padding-bottom: 20px;
+        }
+        h3{
+            font-size: 16px;
+        }
+        .color-blue{
+            color: #1ea0fa;
+            font-weight: bold;
+        }
+        /*input[type=radio]{
+            width: 20px;
+            height: 20px;
+            vertical-align: middle;
+            margin-right: 10px;
+        }*/
+        #list .radio{
+            display: inline-block;
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            border: 1px solid #ccc;
+            margin-right: 10px;
+            vertical-align: middle;
+            position: relative;
+        }
+        #list ul li.active{
+            color: #1ea0fa;
+        }
+        #list ul li.active .radio{
+            box-shadow: inset 0 0 5px #fff;
+            background: #1ea0fa;
+        }
+        #list >div{
+            padding-bottom: 20px;
+        }
+        .btn{
+            background: #1ea0fa;
+            color: white;
+            text-align: center;
+            font-size: 18px;
+            border-radius: 5px;
+            padding: 5px;
+        }
+        #info >div{
+            display: flex;
+            align-items: center;
+            border: 1px solid #dbdbdb;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            position: relative;
+        }
+        #info >div ul{
+            position: absolute;
+            width: 100%;
+            left: 0;
+            top: 40px;
+            background: white;
+            line-height: 2;
+            z-index: 2;
+            padding: 10px 20px;
+            display: none;
+        }
+        #info input{
+            border: none;
+            outline: none;
+            width: 100%;
+            padding: 10px 15px;
+        }
+        #info p{
+            width: 100%;
+            padding: 2px 15px;
+        }
+        .center{
+            text-align: center;
+        }
+        .mask{position: fixed;left: 0;top:0;bottom:0;right:0;background:rgba(0,0,0,.3);animation: mask .5s;display:none;z-index: 9;}
+        .mask-box{position: fixed;top:50%;left:50%;transform: translate(-50%,-50%);background:white;animation: maskbox .2s;display:none;width: 80%;z-index: 11;}
+        .mask-box >p{line-height: 3}
+        .mask-box >div{
+            border-top: 1px solid #eee;
+            padding: 20px 0 0;
+        }
+        .mask-box >div >span{
+            background: #1ea0fa;
+            display: inline-block;
+            color: white;
+            padding: 5px 20px;
+            border-radius: 5px;
+            margin: 20px;
+        }
+        .mask-box >div >span:first-child{
+            background: #eee;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+<h1>2019年8月份创建全国文明城市 入户调查问卷</h1>
+
+<section>
+    <div id="info" style="padding-bottom: 20px">
+        <div>
+            <p id="area"  data-id="qu">请选择 ></p>
+            <ul></ul>
+        </div>
+        <div>
+            <p id="office"  data-id="chu">请选择 ></p>
+            <ul></ul>
+        </div>
+        <div>
+            <p id="community"  data-id="she">请选择 ></p>
+            <ul></ul>
+        </div>
+        <div>
+            <input id="addr" type="text"  placeholder="门牌号 (例：8-2-1508)">
+
+        </div>
+        <div>
+            <input id="name" type="text"  placeholder="请输入您的姓名">
+
+        </div>
+        <div>
+            <input id="mobile" type="text"  placeholder="请输入您的手机号码">
+
+        </div>
+    </div>
+    <div id="list">
+    <!--<div>
+        <h3>1.您了解社会主义核心价值观（富强、民主、文明、和谐；自由、平等、公正、法治；爱国、敬业、诚信、友善）吗？</h3>
+        <ul>
+            <li>
+                <input type="radio">A.非常了解
+            </li>
+            <li>
+                <input type="radio">B.了解
+
+            </li>
+            <li>
+                <input type="radio">C.比较了解
+
+            </li>
+            <li>
+                <input type="radio">D.不了解
+
+            </li>
+            <li>
+                <input type="radio">E.非常不了解
+
+            </li>
+        </ul>
+    </div>-->
+    </div>
+
+    <p class="btn" onclick="tijiao()">提交</p>
+</section>
+
+<!--dialog-->
+<div class="mask">
+    <div class="mask-box center">
+        <p>确定要提交问卷吗?</p>
+        <div >
+            <span class="cancel">取消</span>
+            <span class="yes">确定</span>
+        </div>
+    </div>
+</div>
+<script>
+    var pid = location.search.substr(1).split('=')[1];
+    var publish;
+    var datalist, subid, area;
+    var data = {
+        pid: pid,
+    }
+    $(function () {
+        $.ajax({
+            type: 'post',
+            url: 'http://wenjuan.webziti.com/api/answer/list',
+            data: data,
+            dataType: 'json',
+            success: function (res) {
+                console.log(res);
+                if(res.status == 1){
+                    datalist = res.data.subject;
+                    publish = res.data.publish;
+                    item(datalist,$('#list'));
+                    area = res.data.area;
+                    let a = '';
+                    for (let i=0; i<area.length; i++){
+                        a += '<li>'+area[i].name+'</li>';
+
+                    }
+                    $('#info >div:nth-child(1) ul').html(a);
+
+                }
+            }
+        })
+    })
+    var arr = {};
+    $(document).on('click','#info li',function () {
+        let val = $(this).text();
+        $(this).parent().siblings('p').text(val);
+        let index = $(this).index();
+        let id = $(this).parent().siblings('p').attr('data-id');
+       arr[id] = index;
+       $('#info ul').hide().html();
+       $(this).parents('div').nextAll().find('p').text('请选择 >');
+    })
+    $('#info p').click(function () {
+        let data = $(this).attr('data-id');
+        let self = $(this).text();
+        let parent = $(this).parent().children('ul');
+        let tit = $(this).parent().prev().find('p').text();
+
+            switch (data) {
+                case 'qu':
+                    xiala(parent,area);
+                    break;
+                case 'chu':
+                        xiala(parent,area[arr['qu']].children);
+                    break;
+                case 'she':
+                        xiala(parent,area[arr['qu']].children[arr['chu']].children);
+                    break;
+            }
+
+
+
+    })
+    function xiala(parent,name){
+        if(!name) return;
+        let li = '';
+        for (let i=0; i<name.length; i++){
+            li += '<li>'+ name[i].name +'</li>' ;
+        }
+        parent.html(li).show();
+    }
+    $(document).on('click','#list ul li',function () {
+        let type = $(this).parent().attr('data-type');
+        if(type == 1){
+            $(this).find('input').attr('checked',true).parent().siblings().find('input').attr('checked',false);
+            $(this).addClass('active').siblings().removeClass('active');
+        }
+        if(type == 2){
+            $(this).hasClass('active')?$(this).removeClass('active'):$(this).addClass('active');
+        }
+
+    });
+    function tijiao(){
+        $(".mask").show();
+        $(".mask-box").show();
+    }
+    $(".cancel").click(function () {
+        $(".mask").hide();
+        $(".mask-box").hide();
+    })
+    $(document).on('click','.yes', function (){
+        $(".mask").hide();
+        $(".mask-box").hide();
+        if(publish == 0){
+            alert('此问卷不存在');
+            return;
+        }
+        var area = $("#area").text();
+        var office = $("#office").text();
+        var community = $("#community").text();
+        var addr = $("#addr").val();
+        var name = $("#name").val();
+        var mobile = $("#mobile").val();
+        if(area == '' || office == '' || community =='' || addr == '' || name == '' || mobile == ''){
+            alert('请填写完整信息');
+            return;
+        }
+        for (let i=0; i<datalist.length; i++){
+            let list = $("#list >div").eq(i).find('li');
+            for (let j=0; j<list.length; j++){
+                if(list.eq(j).hasClass('active')){
+                    datalist[i].content.subject[j].check = 1;
+                }
+            }
+
+        }
+        var data = {};
+        data.pid = pid;
+        data.area = area;
+        data.office = office;
+        data.community = community;
+        data.addr = addr;
+        data.name = name;
+        data.mobile = mobile;
+        data.data = JSON.stringify(datalist);
+        console.log(data)
+        $.ajax({
+            url: 'http://wenjuan.webziti.com/api/answer',
+            data: data,
+            type: 'post',
+            dataType: 'json',
+            success: function (res) {
+                console.log(res);
+                if(res.status == 1){
+                    subid = res.data.subid;
+                    // location.href = 'result2.html?pid='+data.pid+ '&subid='+subid;
+                    location.href = 'result2.html';
+
+                }else{
+                    alert(res.info);
+                }
+            }
+        })
+    })
+
+
+    function item(data,parent) {
+        let item = '';
+        for (let i=0; i<data.length; i++){
+            item += '<div><h3>'+(i+1)+data[i].content.title+'</h3><ul data-type="'+data[i].content.type+'">';
+            
+            for (let j=0; j<data[i].content.subject.length; j++){
+                item += '<li><span class="radio"></span>'+data[i].content.subject[j].content+'</li>';
+            }
+            item += '</ul></div>';
+        }
+        parent.html(item);
+    }
+
+
+</script>
+</body>
+</html>

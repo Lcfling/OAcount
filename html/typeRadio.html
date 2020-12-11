@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="css/aui.css">
+    <link rel="stylesheet" href="css/style.css">
+    <script src="js/jquery-3.3.1.min.js"></script>
+    <script src="js/init.js"></script>
+    <title>Document</title>
+</head>
+<body>
+<header>
+    <a href="javascript:history.go(-1)" class="f1 color-white iconfont">&#xe675</a>
+    <div class="header f8 center"></div>
+    <div class="f1"></div>
+</header>
+<section class="bg-gray">
+
+    <div class="bg-white pad-2-3">
+        <p class="color-gray font2 pad-b-1">标题</p>
+        <textarea id="title" class="col-10 border-gray border-radius-1 pad-1-2 font3" name="" id="" cols="30" rows="2" placeholder="请输入标题"></textarea>
+    </div>
+    <p class="color-gray pad-2-3 font2">答案 选项</p>
+    <div class="bg-white ">
+        <ul id="selectlist" class="pad-l-r-3">
+            <li class="flex border-b-gray pad-t-b-2">
+                <input type="checkbox" >
+                <input id="content" class="f1 pad-l-2" type="text" placeholder="输入选项">
+                <i>&#xe889</i>
+                <i class="color-red mar-l-1">&#xe600</i>
+            </li>
+            <li class="flex border-b-gray pad-t-b-2">
+                <input type="checkbox">
+                <input class="f1 pad-l-2" type="text" placeholder="输入选项">
+                <i>&#xe889</i>
+                <i class="color-red mar-l-1">&#xe600</i>
+            </li>
+        </ul>
+        <p class="color-blue pad-2-3 border-t-gray">
+            <span onclick="additem($('#selectlist'))"><i>&#xe6af</i>添加选项</span>
+            <a href="selectEdit.html" class="fr border-radius-5 border-blue font2 pad-l-r-2 line-h-2 color-blue">批量添加</a>
+        </p>
+    </div>
+
+    <p class="color-gray pad-2-3 font2">设置</p>
+    <ul class="switch_list bg-white pad-l-r-3">
+        <li class="pad-t-b-2 border-b-gray re">
+            <span id="typeSwtich"></span>
+            <div id="btnSwitch" class="switch_btn"  onclick="btnSwitch(type)">
+                <i class=" font8">&#xe65a</i>
+                <i class=" font8 none">&#xe659</i>
+            </div>
+
+
+        </li>
+        <li class="pad-t-b-2 border-b-gray">
+            <span>题目分数</span>
+            <i class="fr rotate-180">&#xe675</i>
+            <span class="fr color-gray ">5分</span>
+        </li>
+        <li class="pad-t-b-2 border-b-gray re">
+            <span>此题目必须回答</span>
+            <i class="switch_btn font8">&#xe659</i>
+
+        </li>
+    </ul>
+
+    <div class="bg-blue center color-white border-radius-1 pad-2 font35 mar-3" onclick="tijiao()">确认</div>
+</section>
+
+
+<script>
+    var arr = location.search.substr(1).split('&');
+    var type = arr[0].split('=')[1];
+    var pid = arr[1].split('=')[1];
+    var typeSwtich = $("#typeSwtich");
+    var header = $(".header");
+    var selecData =[]; /*选项li内容*/
+    function additem(parent) {
+        let item = '<li class="flex border-b-gray pad-t-b-2"><input type="checkbox"><input id="content" class="f1 pad-l-2" type="text" placeholder="输入选项"><i>&#xe889</i><i class="color-red mar-l-1">&#xe600</i></li>';
+        parent.append(item);
+    }
+
+    function loadlist(data,parent) {
+        var list = '';
+        for (let i=0; i<data.length; i++){
+            list += '<li class="flex border-b-gray pad-t-b-2"><input type="checkbox"><input id="content" class="f1 pad-l-2" type="text" placeholder="输入选项"><i>&#xe889</i><i class="color-red mar-l-1">&#xe600</i></li>';
+
+        }
+        parent.html(list);
+    }
+    // loadlist(selecData,$("#selectlist"))
+
+    $(function () {
+        if(type == 1){
+            typeSwtich.text('切换至多选项');
+            header.text('考试单选');
+        }
+        if(type == 2){
+            typeSwtich.text('切换至单选项');
+            header.text('考试多选');
+        }
+    });
+    function btnSwitch(e) {
+        if(e == 1){
+            type = 2;
+            $("#btnSwitch i").eq(0).hide();
+            $("#btnSwitch i").eq(1).show().css('color','#1e9ff8');
+            typeSwtich.text('切换至单选项')
+            header.text('考试多选');
+        }
+        if(e == 2){
+            type = 1;
+            $("#btnSwitch i").eq(0).show();
+            $("#btnSwitch i").eq(1).hide().css('color','#1e9ff8');
+            typeSwtich.text('切换至多选项')
+            header.text('考试单选');
+        }
+
+    }
+
+    var datab = {},data = {};
+    function tijiao() {
+        var title = $("#title").val();
+        var selec = $("#selectlist >li");
+        var arr = [];
+        if(!selec){
+            toast('请添加选项');
+            return;
+        }
+        for (let i=0; i<selec.length; i++){
+            let item = {};
+            let content = selec.eq(i).find('input[type=text]').val();
+            let check = 0;
+            item.content = content;
+            item.check = check;
+            item.count = 0;
+            arr.push(item);
+        }
+
+        datab.pid = pid;
+        data.title = title;
+        data.type = type;
+        data.subject = arr;
+        datab.data = JSON.stringify(data);
+
+        new AjaxRequest({
+            url: hostUrl + 'addsubject',
+            data: datab,
+            callback: function (res) {
+                toast(res.info);
+                if(res.status == 1){
+                    setTimeout(function () {
+                        history.go(-1);
+                    },1000)
+                }
+
+            }
+
+        })
+    }
+</script>
+</body>
+</html>

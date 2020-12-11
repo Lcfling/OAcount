@@ -1,0 +1,216 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="css/aui.css">
+    <link rel="stylesheet" href="css/style.css">
+    <script src="js/jquery-3.3.1.min.js"></script>
+    <script src="js/init.js"></script>
+    <title>Document</title>
+
+</head>
+<body>
+<header>
+    <a href="javascript:history.go(-1)" class="f1 iconfont color-white">&#xe675</a>
+    <div class="f8 center">编辑调查</div>
+    <div class="f1"></div>
+</header>
+<section class="bg-gray">
+    <div class="bg-white mar-b-2 pad-3">
+        <p id="title" class="bold font35"></p>
+        <p class="color-gray font25 pad-t-2">添加问卷说明</p>
+    </div>
+    <ul id="list">
+        <!--item-->
+        <!--<li class="bg-white mar-b-2">
+            <div class="pad-3 line-h-2">
+                <p>1.您的性别</p>
+                <ul>
+                    <li>
+                        <input type="radio">男
+                    </li>
+                    <li>
+                        <input type="radio">女
+                    </li>
+                </ul>
+            </div>
+            <ul class="bg-gray-l color-gray center font2 pad-2 border-t-gray hidden none">
+                <li class="fl col-2">
+                    <i class="iconfont font4 ">&#xe639</i>
+                    <p class="pad-t-1">编辑</p>
+                </li>
+                <li class="fl col-2">
+                    <i class="iconfont font4">&#xe66e</i>
+                    <p class="pad-t-1">复制</p>
+                </li>
+                <li class="fl col-2">
+                    <i class="iconfont font4">&#xe633</i>
+                    <p class="pad-t-1">上移</p>
+                </li>
+                <li class="fl col-2">
+                    <i class="iconfont font4">&#xe631</i>
+                    <p class="pad-t-1">下移</p>
+                </li>
+                <li class="fl col-2">
+                    <i class="iconfont font4">&#xe667</i>
+                    <p class="pad-t-1">删除</p>
+                </li>
+            </ul>
+        </li>-->
+    </ul>
+
+    <div class="mar-5 bg-white pad-2 center border-dashed" onclick="quest_class_select()">
+        <i>&#xe721</i>添加题目
+    </div>
+
+</section>
+
+<ul class="fix l-b-0 bg-white flex center font25 color-gray pad-t-2 pad-b-1">
+    <li class="f1" onclick="quest_class_select()">
+        <i class=" font5">&#xe613</i>
+        <p>题目</p>
+    </li>
+    <li class="f1">
+        <i class=" font5">&#xe626</i>
+        <p>设置</p>
+    </li>
+    <li class="f1">
+        <i class=" font5">&#xe649</i>
+        <p>预览</p>
+    </li>
+    <li class="f1">
+        <i class=" font5">&#xe936</i>
+        <p>保存</p>
+    </li>
+</ul>
+
+<!--题目-->
+<div class="quest_class fix bg-gray pad-l-r-3  ">
+    <p class="color-gray font2 line-h-2 pad-t-2">添加基础题型</p>
+    <ul id="typelist" class="questType bg-white border-radius-1 pad-1 center color-gray font25 flex flex-r-w">
+        <!--<li >
+            <i >&#xe647</i>
+            <p class="pad-t-1">滑动条</p>
+        </li>-->
+    </ul>
+
+    <p class="color-gray font2 line-h-2 pad-t-2">添加题目模板</p>
+    <ul class="questType bg-white border-radius-1 pad-1 center color-gray font25 flex flex-r-w">
+        <li >
+            <i >&#xe71f</i>
+            <p class="pad-t-1">姓名</p>
+        </li>
+        <li >
+            <i >&#xe692</i>
+            <p class="pad-t-1">性别</p>
+        </li>
+        <li >
+            <i >&#xe692</i>
+            <p class="pad-t-1">手机</p>
+        </li>
+        <li >
+            <i >&#xe692</i>
+            <p class="pad-t-1">日期</p>
+        </li>
+        <li >
+            <i >&#xe692</i>
+            <p class="pad-t-1">地区</p>
+        </li>
+        <li >
+            <i >&#xe692</i>
+            <p class="pad-t-1">地图</p>
+        </li>
+    </ul>
+
+
+    <p class="color-gray font2 line-h-2 pad-t-2">批量添加题目</p>
+    <ul class="questType bg-white border-radius-1 pad-1 center color-gray font25 flex flex-r-w">
+        <li >
+            <i >&#xe71f</i>
+            <p class="pad-t-1">题库选题</p>
+        </li>
+        <li >
+            <i >&#xe692</i>
+            <p class="pad-t-1">文本导入</p>
+        </li>
+        <li >
+            <i >&#xe692</i>
+            <p class="pad-t-1">图片添加</p>
+        </li>
+    </ul>
+
+
+</div>
+<script>
+    var itemid, pid = location.search.substr(1).split('=')[1];
+    var datalist;
+    var typelist = [{icon: '&#xe71f', text: '单选题', type:1},{icon: '&#xe692', text: '多选题', type:2}];
+    function loadType(typelist,parent) {
+        let list = '';
+        for (let i=0; i<typelist.length; i++){
+            list += '<a href="typeRadio.html?type='+typelist[i].type+'&pid='+pid+'" ><i >'+typelist[i].icon+'</i><p class="pad-t-1">'+typelist[i].text+'</p></a>';
+        }
+        parent.html(list);
+    }
+
+    $(function () {
+        var data = {
+            pid: pid
+        };
+        new AjaxRequest({
+            url:  '/program/index',
+            data: data,
+            callback: function (res) {
+                if(res.code == 1){
+                    $("#title").text(res.data.project.Title);
+                    datalist = res.data.subject;
+                    addlist(datalist,$("#list"));
+                    $("#list input").attr('disabled','disabled');
+                }
+            }
+        });
+        loadType(typelist,$("#typelist"));
+
+    });
+
+    $(document).on('click','#list >li', function () {
+        $("#list >li").children("#editbox").remove();
+        showEdit($(this));
+        itemid = $(this).attr('data-id');
+
+    });
+    
+    function addlist(data,parent) {
+        let list = '';
+        if(data){
+            console.log(data)
+            for (let i=0; i<data.length; i++){
+                //data[i].Content=JSON.parse(data[i].Content)
+                list += '<li class="bg-white mar-b-2" data-id="'+data[i].Id+'"><div class="pad-3 line-h-2"><p>'+(i+1)+data[i].Content.Title+'</p><ul>';
+                for (let j=0; j<data[i].Content.Subject.length; j++){
+                    list += '<li><input type="radio" >'+data[i].Content.Subject[j].Content+'</li>';
+                }
+                list += '</ul></div></li>';
+            }
+            parent.html(list);
+        }
+    }
+
+    function showEdit(parent) {
+        let content = '<ul id="editbox" class="bg-gray-l color-gray center font2 pad-2 border-t-gray hidden"><li class="fl col-2" onclick="editFun(itemid)"><i class="iconfont font4 ">&#xe639</i><p class="pad-t-1">编辑</p></li><li class="fl col-2"><i class="iconfont font4">&#xe66e</i><p class="pad-t-1">复制</p></li><li class="fl col-2"><i class="iconfont font4">&#xe633</i><p class="pad-t-1">上移</p></li><li class="fl col-2"><i class="iconfont font4">&#xe631</i><p class="pad-t-1">下移</p></li><li class="fl col-2"><i class="iconfont font4">&#xe667</i><p class="pad-t-1">删除</p></li></ul>';
+        parent.append(content)
+
+    }
+    function editFun(itemid) {
+        
+    }
+
+    function quest_class_select() {
+        $(".quest_class").animate({top: "1rem"})
+    }
+    
+</script>
+</body>
+</html>

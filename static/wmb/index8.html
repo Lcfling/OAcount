@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <title>MapVGL</title>
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+  <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+
+  <!-- force full screen on some browser -->
+  <meta name="full-screen" content="yes"/>
+  <meta name="x5-fullscreen" content="true"/>
+  <meta name="360-fullscreen" content="true"/>
+  <script src="static/jquery-3.3.1.min.js"></script>
+  <link rel="stylesheet" href="css/style.css">
+
+  <script src="https://api.map.baidu.com/api?v=1.0&type=webgl&ak=1XjLLEhZhQNUzd93EjU5nOGQ"></script>
+  <script src="https://mapv.baidu.com/build/mapv.min.js"></script>
+  <script src="static/common.js"></script>
+  <script src="https://code.bdstatic.com/npm/mapvgl@1.0.0-beta.93/dist/mapvgl.min.js"></script>
+</head>
+<body>
+<div id="map_container"></div>
+
+<div class="btn" onclick="tableShow()">图表显示</div>
+
+<div style="text-align: center;font-size: 18px;position: absolute;width: 100%;top:10px;">文明城市智慧管理系统可视数据</div>
+
+<div class="select">
+  <div id="area0">
+    <span>行业类型</span>
+    <ul>
+      <li>学校教育类</li>
+      <li>交警公安部</li>
+      <li>电子通讯部</li>
+    </ul>
+  </div>
+
+  <div id="area">
+    <span>文峰区</span>
+    <ul>
+      <li>文峰区</li>
+      <li>北关区</li>
+      <li>殷都区</li>
+      <li>龙安区</li>
+      <li>开发区</li>
+      <li>安东新区</li>
+    </ul>
+  </div>
+  <div id="area2">
+    <span>中华路街道</span>
+    <ul>
+      <li>中华路街道</li>
+      <li>永明路街道</li>
+      <li>紫薇大道街道</li>
+    </ul>
+  </div>
+  <div id="area3">
+    <span>鑫泰社区</span>
+    <ul>
+      <li>鑫泰社区</li>
+      <li>康馨社区</li>
+    </ul>
+  </div>
+
+</div>
+
+<div class="left_bot">
+  <div>
+    <i>0%~30%</i>
+    <span></span>
+  </div>
+  <div>
+    <i>30%~60%</i>
+    <span></span>
+  </div>
+  <div>
+    <i>60%~100%</i>
+    <span></span>
+  </div>
+</div>
+
+<div class="right_top">
+  <p>任务达标率</p>
+  <div>
+    <i>安阳市一中</i>
+    <span><span></span></span>
+  </div>
+  <div>
+    <i>安阳师范学院</i>
+    <span><span></span></span>
+  </div>
+  <div>
+    <i>安阳市飞翔学校</i>
+    <span><span></span></span>
+  </div>
+  <div>
+    <i>安阳市第十中学</i>
+    <span><span></span></span>
+  </div>
+  <div>
+    <i>安阳市中等职业技术学校</i>
+    <span><span></span></span>
+  </div>
+</div>
+
+<div class="right">
+  <div class="title">
+    <p>实地考察数据</p>
+    <div>
+      <span></span>
+      未核查
+    </div>
+    <div>
+      <span></span>
+      已核查
+    </div>
+  </div>
+  <ul>
+    <li>
+      <i>景区卫生</i>
+      <div>
+        <p><span><span></span></span><i>14</i></p>
+        <p><span><span></span></span><i>152</i></p>
+      </div>
+    </li>
+    <li>
+      <i>社区安全</i>
+      <div>
+        <p><span><span></span></span><i>14</i></p>
+        <p><span><span></span></span><i>152</i></p>
+      </div>
+    </li>
+    <li>
+      <i>道路设施</i>
+      <div>
+        <p><span><span></span></span><i>14</i></p>
+        <p><span><span></span></span><i>152</i></p>
+      </div>
+    </li>
+    <li>
+      <i>交通文明</i>
+      <div>
+        <p><span><span></span></span><i>14</i></p>
+        <p><span><span></span></span><i>152</i></p>
+      </div>
+    </li>
+  </ul>
+</div>
+
+<ul class="maskinfo">
+  <li>名称：<span>中华路街道</span></li>
+  <li>职位：<span>点位长</span></li>
+  <li>姓名：<span>张三</span></li>
+  <li>达标率：<span>50%</span></li>
+  <li>档案完成率：<span>50%</span></li>
+  <li>联系方式：<span>13152543122</span></li>
+</ul>
+
+
+
+<script>
+
+  var colors = ['#ec961a', '#06f0b8', '#3657f6'];
+
+  var data = [],data2= [],data3= [];
+
+  var randomCount = 12;
+
+  var area = [[114.368792,36.090586],[114.379520,36.094193],[114.367847,36.103625],[114.388447,36.098978],[114.374971,36.086529],[114.369693,36.086633],[114.363041,36.088055],[114.383039,36.080078],[114.368749,36.079211],[114.356561,36.082852]];
+
+  var area2 = [[36.131983,114.358921],[36.132329,114.347935],[36.126229,114.354544],[36.119781,114.351969],[36.114165,114.353170],[36.118048,114.366302]];
+
+  var aname = ['中华路街道', '永明路街道', '紫薇大道街道', '办事处4', '办事处5','办事处6','办事处7','办事处8','办事处9','办事处10','办事处11','办事处12']
+
+  var aname2 = ['洹北小区', '国家体育总局', '袁林景区', '安阳市肿瘤医院', '安阳市中医院','安阳市三医院']
+
+  var done = [35,15,65,75,5,90,50];
+
+  var standard = [3,1,6,8,1,9,5];
+
+  var Vdone = [25,70,15,45,85];  //任务达标率
+
+  var kaoc = [[35,90],[15,60],[15,75],[30,95]];  //实地考察
+
+  var areaC = [[114.357719,36.082957],[114.349136,36.134547],[114.282532,36.124842],[114.293861,36.075742]]
+
+  var area0 = [[114.350166,36.066030],[114.395142,36.024946],[114.402781,36.052777]]
+  var aname0 = ['安阳工学院','安阳学院','飞翔学校',]
+  var area1 = [[114.412050,36.077060]]
+  var aname1 = ['安阳市人民医院新院']
+
+  $('.select> div').click(function () {
+    $(this).find('ul').slideToggle();
+  });
+  $('.select li').click(function () {
+    var txt = $(this).text();
+    $(this).parent().siblings('span').text(txt);
+  });
+
+  for (let i=0; i<$('.right_top> div').length; i++){
+    $('.right_top> div').eq(i).children('span').children('span').animate({
+      width: Vdone[i]+'%',
+      backgroundColor: '#fff'
+    },1000)
+  }
+  for (let i=0; i<$('.right li').length; i++){
+    $('.right li').eq(i).find('span').children('span').eq(0).animate({
+      width: kaoc[i][0]+'%',
+    },1000)
+    $('.right li').eq(i).find('span').children('span').eq(1).animate({
+      width: kaoc[i][1]+'%',
+    },1000)
+  }
+
+  var index,point;
+  $('#area li').click(function () {
+    index = $(this).index();
+    point = new BMapGL.Point(areaC[index][0],areaC[index][1]);
+    map.centerAndZoom(point, 14.5);
+
+    // areaf(area[index])
+  });
+
+  $('#area0 li').click(function () {
+    index = $(this).index();
+
+    view.removeAllLayers();
+    // view.removeLayer(textLayer);
+
+    console.log(index)
+    if(index==0){
+      areaf(area0,aname0)
+    }
+    if(index==1){
+      areaf(area1,aname1)
+    }
+  });
+
+
+  var map = initMap({
+    tilt: 30,
+    heading: 0,
+    center: [114.378382,36.108907],
+    zoom: 13.9,
+    style: darkStyle,
+  });
+  var view = new mapvgl.View({
+    map: map
+  });
+
+  // 构造数据
+  while (randomCount--) {
+    data.push({
+      geometry: {
+        type: 'Point',
+        coordinates: area[randomCount],
+      },
+      color: !done[randomCount]|| done[randomCount]<30? colors[0] :done[randomCount] <60? colors[1] :colors[2],
+      // 圆的半径
+      size: 5,
+      properties: {
+        text: aname[randomCount]
+      }
+
+    });
+    data2.push({
+      geometry: {
+        type: 'Point',
+        coordinates: area[randomCount]
+      },
+      properties: {
+        text: '达标率'+ (done[randomCount]?done[randomCount]:'0') +'%'
+      },
+    });
+    data3.push({
+      geometry: {
+        type: 'Point',
+        coordinates: area[randomCount]
+      },
+      properties: {
+        text: '档案完成度'+ (standard[randomCount]?standard[randomCount]:'0') +'/10'
+      },
+    })
+  }
+
+  var bubbleLayer = new mapvgl.CircleLayer({
+    // 绘制带泡泡的圆
+    type: 'bubble',
+    // 扩散半径，支持直接设置和回调两种形式，size为点的大小
+    radius(size) {
+      return 2 * size;
+    },
+    // 扩散时间
+    duration: 1,
+    // 渐隐时间
+    trail: 1,
+    enablePicked: true,
+    selectedColor: '#f0f', // 选中项颜色
+    autoSelect: true, // 根据鼠标位置来自动设置选中项
+    onClick: (e) => { // 点击事件
+      console.log(e);
+      // if(e.dataItem){
+        $('.maskinfo').fadeIn();
+        setTimeout(function () {
+          $('.maskinfo').fadeOut();
+        },1000)
+      // }
+    }
+
+  });
+  view.addLayer(bubbleLayer);
+  bubbleLayer.setData(data);
+
+  // 名称
+  var textLayer = new mapvgl.TextLayer({
+    fontFamily: '微软雅黑',
+    enablePicked: true,
+    autoSelect: true,
+    selectedColor: '#8a9ecf', // 选中项颜色
+    color: '#8a9ecf',
+    padding: [2, 2],
+    offset: [20, 20],
+    fontSize: 16,
+  });
+  view.addLayer(textLayer);
+  textLayer.setData(data);
+
+
+
+  function areaf(area,aname){
+    console.log(area)
+    console.log(aname)
+
+    let randomCount = area.length,datas= [];
+    // 构造数据
+    while (randomCount--) {
+      datas.push({
+        geometry: {
+          type: 'Point',
+          coordinates: area[randomCount],
+        },
+        color: !done[randomCount]|| done[randomCount]<30? colors[0] :done[randomCount] <60? colors[1] :colors[2],
+        // 圆的半径
+        size: 5,
+        properties: {
+          text: aname[randomCount]
+        }
+
+      });
+    }
+
+    let bubbleLayer2 = new mapvgl.CircleLayer({
+      // 绘制带泡泡的圆
+      type: 'bubble',
+      // 扩散半径，支持直接设置和回调两种形式，size为点的大小
+      radius(size) {
+        return 2 * size;
+      },
+      // 扩散时间
+      duration: 1,
+      // 渐隐时间
+      trail: 1,
+      enablePicked: true,
+      selectedColor: '#f0f', // 选中项颜色
+      autoSelect: true, // 根据鼠标位置来自动设置选中项
+      onClick: (e) => { // 点击事件
+        console.log(e);
+        // if(e.dataItem){
+        $('.maskinfo').fadeIn();
+        setTimeout(function () {
+          $('.maskinfo').fadeOut();
+        },2000)
+        // }
+      },
+      onDblClick: (e) => {
+        console.log(e)
+
+      }
+
+    });
+    console.log(datas)
+    view.addLayer(bubbleLayer2);
+    bubbleLayer2.setData(datas);
+
+    // 名称
+    let textLayer2 = new mapvgl.TextLayer({
+      fontFamily: '微软雅黑',
+      enablePicked: true,
+      autoSelect: true,
+      selectedColor: '#8a9ecf', // 选中项颜色
+      color: '#8a9ecf',
+      padding: [2, 2],
+      offset: [20, 20],
+      fontSize: 16,
+    });
+    view.addLayer(textLayer2);
+    textLayer2.setData(datas);
+
+    console.log(view.getAllLayers())
+  }
+
+  var lock;
+  function tableShow() {
+    if(lock){
+      $('.right_top').animate({
+        right: '-100%'
+      },1500)
+      $('.right').animate({
+        right: '-100%'
+      },1500)
+      lock = !lock;
+    }else{
+      $('.right_top').animate({
+        right: '15px'
+      },1000)
+      $('.right').animate({
+        right: '15px'
+      },1000)
+      lock = !lock;
+    }
+  }
+
+
+
+</script>
+</body>
+</html>

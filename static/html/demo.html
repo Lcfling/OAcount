@@ -1,0 +1,49 @@
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+    <style type="text/css">
+        body, html,#allmap {width: 80%;height: 80%;overflow: hidden;margin:0;font-family:"微软雅黑";}
+    </style>
+    <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=Z1bz6BGmrthCGyz95vQEpITcy7VSztDx"></script>
+    <title>单击获取点击的经纬度</title>
+</head>
+<body>
+<div id="allmap">
+</div>
+</body>
+</html>
+<script type="text/javascript">
+    // 百度地图API功能 （cp58    2017-11-22 xiah）
+    var markergg;
+    var map = new BMap.Map("allmap");
+    var point = new BMap.Point(116.331398,39.897445);//地图初始位置
+    map.centerAndZoom(point,12);//默认地图级别12级
+    map.setDefaultCursor("url('bird.cur')");   //设置地图默认的鼠标指针样式
+    function myFun(result){
+        var cityName = result.name;
+        map.setCenter(cityName);
+    }
+    var myCity = new BMap.LocalCity(); //根据ip设置坐标初始位置
+    myCity.get(myFun);
+
+    //var map = new BMap.Map("allmap");
+    //map.centerAndZoom("重庆",12);
+    map.enableScrollWheelZoom();   //启用滚轮放大缩小，默认禁用
+    map.enableContinuousZoom();    //启用地图惯性拖拽，默认禁用
+    //单击获取点击的经纬度
+    map.addEventListener("click",function(e){
+        alert(e.point.lng + "," + e.point.lat);
+        map.clearOverlays();
+        var x = e.point.lng;
+        var y = e.point.lat;
+        var ggPoint = new BMap.Point(x,y);
+        map.addControl(new BMap.NavigationControl());
+        var markergg = new BMap.Marker(ggPoint);
+        map.addOverlay(markergg); //添加GPS坐标
+        //var labelgg = new BMap.Label("",{offset:new BMap.Size(2,2)});
+        //markergg.setLabel(labelgg); //添加GPS label
+        map.setDefaultCursor("url('bird.cur')");     //设置鼠标形状为手型
+    });
+</script>

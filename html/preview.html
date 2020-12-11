@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="css/aui.css">
+    <link rel="stylesheet" href="css/style.css">
+    <script src="js/jquery-3.3.1.min.js"></script>
+    <script src="js/init.js"></script>
+    <title>Document</title>
+
+</head>
+<body>
+<header>
+    <a href="index.html" class="f1 iconfont color-white">&#xe675</a>
+    <div class="f8 center">结果显示</div>
+    <div class="f1"></div>
+</header>
+<section class="bg-gray">
+    <div class="bg-white mar-b-2 pad-3">
+        <p id="title" class="bold font35"></p>
+        <!--<p class="color-gray font25 pad-t-2">添加问卷说明</p>-->
+    </div>
+    <ul id="list">
+        <!--item-->
+        <!--<li class="bg-white mar-b-2">
+            <div class="pad-3 line-h-2">
+                <p>1.您的性别</p>
+                <ul>
+                    <li>
+                        <input type="radio">男
+                    </li>
+                    <li>
+                        <input type="radio">女
+                    </li>
+                </ul>
+            </div>
+            <ul class="bg-gray-l color-gray center font2 pad-2 border-t-gray hidden none">
+                <li class="fl col-2">
+                    <i class="iconfont font4 ">&#xe639</i>
+                    <p class="pad-t-1">编辑</p>
+                </li>
+                <li class="fl col-2">
+                    <i class="iconfont font4">&#xe66e</i>
+                    <p class="pad-t-1">复制</p>
+                </li>
+                <li class="fl col-2">
+                    <i class="iconfont font4">&#xe633</i>
+                    <p class="pad-t-1">上移</p>
+                </li>
+                <li class="fl col-2">
+                    <i class="iconfont font4">&#xe631</i>
+                    <p class="pad-t-1">下移</p>
+                </li>
+                <li class="fl col-2">
+                    <i class="iconfont font4">&#xe667</i>
+                    <p class="pad-t-1">删除</p>
+                </li>
+            </ul>
+        </li>-->
+    </ul>
+
+
+</section>
+
+<script>
+    var pid = location.search.substr(1).split('=')[1];
+    var datalist;
+
+    $(function () {
+        var data = {
+            pid: pid
+        };
+        new AjaxRequest({
+            url: hostUrl + 'project/index',
+            data: data,
+            callback: function (res) {
+                if(res.status == 1){
+                    $("#title").text(res.data.project.title);
+                    datalist = res.data.subject;
+                    addlist(datalist,$("#list"));
+                    $("#list input").attr('disabled','disabled');
+                }
+
+            }
+        });
+
+    });
+
+    function addlist(data,parent) {
+        let list = '';
+        if(data){
+            for (let i=0; i<data.length; i++){
+                list += '<li class="bg-white mar-b-2" data-id="'+data[i].id+'"><div class="pad-3 line-h-2"><p>'+(i+1)+data[i].content.title+'</p><ul>';
+                for (let j=0; j<data[i].content.subject.length; j++){
+                    list += '<li><input type="radio" >'+data[i].content.subject[j].content+'</li>';
+                }
+                list += '</ul></div></li>';
+            }
+            parent.html(list);
+        }
+
+    }
+
+    
+</script>
+</body>
+</html>

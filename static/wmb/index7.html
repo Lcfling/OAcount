@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <title>MapVGL</title>
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+  <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+
+  <!-- force full screen on some browser -->
+  <meta name="full-screen" content="yes"/>
+  <meta name="x5-fullscreen" content="true"/>
+  <meta name="360-fullscreen" content="true"/>
+  <script src="static/jquery-3.3.1.min.js"></script>
+  <link rel="stylesheet" href="css/style.css">
+
+  <script src="https://api.map.baidu.com/api?v=1.0&type=webgl&ak=1XjLLEhZhQNUzd93EjU5nOGQ"></script>
+  <script src="https://mapv.baidu.com/build/mapv.min.js"></script>
+  <script src="static/common.js"></script>
+  <script src="https://code.bdstatic.com/npm/mapvgl@1.0.0-beta.93/dist/mapvgl.min.js"></script>
+
+</head>
+<body>
+<div id="map_container"></div>
+
+<div style="text-align: center;font-size: 18px;position: absolute;width: 100%;top:10px;">文明城市智慧管理系统可视数据</div>
+<div class="btn" onclick="handleFullScreen()">全屏显示</div>
+<!--<div class="btn" onclick="changeCenter()" style="bottom: 50px">打卡</div>-->
+<div class="select">
+  <div id="area">
+    <span>文峰区</span>
+    <ul>
+      <li>文峰区</li>
+      <li>北关区</li>
+      <li>殷都区</li>
+      <li>龙安区</li>
+      <li>开发区</li>
+      <li>安东新区</li>
+    </ul>
+  </div>
+  <div id="area2">
+    <span>中华路街道</span>
+    <ul>
+      <li>中华路街道</li>
+      <li>永明路街道</li>
+      <li>紫薇大道街道</li>
+    </ul>
+  </div>
+  <div id="area3">
+    <span>鑫泰社区</span>
+    <ul>
+      <li>鑫泰社区</li>
+      <li>康馨社区</li>
+    </ul>
+  </div>
+
+</div>
+
+
+<script>
+  var pageDate,hy1,hy2;
+
+  var colors = ['#ff321a', '#06f0b8', '#3657f6'];
+
+  var data = [],data2= [],data3= [];
+
+  var randomCount = 12;
+
+  //文峰区
+  var area = [[114.368792,36.090586],[114.379520,36.094193],[114.367847,36.103625],[114.388447,36.098978],[114.374971,36.086529],[114.369693,36.086633],[114.363041,36.088055],[114.383039,36.080078],[114.368749,36.079211],[114.356561,36.082852]];
+
+  //北关区
+  //洹北小区 国家体育总局 园林景区 肿瘤医院 中医院 三医院
+  var area2 = [[36.131983,114.358921],[36.132329,114.347935],[36.126229,114.354544],[36.119781,114.351969],[36.114165,114.353170],[36.118048,114.366302]];
+
+  var aname = ['中华路街道', '永明路街道', '紫薇大道街道', '办事处4', '办事处5','办事处6','办事处7','办事处8','办事处9','办事处10','办事处11','办事处12']
+
+  var aname2 = ['洹北小区', '国家体育总局', '袁林景区', '安阳市肿瘤医院', '安阳市中医院','安阳市三医院']
+
+  /*var aname = [
+    ['中华路街道', '永明路街道', '紫薇大道街道', '办事处4', '办事处5','办事处6','办事处7','办事处8','办事处9','办事处10','办事处11','办事处12'],
+    ['洹北小区', '国家体育总局', '袁林景区', '安阳市肿瘤医院', '安阳市中医院','安阳市三医院'],
+  ]*/
+
+
+  $.ajax({
+    url: 'http://192.168.0.109:8088/area/getall',
+    type: 'POST',
+    dataType: 'json',
+    data: {},
+    success: function (res) {
+      console.log(res);
+      pageDate = res.data;
+    }
+  })
+
+  var done = [35,15,65,75,5,90,50];
+
+  var standard = [3,1,6,8,1,9,5];
+
+  var postmsg = ['green','green','red','green','red','red','green'];
+
+  var postmsg2 = ['green','green','green','green','red','red','green'];
+
+
+  var areaC = [[114.357719,36.082957],[114.349136,36.134547],[114.282532,36.124842],[114.293861,36.075742]]
+
+
+  var map = initMap({
+    tilt: 30,
+    heading: 0,
+    center: [114.378382,36.108907],
+    zoom: 13.5,
+    style: darkStyle,
+  });
+  var view = new mapvgl.View({
+    map: map
+  });
+  console.log(map)
+
+  var index,point;
+  $('#area li').click(function () {
+    index = $(this).index();
+    point = new BMapGL.Point(areaC[index][0],areaC[index][1]);
+    map.centerAndZoom(point, 14.5);
+
+    view.removeAllLayers();
+
+    areaf(area[index])
+
+  });
+  var a=0;
+
+  setInterval(function () {
+    $.ajax({
+      url: 'http://127.0.0.1:8088/ding',
+      type: 'POST',
+      dataType: 'json',
+      data: {},
+      success: function (res) {
+        console.log(res);
+        var signId = res.data.Id;
+        if (a==0){
+          a =  signId
+          console.log(1111)
+        }else{
+          if(a != signId){
+            view.removeLayer(bubbleLayer);
+            areaf(postmsg2);
+            console.log(222)
+
+          }
+
+        }
+      }
+    })
+  },1000)
+
+  // 构造数据
+  while (randomCount--) {
+    data.push({
+      geometry: {
+        type: 'Point',
+        coordinates: area[randomCount],
+      },
+      color: !postmsg[randomCount]|| postmsg[randomCount]=='red'? colors[0] : colors[1],
+      // 圆的半径
+      size: 5,
+      properties: {
+        text: aname[randomCount]
+      }
+
+    });
+    data2.push({
+      geometry: {
+        type: 'Point',
+        coordinates: area[randomCount]
+      },
+      properties: {
+        text: '达标'+ (done[randomCount]?done[randomCount]:'0') +'%'
+      },
+    });
+    data3.push({
+      geometry: {
+        type: 'Point',
+        coordinates: area[randomCount]
+      },
+      properties: {
+        text: '档案完成度'+ (standard[randomCount]?standard[randomCount]:'0') +'/10'
+      },
+    })
+  }
+
+  var bubbleLayer = new mapvgl.CircleLayer({
+    // 绘制带泡泡的圆
+    type: 'bubble',
+    // 扩散半径，支持直接设置和回调两种形式，size为点的大小
+    radius(size) {
+      return 2 * size;
+    },
+    // 扩散时间
+    duration: 1,
+    // 渐隐时间
+    trail: 1,
+    enablePicked: true,
+    selectedColor: '#f0f', // 选中项颜色
+    autoSelect: true, // 根据鼠标位置来自动设置选中项
+    onClick: (e) => { // 点击事件
+      console.log(e);
+      // if(e.dataItem){
+        $('.maskinfo').fadeIn();
+        setTimeout(function () {
+          $('.maskinfo').fadeOut();
+        },2000)
+      // }
+    },
+    onDblClick: (e) => {
+      console.log(e)
+      map.scaleZoom(19);
+
+    }
+
+  });
+  console.log(data)
+  view.addLayer(bubbleLayer);
+  bubbleLayer.setData(data);
+
+  // 名称
+  var textLayer = new mapvgl.TextLayer({
+    fontFamily: '微软雅黑',
+    enablePicked: true,
+    autoSelect: true,
+    selectedColor: '#8a9ecf', // 选中项颜色
+    color: '#8a9ecf',
+    padding: [2, 2],
+    offset: [20, 20],
+    fontSize: 16,
+  });
+  view.addLayer(textLayer);
+  textLayer.setData(data);
+
+
+  //定义一个变量进行判断，默认false 非全屏状态
+  let exitFullscreen = false
+  // 全屏事件
+  function handleFullScreen(){
+    console.log(this.fullscreen)
+    let element = document.documentElement;
+    if (this.fullscreen) {
+      if (document.exitFullscreen) {
+        document.exitFullscreen();
+      } else if (document.webkitCancelFullScreen) {
+        document.webkitCancelFullScreen();
+      } else if (document.mozCancelFullScreen) {
+        document.mozCancelFullScreen();
+      } else if (document.msExitFullscreen) {
+        document.msExitFullscreen();
+      }
+      this.fullscreen = false;
+
+    } else {
+      if (element.requestFullscreen) {
+        element.requestFullscreen();
+      } else if (element.webkitRequestFullScreen) {
+        element.webkitRequestFullScreen();
+      } else if (element.mozRequestFullScreen) {
+        element.mozRequestFullScreen();
+      } else if (element.msRequestFullscreen) {
+        // IE11
+        element.msRequestFullscreen();
+      }
+      this.fullscreen = true;
+    }
+  }
+  $('.select> div').click(function () {
+    $(this).find('ul').slideToggle();
+  });
+  $('.select li').click(function () {
+    var txt = $(this).text();
+    $(this).parent().siblings('span').text(txt);
+  });
+
+
+
+  function areaf(postmsg){
+
+    let randomCount = area.length,datas= [];
+    // 构造数据
+    while (randomCount--) {
+      datas.push({
+        geometry: {
+          type: 'Point',
+          coordinates: area[randomCount],
+        },
+        color: !postmsg[randomCount]|| postmsg[randomCount]=='red'? colors[0] : colors[1],
+        // 圆的半径
+        size: 5,
+        properties: {
+          text: aname[randomCount]
+        }
+
+      });
+    }
+
+    let bubbleLayer2 = new mapvgl.CircleLayer({
+      // 绘制带泡泡的圆
+      type: 'bubble',
+      // 扩散半径，支持直接设置和回调两种形式，size为点的大小
+      radius(size) {
+        return 2 * size;
+      },
+      // 扩散时间
+      duration: 1,
+      // 渐隐时间
+      trail: 1,
+      enablePicked: true,
+      selectedColor: '#f0f', // 选中项颜色
+      autoSelect: true, // 根据鼠标位置来自动设置选中项
+      onClick: (e) => { // 点击事件
+        console.log(e);
+        // if(e.dataItem){
+        $('.maskinfo').fadeIn();
+        setTimeout(function () {
+          $('.maskinfo').fadeOut();
+        },2000)
+        // }
+      },
+      onDblClick: (e) => {
+        console.log(e)
+
+      }
+
+    });
+    console.log(datas)
+    view.addLayer(bubbleLayer2);
+    bubbleLayer2.setData(datas);
+
+
+  }
+
+
+</script>
+</body>
+</html>

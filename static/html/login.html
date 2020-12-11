@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="css/aui.css">
+    <script src="js/jquery-3.3.1.min.js"></script>
+    <script src="js/init.js"></script>
+    <title>Document</title>
+</head>
+<body class="flex">
+<div class="col-10 pad-3">
+    <ul class="center line-h-3 font4">
+        <li class="border-b-gray color-blue">登录</li>
+        <!--<li>注册</li>-->
+    </ul>
+    <div >
+        <!--login-->
+        <ul class="pad-t-4 pad-b-4">
+            <li class="flex pad-2 border-b-gray">
+                <i class="font5">&#xe615</i>
+                <input id="account" class="f1 pad-l-2" type="text" placeholder="手机号/邮箱/用户名">
+            </li>
+            <li class="flex pad-2 border-b-gray">
+                <i class="font5">&#xe621</i>
+                <input id="password" class="f1 pad-l-2" type="password" placeholder="密码">
+                <span class="color-blue">忘记密码?</span>
+            </li>
+            <!--<li class="flex pad-2 border-b-gray">
+                <img src="" alt="">
+                <input type="text" placeholder="图形验证码">
+                <img src="" alt="图片验证码">
+            </li>-->
+        </ul>
+
+        <!--register-->
+
+    </div>
+
+    <p class="block border-radius-5 bg-blue pad-2 color-white center font35 mar-t-5 mar-b-5" onclick="login()">登录</p>
+
+    <div class="color-gray ab col-10 center l-b-0 pad-3 mar-b-3 font25">
+        <p>登录即代表您同意问卷星<span class="color-blue">《用户服务协议》</span>和<span class="color-blue">《隐私条款》</span></p>
+    </div>
+</div>
+<script>
+    function login() {
+        let account = $("#account").val();
+        let password = $("#password").val();
+        if(!account || !password){
+            toast('请填写完整信息');
+            return;
+        }
+        let data = {
+            account: account,
+            password: password,
+        };
+        $.ajax({
+            url: hostUrl + 'login',
+            data: data,
+            type: 'post',
+            dataType: 'json',
+            success: function (res) {
+                toast(res.info);
+                if(res.status == 1){
+                    localStorage.user_id = res.data.user_id;
+                    localStorage.token = res.data.token;
+                    setTimeout(function () {
+                        location.href = 'index.html';
+                    },1000)
+                }
+            }
+        })
+    }
+</script>
+</body>
+</html>
