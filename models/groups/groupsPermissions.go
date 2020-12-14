@@ -60,9 +60,10 @@ func ListGroupsPermission(groupid int64) (ops []GroupsPermission) {
 }
 
 type GroupsUserPermission struct {
-	Name  string
-	Ename string
-	Icon  string
+	Name   string
+	Ename  string
+	Icon   string
+	Weight int64
 }
 
 func ListGroupsUserPermission(groupid string) (num int64, err error, ops []GroupsUserPermission) {
@@ -73,11 +74,11 @@ func ListGroupsUserPermission(groupid string) (num int64, err error, ops []Group
 		cache_expire, _ := beego.AppConfig.Int("cache_expire")
 		qb, _ := orm.NewQueryBuilder("mysql")
 
-		qb.Select("pp.name", "pp.ename", "pp.icon").From("pms_groups_permission AS gp").
+		qb.Select("pp.name", "pp.ename", "pp.icon", "pp.weight").From("pms_groups_permission AS gp").
 			LeftJoin("pms_permissions AS p").On("gp.permissionid = p.permissionid").
 			LeftJoin("pms_permissions AS pp").On("pp.permissionid = p.parentid").
 			Where("gp.groupid IN (" + groupid + ")").
-			GroupBy("p.parentid")
+			GroupBy("p.parentid").OrderBy("pp.weight desc")
 		sql := qb.String()
 		o := orm.NewOrm()
 		nums, err = o.Raw(sql).QueryRows(&users)

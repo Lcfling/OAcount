@@ -3,6 +3,7 @@ package mission
 import (
 	"fmt"
 	"github.com/Lcfling/OAcount/controllers"
+	. "github.com/Lcfling/OAcount/models/area"
 	. "github.com/Lcfling/OAcount/models/files"
 	. "github.com/Lcfling/OAcount/models/mission"
 	. "github.com/Lcfling/OAcount/models/program"
@@ -185,7 +186,6 @@ func (this *MissionMySubController) Get() {
 	idstr := this.Ctx.Input.Param(":id")
 	id, _ := strconv.ParseInt(idstr, 10, 64)
 	missionmy := GetMissionMy(id)
-	fmt.Println(missionmy)
 	this.Data["missionmy"] = missionmy
 	this.TplName = "mission/missionmy-form.tpl"
 }
@@ -255,6 +255,99 @@ func (this *MissionMySubController) Post() {
 		this.Data["json"] = map[string]interface{}{"code": 1, "message": "success"}
 		this.ServeJSON()
 	}
+}
+
+//审核列表
+type ArraignmentController struct {
+	controllers.BaseController
+}
+
+func (this *ArraignmentController) Get() {
+	Types := this.Ctx.Input.Param(":types")
+	fmt.Println("types:", Types)
+	types, _ := strconv.ParseInt(Types, 10, 64)
+	areaid, _ := this.GetInt64("areaid")
+	condArr := make(map[string]string)
+	if areaid > 0 {
+		arr := GetChild(areaid, "")
+		array := GetAllAreaIdByPid(arr)
+		//fmt.Println(array)
+		arrstr := strings.Join(array, ",")
+		condArr["areaid"] = arrstr
+	}
+	//var condArr map[string]string
+
+	condArr["types"] = Types
+
+	page, err := this.GetInt("p")
+	if err != nil {
+		page = 1
+	}
+
+	offset, err1 := beego.AppConfig.Int("pageoffset")
+	if err1 != nil {
+		offset = 15
+	}
+
+	countMission := CountMissionArraignment(condArr)
+	paginator := pagination.SetPaginator(this.Ctx, offset, countMission)
+	_, _, data := GetMissionArraignment(types, page, offset, condArr)
+
+	fmt.Println(data)
+	this.Data["areaid"] = areaid
+	this.Data["paginator"] = paginator
+	this.Data["condArr"] = condArr
+	this.Data["mymissions"] = data
+	this.Data["countMission"] = countMission
+	this.TplName = "mission/arraignment.tpl"
+}
+
+//任务审核
+
+type ArraignmentSubController struct {
+	controllers.BaseController
+}
+
+func (this *ArraignmentSubController) Get() {
+	missionmyidstr := this.Ctx.Input.Param(":id")
+	missionmyid, _ := strconv.ParseInt(missionmyidstr, 10, 64)
+	missionmy := GetMissionMy(missionmyid)
+
+	var condArr map[string]interface{}
+
+	condArr = make(map[string]interface{})
+	condArr["missionmyid"] = missionmyid
+	condArr["aid"] = int64(0)
+	condArr["missionid"] = int64(0)
+	condArr["types"] = 0
+	condArr["keywords"] = ""
+
+	fnums, _, files := ListFiles(condArr, 1, 100)
+
+	this.Data["files"] = files
+	this.Data["fnums"] = fnums
+	this.Data["missionmy"] = missionmy
+	this.TplName = "mission/arraignment-form.tpl"
+
+}
+func (this *ArraignmentSubController) Post() {
+	missionmyidstr := this.Ctx.Input.Param(":id")
+	missionmyid, _ := strconv.ParseInt(missionmyidstr, 10, 64)
+	arraignment, _ := this.GetInt64("arraignment")
+	if !(arraignment > 0) {
+		this.Data["json"] = map[string]interface{}{"code": 0, "message": "请更改审核状态"}
+
+	} else if !(arraignment == 1 || arraignment == 2) {
+		this.Data["json"] = map[string]interface{}{"code": 0, "message": "请更改审核状态"}
+	} else {
+		err := ChangeArraignment(missionmyid, arraignment)
+		if err != nil {
+			this.Data["json"] = map[string]interface{}{"code": 0, "message": err}
+		} else {
+			this.Data["json"] = map[string]interface{}{"code": 0, "message": "审核成功"}
+		}
+	}
+	this.ServeJSON()
 }
 
 //任务完善结构体

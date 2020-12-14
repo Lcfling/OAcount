@@ -785,6 +785,101 @@ func (this *EditUserProfileController) Post() {
 	this.ServeJSON()
 }
 
+//手机
+type UserProfileController struct {
+	controllers.UserBaseController
+}
+
+func (this *UserProfileController) Get() {
+	userid := this.UserBaseController.UserUserId
+
+	pro, err := GetProfile(userid)
+	if err != nil {
+		this.Abort("404")
+	}
+	this.Data["json"] = map[string]interface{}{"code": 1, "message": "success", "data": pro}
+	this.ServeJSON()
+}
+func (this *UserProfileController) Post() {
+	userid := this.UserBaseController.UserUserId
+
+	realname := this.GetString("realname")
+	if "" == realname {
+		this.Data["json"] = map[string]interface{}{"code": 0, "message": "请填写姓名"}
+		this.ServeJSON()
+		return
+	}
+	sex, _ := this.GetInt("sex")
+	if sex <= 0 {
+		this.Data["json"] = map[string]interface{}{"code": 0, "message": "请选择性别"}
+		this.ServeJSON()
+		return
+	}
+	birth := this.GetString("birth")
+	if "" == birth {
+		this.Data["json"] = map[string]interface{}{"code": 0, "message": "请选择出生日期"}
+		this.ServeJSON()
+		return
+	}
+	email := this.GetString("email")
+	if "" == email {
+		this.Data["json"] = map[string]interface{}{"code": 0, "message": "请填写邮箱"}
+		this.ServeJSON()
+		return
+	}
+	webchat := this.GetString("webchat")
+	qq := this.GetString("qq")
+	phone := this.GetString("phone")
+	if "" == phone {
+		this.Data["json"] = map[string]interface{}{"code": 0, "message": "请填写手机号"}
+		this.ServeJSON()
+		return
+	}
+	tel := this.GetString("tel")
+	address := this.GetString("address")
+	emercontact := this.GetString("emercontact")
+	if "" == emercontact {
+		this.Data["json"] = map[string]interface{}{"code": 0, "message": "请填写紧急联系人"}
+		this.ServeJSON()
+		return
+	}
+	emerphone := this.GetString("emerphone")
+	if "" == emerphone {
+		this.Data["json"] = map[string]interface{}{"code": 0, "message": "请填写紧急联系人电话"}
+		this.ServeJSON()
+		return
+	}
+
+	_, err := GetUser(userid)
+	if err != nil {
+		this.Data["json"] = map[string]interface{}{"code": 0, "message": "员工不存在"}
+		this.ServeJSON()
+		return
+	}
+
+	var pro UsersProfile
+	pro.Realname = realname
+	pro.Sex = sex
+	pro.Birth = birth
+	pro.Email = email
+	pro.Webchat = webchat
+	pro.Qq = qq
+	pro.Phone = phone
+	pro.Tel = tel
+	pro.Address = address
+	pro.Emercontact = emercontact
+	pro.Emerphone = emerphone
+
+	err = UpdateProfile(userid, pro)
+
+	if err == nil {
+		this.Data["json"] = map[string]interface{}{"code": 1, "message": "个人资料修改成功", "type": "profile", "id": fmt.Sprintf("%d", userid)}
+	} else {
+		this.Data["json"] = map[string]interface{}{"code": 0, "message": "修改失败"}
+	}
+	this.ServeJSON()
+}
+
 type EditUserPasswordController struct {
 	controllers.BaseController
 }

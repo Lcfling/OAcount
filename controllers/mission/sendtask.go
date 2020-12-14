@@ -14,7 +14,7 @@ type SendTaskController struct {
 }
 
 func (this *SendTaskController) Get() {
-	s := GetChild(0)
+	s := GetChild(0, "")
 	json, _ := json.Marshal(s)
 
 	this.Data["area"] = string(json)

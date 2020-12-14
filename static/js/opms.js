@@ -1924,6 +1924,28 @@ $(function(){
 			});
 		}
 	});
+	//任务审核
+	$('#arraignment-form').validate({
+		ignore:'',
+		rules : {
+		},
+		messages : {
+		},
+		submitHandler:function(form) {
+			$(form).ajaxSubmit({
+				type:'POST',
+				dataType:'json',
+				success:function(data) {
+					dialogInfo(data.message)
+					if (data.code) {
+						setTimeout(function(){window.location.href="/mission/manage"}, 2000);
+					} else {
+						setTimeout(function(){ $('#dialogInfo').modal('hide'); }, 1000);
+					}
+				}
+			});
+		}
+	});
 	
 });
 
