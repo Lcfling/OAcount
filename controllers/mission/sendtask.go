@@ -29,9 +29,7 @@ func (this *SendTaskController) Post() {
 
 	//任务id
 	id := this.Ctx.Input.Param(":id")
-
 	id64, _ := strconv.ParseInt(id, 10, 64)
-	fmt.Println("id64:", id64)
 
 	//---------------------------------------------------------------------------------
 	//全部下发   查询所有社区人员
