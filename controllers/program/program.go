@@ -104,7 +104,7 @@ func (this *SubjectManageController) Get() {
 
 //列表
 type ListController struct {
-	controllers.BaseController
+	controllers.IndexController
 }
 
 func (this *ListController) Get() {
