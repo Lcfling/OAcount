@@ -46,10 +46,16 @@
             <div class="panel-body">
               <section id="unseen">
                 <form id="sendtask-form">
+                  <ul class="list-unstyled pul" id="js-all">
+                    <li data-id="11" class="border"><h4>全部下发 <input type="checkbox" name="all" value="1"></h4></li>
+                  </ul>
                   <ul class="list-unstyled pul" id="js-permission">
-					<li class="text-center">
-                      <input type="hidden" id="groupid" value="{{.group.Id}}">
-                      <button type="button" id="permission-btn-new" class="btn btn-success">任务下发</button>
+
+                  </ul>
+                  <ul class="list-unstyled pul" id="js-tags">
+                    <li class="text-center">
+
+                      <button type="submit"  class="btn btn-primary">任务下发</button>
                     </li>
                   </ul>
                 </form>
@@ -91,9 +97,12 @@ $(function(){
 	var lefthtml = '';
 
 	var jsonstr='{{.area}}'
+    var tags='{{.tage}}'
 
     var jsonOb=JSON.parse(jsonstr);
+    var tagsOb=JSON.parse(tags);
 	console.log(jsonOb)
+    console.log(tagsOb)
 	
 	for(var i=0;i<jsonOb.length;i++) {
 		html +='<li data-id="'+jsonOb[i].Id+'" class="border">';
@@ -106,7 +115,7 @@ $(function(){
             html += '<li>';
             html += '<div class="form-group" data-id="' +arr2[j].Name+ '"> ';
             html += '<label class="checkbox-inline">';
-            html += '<input type="checkbox" name="checkareas[]" data-ename="' + arr2[j].Id + '">';
+            html += '<input type="checkbox" name="checkareas[]" data-ename="' + arr2[j].Id + '" value="' + arr2[j].Id + '">';
             html += arr2[j].Name;
             html += '</label>';
             html += '</div>';
@@ -119,14 +128,12 @@ $(function(){
                   html += '<li>';
                   html += '<div class="form-group" data-id="' +arr3[k].Name+ '"> ';
                   html += '<label class="checkbox-inline">';
-                  html += '<input type="checkbox" name="checkareas[]" data-ename="' + arr3[k].Id + '">';
+                  html += '<input type="checkbox" name="checkareas[]" data-ename="' + arr3[k].Id +  '" value="' + arr2[j].Id + '">';
                   html += arr3[k].Name;
                   html += '</label>';
                   html += '</div>';
                   html += '</li>';
-
                 }
-
             }
           }
         }
@@ -136,8 +143,28 @@ $(function(){
 	}
 
 	$('#js-permission').prepend(html);
+
+    html=""
+    html +='<li data-id="" class="border">';
+    html += '<h4>按行业下发 </h4>';
+
+    html+='<ul class="cul">'
+
+          for (var k = 0; k < tagsOb.length; k++) {
+            html += '<li>';
+            html += '<div class="form-group" data-id="' +tagsOb[k].Name+ '"> ';
+            html += '<label class="checkbox-inline">';
+            html += '<input type="checkbox" name="tags[]" value="' + tagsOb[k].Id + '" data-ename="' + tagsOb[k].Name + '">';
+            html += tagsOb[k].Name;
+            html += '</label>';
+            html += '</div>';
+            html += '</li>';
+          }
+
+    html += '</ul>';
+    html +='</li>';
 	//$('.js-left-nav').append(lefthtml);
-	
+    $('#js-tags').prepend(html);
 	var per = '{{.groupspermissions}}';
 	var val = '';
 	$('input[name="permission[]"]').each(function(){
