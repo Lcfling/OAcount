@@ -6,6 +6,7 @@ import (
 	"github.com/Lcfling/OAcount/controllers"
 	. "github.com/Lcfling/OAcount/models/area"
 	. "github.com/Lcfling/OAcount/models/mission"
+	. "github.com/Lcfling/OAcount/models/tags"
 	"strconv"
 )
 
@@ -14,12 +15,14 @@ type SendTaskController struct {
 }
 
 func (this *SendTaskController) Get() {
+	tags := GetTagsAll()
+	tjson, _ := json.Marshal(tags)
+
 	s := GetChild(0, "")
 	json, _ := json.Marshal(s)
 
 	this.Data["area"] = string(json)
-	this.Data["tage"] = string(json)
-	fmt.Println(string(json))
+	this.Data["tage"] = string(tjson)
 
 	this.TplName = "mission/sendtask.tpl"
 }
@@ -30,6 +33,10 @@ func (this *SendTaskController) Post() {
 	//任务id
 	id := this.Ctx.Input.Param(":id")
 	id64, _ := strconv.ParseInt(id, 10, 64)
+	//ares := this.GetString("checkareas")
+	tagss := this.GetStrings("tags")
+
+	fmt.Println("tagsssssss", tagss)
 
 	//---------------------------------------------------------------------------------
 	//全部下发   查询所有社区人员
