@@ -101,3 +101,57 @@ func (this *SubjectManageController) Get() {
 	this.Data["pid"] = id
 	this.TplName = "program/ifram.tpl"
 }
+
+//列表
+type ListController struct {
+	controllers.BaseController
+}
+
+func (this *ListController) Get() {
+	//权限检测
+	/*if !strings.Contains(this.GetSession("userPermission").(string), "program-manage") {
+		this.Redirect("/my/task", 302)
+		return
+		//this.Abort("401")
+	}*/
+	page, err := this.GetInt("p")
+	status := this.GetString("status")
+	keywords := this.GetString("keywords")
+	if err != nil {
+		page = 1
+	}
+
+	offset, err1 := beego.AppConfig.Int("pageoffset")
+	if err1 != nil {
+		offset = 15
+	}
+
+	condArr := make(map[string]string)
+	condArr["status"] = status
+	condArr["keywords"] = keywords
+
+	countProject := CountProgram(condArr)
+	paginator := pagination.SetPaginator(this.Ctx, offset, countProject)
+	_, _, programs := ListProgram(condArr, page, offset)
+	this.Data["paginator"] = paginator
+	this.Data["condArr"] = condArr
+	this.Data["program"] = programs
+	this.Data["countProject"] = countProject
+	this.TplName = "program/program.tpl"
+}
+func (this *ListController) Post() {
+	lastid, err := this.GetInt("lastid")
+	if err != nil {
+		lastid = 0
+	}
+
+	offset, err1 := beego.AppConfig.Int("pageoffset")
+	if err1 != nil {
+		offset = 15
+	}
+
+	_, _, programs := ApiGetProgram(lastid, offset)
+
+	this.Data["json"] = map[string]interface{}{"code": 1, "message": "消息列表", "data": programs}
+	this.ServeJSON()
+}

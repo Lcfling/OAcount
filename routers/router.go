@@ -271,6 +271,7 @@ func init() {
 	beego.Router("/program/subjectlist/:pid", &program.SubjectListController{})
 	beego.Router("/addsubject", &program.SubjectAddController{})
 	beego.Router("/subject/edit", &program.SubjectManageController{})
+	beego.Router("/mobile/subject/edit", &program.ListController{})
 
 	//文件管理
 	beego.Router("/files/manage", &files.FilesManageController{})
@@ -284,6 +285,8 @@ func init() {
 	beego.Router("/news/classicadd", &news.NewsClassicAddController{})
 
 	// API接口---------------------
+	//app 登录
+	beego.Router("/moblie/news/newsList", &news.ApiNewsController{})
 
 	//消息列表
 	beego.Router("/moblie/news/newsList", &news.ApiNewsController{})

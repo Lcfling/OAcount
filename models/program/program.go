@@ -98,3 +98,26 @@ func GetProgram(id int64) (Program, error) {
 	err := o.Read(&p)
 	return p, err
 }
+
+func ApiGetProgram(lastid, offset int) (num int64, err error, ops []Program) {
+	o := orm.NewOrm()
+	o.Using("default")
+	qs := o.QueryTable(models.TableName("program"))
+	cond := orm.NewCondition()
+
+	if lastid > 0 {
+		cond = cond.AndCond(cond.And("id__lt", lastid))
+	}
+
+	qs = qs.SetCond(cond)
+
+	if offset < 1 {
+		offset, _ = beego.AppConfig.Int("pageoffset")
+	}
+	qs = qs.RelatedSel()
+
+	var program []Program
+	qs = qs.OrderBy("-id")
+	num, err1 := qs.Limit(offset).All(&program)
+	return num, err1, program
+}
