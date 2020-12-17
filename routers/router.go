@@ -13,6 +13,7 @@ import (
 	"github.com/Lcfling/OAcount/controllers/leaves"
 	"github.com/Lcfling/OAcount/controllers/messages"
 	"github.com/Lcfling/OAcount/controllers/mission"
+	"github.com/Lcfling/OAcount/controllers/news"
 	"github.com/Lcfling/OAcount/controllers/oagoods"
 	"github.com/Lcfling/OAcount/controllers/overtimes"
 	"github.com/Lcfling/OAcount/controllers/program"
@@ -276,4 +277,23 @@ func init() {
 	//标签管理
 	beego.Router("/tags", &tags.TagsAllController{})
 
+	//通知管理
+	beego.Router("/news/manage", &news.NewsManageController{})
+	beego.Router("/news/add", &news.NewsAddController{})
+	beego.Router("/news/classic", &news.NewsClassicController{})
+	beego.Router("/news/classicadd", &news.NewsClassicAddController{})
+
+	// API接口---------------------
+
+	//消息列表
+	beego.Router("/moblie/news/newsList", &news.ApiNewsController{})
+	//消息类型
+	beego.Router("/moblie/news/classicList", &news.ApiNewsClassicController{})
+
+	//我的任务
+	beego.Router("/moblie/mission/missionMy", &mission.ApiMissionMyController{})
+	//任务详情
+	beego.Router("/moblie/mission/missionInfo", &mission.ApiMissionInfoController{})
+	//点位信息
+	beego.Router("/moblie/mission/areaInfo", &mission.ApiAreaUserInfoController{})
 }
