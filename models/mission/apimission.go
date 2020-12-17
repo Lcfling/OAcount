@@ -3,6 +3,7 @@ package mission
 import (
 	"github.com/Lcfling/OAcount/models"
 	"github.com/astaxie/beego/orm"
+	"time"
 )
 
 type ApiMissionMydata struct {
@@ -90,4 +91,12 @@ func ApiGetAreaUserInfo(owner int64) ApiMissionAreaInfo {
 	o := orm.NewOrm()
 	o.Raw(sql, owner).QueryRow(&my)
 	return my
+}
+
+//更改我的任务查阅状态
+func UpdateCheck(id int64, userid int64) error {
+	checktime := time.Now().Unix()
+	o := orm.NewOrm()
+	_, err := o.Raw("update  "+models.TableName("mission_my")+" SET `check`=1,checktime=?  WHERE id = ? AND userid=?", checktime, id, userid).Exec()
+	return err
 }

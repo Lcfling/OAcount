@@ -1722,7 +1722,7 @@ $(function(){
                 success:function(data) {
                     dialogInfo(data.message)
                     if (data.code) {
-						setTimeout(function(){ window.location.href='/permission/manage'; }, 2000);
+						//setTimeout(function(){ window.location.href='/permission/manage'; }, 2000);
                     } else {
                        setTimeout(function(){ $('#dialogInfo').modal('hide'); }, 1000);
                     }															
@@ -1902,7 +1902,7 @@ $(function(){
 		}
 	});
 	//任务下发
-	$('#sendtask').validate({
+	$('#sendtask-form').validate({
 		ignore:'',
 		rules : {
 		},
@@ -1916,9 +1916,9 @@ $(function(){
 				success:function(data) {
 					dialogInfo(data.message)
 					if (data.code) {
-						setTimeout(function(){window.location.href="/mission/manage"}, 2000);
+						//setTimeout(function(){window.location.href="/mission/manage"}, 2000);
 					} else {
-						setTimeout(function(){ $('#dialogInfo').modal('hide'); }, 1000);
+						//setTimeout(function(){ $('#dialogInfo').modal('hide'); }, 1000);
 					}
 				}
 			});

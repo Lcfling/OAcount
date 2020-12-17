@@ -77,6 +77,31 @@ func LoginUser(username, password string) (err error, user Users) {
 	return err, users
 }
 
+//手机登录
+func LoginMobile(username, password string) (err error, user Users) {
+	o := orm.NewOrm()
+	qs := o.QueryTable(models.TableName("users"))
+	cond := orm.NewCondition()
+
+	cond = cond.And("username", username)
+	pwdmd5 := utils.Md5(password)
+	cond = cond.And("password", pwdmd5)
+	cond = cond.And("status", 1)
+
+	qs = qs.SetCond(cond)
+	var users Users
+	err = qs.Limit(1).One(&users, "userid", "username", "avatar")
+	fmt.Println(err)
+	if err == nil {
+		token := utils.Md5(utils.RandChar(8))
+		o.Raw("UPDATE pms_users_profile SET lasted = ?,lognum=lognum+? WHERE userid = ?", time.Now().Unix(), 1, users.Id).Exec()
+		o.Raw("UPDATE pms_users SET token = ? WHERE userid = ?", token, users.Id).Exec()
+		users.Token = token
+	}
+
+	return err, users
+}
+
 //得到用户信息
 func GetUser(id int64) (Users, error) {
 	var user Users

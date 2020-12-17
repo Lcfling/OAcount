@@ -44,6 +44,12 @@ func init() {
 	beego.Router("/user/permission/:id", &users.PermissionController{})
 
 	beego.Router("/login", &users.LoginUserController{})
+
+	beego.Router("/mobile/user/login", &users.MobileLoginController{}) //手机用户信息完善
+
+	//----------------------------------------    登陆
+	beego.Router("/moblie/login", &users.LoginUserController{})
+
 	beego.Router("/logout", &users.LogoutUserController{})
 	beego.Router("/register/:pid", &users.RegisterController{})
 
@@ -271,6 +277,7 @@ func init() {
 	beego.Router("/program/subjectlist/:pid", &program.SubjectListController{})
 	beego.Router("/addsubject", &program.SubjectAddController{})
 	beego.Router("/subject/edit", &program.SubjectManageController{})
+	beego.Router("/mobile/program/list", &program.ListController{})
 
 	//文件管理
 	beego.Router("/files/manage", &files.FilesManageController{})
@@ -284,6 +291,8 @@ func init() {
 	beego.Router("/news/classicadd", &news.NewsClassicAddController{})
 
 	// API接口---------------------
+	//app 登录
+	beego.Router("/moblie/news/newsList", &news.ApiNewsController{})
 
 	//消息列表
 	beego.Router("/moblie/news/newsList", &news.ApiNewsController{})
@@ -299,4 +308,5 @@ func init() {
 
 	//成功率
 	beego.Router("/moblie/area/doneRate", &area.ApiDoneRateController{})
+
 }
