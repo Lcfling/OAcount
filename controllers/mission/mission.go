@@ -48,9 +48,11 @@ func (this *MissionManageController) Get() {
 	paginator := pagination.SetPaginator(this.Ctx, offset, countMission)
 	_, _, missions := ListMission(condArr, page, offset)
 
+	fmt.Println("missions:", missions)
 	this.Data["paginator"] = paginator
 	this.Data["condArr"] = condArr
 	this.Data["missions"] = missions
+
 	this.Data["countMission"] = countMission
 
 	this.TplName = "mission/mission.tpl"

@@ -275,8 +275,7 @@ func ChangeArraignment(id int64, a int64) error {
 }
 
 //添加我的任务
-func AddMyMission(
-	Missionid, Userid, Areaid int64) (int64, error) {
+func AddMyMission(Missionid, Userid, Areaid int64) (int64, error) {
 	o := orm.NewOrm()
 	MissionMy := new(MissionMy)
 	MissionMy.Missionid = Missionid
