@@ -167,11 +167,14 @@ func DeleteArea(id int64) error {
 	return err
 }
 
-func GetChild(pid int64) []AreaList {
+func GetChild(pid int64, types string) []AreaList {
 	o := orm.NewOrm()
 	qs := o.QueryTable(models.TableName("area"))
 	cond := orm.NewCondition()
 	cond = cond.And("parentid", pid)
+	if types != "" {
+		cond = cond.And("jstatus", types)
+	}
 	qs = qs.SetCond(cond)
 	var areas []Area
 	num, _ := qs.All(&areas)
@@ -188,7 +191,7 @@ func GetChild(pid int64) []AreaList {
 			areaList.Owner = v.Owner
 			areaList.Coler = v.Coler
 			areaList.Locations = v.Locations
-			areaList.Child = GetChild(v.Id)
+			areaList.Child = GetChild(v.Id, types)
 			areaLists = append(areaLists, areaList)
 		}
 		return areaLists
@@ -196,6 +199,34 @@ func GetChild(pid int64) []AreaList {
 		return nil
 	}
 
+}
+
+//通过pid 获取下面所有地区id数组
+func GetAllAreaIdByPid(areaList []AreaList) (arr []string) {
+	for _, v := range areaList {
+		arr = append(arr, strconv.FormatInt(v.Id, 10))
+		if v.Child != nil {
+			arr = append(arr, GetAllAreaIdByPid(v.Child)...)
+		}
+
+	}
+	return
+}
+
+func GetAllByArray(arr []string) (nums int64, err error, ar []Area) {
+	o := orm.NewOrm()
+	o.Using("default")
+	qs := o.QueryTable(models.TableName("area"))
+	cond := orm.NewCondition()
+
+	cond = cond.And("id__in", arr)
+
+	qs = qs.SetCond(cond)
+
+	qs = qs.OrderBy("id")
+	var areas []Area
+	num, errs := qs.All(&areas)
+	return num, errs, areas
 }
 
 //查询社区所有人员

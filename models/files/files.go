@@ -73,7 +73,7 @@ func ListFiles(condArr map[string]interface{}, page int, offset int) (num int64,
 	o.Using("default")
 	qs := o.QueryTable(models.TableName("files"))
 	cond := orm.NewCondition()
-	if condArr["keywords"] != "" {
+	if condArr["keywords"].(string) != "" {
 		cond = cond.AndCond(cond.And("oldname__icontains", condArr["keywords"]))
 	}
 	if condArr["types"].(int) != 0 {

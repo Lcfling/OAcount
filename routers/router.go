@@ -18,6 +18,7 @@ import (
 	"github.com/Lcfling/OAcount/controllers/program"
 	"github.com/Lcfling/OAcount/controllers/projects"
 	"github.com/Lcfling/OAcount/controllers/resumes"
+	"github.com/Lcfling/OAcount/controllers/tags"
 	"github.com/Lcfling/OAcount/controllers/users"
 
 	"github.com/astaxie/beego"
@@ -36,6 +37,7 @@ func init() {
 	beego.Router("/user/show/:id", &users.ShowUserController{})
 	beego.Router("/my/manage", &users.ShowUserController{})
 	beego.Router("/user/profile", &users.EditUserProfileController{})
+	beego.Router("/mobile/user/profile", &users.UserProfileController{}) //手机用户信息完善
 	beego.Router("/user/password", &users.EditUserPasswordController{})
 
 	beego.Router("/user/permission/:id", &users.PermissionController{})
@@ -246,6 +248,7 @@ func init() {
 	beego.Router("/area/edit/:id", &area.AreaEditController{})
 	beego.Router("/area/delete/:id", &area.AreaDeleteController{})
 	beego.Router("/area/getall/", &area.AllAreaController{})
+	beego.Router("/area/getallarea/", &area.GetAllAreaController{})
 	beego.Router("/ding", &area.DingController{})
 
 	//项目mission
@@ -258,6 +261,8 @@ func init() {
 	//my mission
 	beego.Router("/mymission/manage", &mission.MissionMyController{})
 	beego.Router("/mymission/sub/:id", &mission.MissionMySubController{})
+	beego.Router("/mymission/arraignment/:types", &mission.ArraignmentController{})
+	beego.Router("/mymission/arraignmentsub/:id", &mission.ArraignmentSubController{})
 
 	//测评管理
 	beego.Router("/program/manage", &program.ProgramController{})
@@ -268,5 +273,7 @@ func init() {
 
 	//文件管理
 	beego.Router("/files/manage", &files.FilesManageController{})
+	//标签管理
+	beego.Router("/tags", &tags.TagsAllController{})
 
 }

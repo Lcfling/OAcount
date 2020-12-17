@@ -208,9 +208,25 @@ type AreaShow struct {
 
 func (this *AllAreaController) Post() {
 
-	s := GetChild(0)
+	s := GetChild(0, "0")
 
 	this.Data["json"] = map[string]interface{}{"code": 1, "message": "系统错误", "data": s}
+
+	this.ServeJSON()
+}
+
+type GetAllAreaController struct {
+	controllers.IndexController
+}
+
+func (this *GetAllAreaController) Get() {
+
+	pid, _ := this.GetInt64("aid")
+	s := GetChild(pid, "")
+	arr := GetAllAreaIdByPid(s)
+	_, _, data := GetAllByArray(arr)
+
+	this.Data["json"] = map[string]interface{}{"code": 1, "message": "success", "data": data}
 
 	this.ServeJSON()
 }
