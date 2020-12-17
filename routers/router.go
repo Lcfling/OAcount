@@ -45,6 +45,8 @@ func init() {
 
 	beego.Router("/login", &users.LoginUserController{})
 
+	beego.Router("/mobile/user/login", &users.MobileLoginController{}) //手机用户信息完善
+
 	//----------------------------------------    登陆
 	beego.Router("/moblie/login", &users.LoginUserController{})
 

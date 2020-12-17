@@ -78,6 +78,38 @@ func (this *LoginUserController) Post() {
 	this.ServeJSON()
 }
 
+//手机登录
+type MobileLoginController struct {
+	controllers.IndexController
+}
+
+func (this *MobileLoginController) Post() {
+	username := this.GetString("username")
+	password := this.GetString("password")
+
+	if "" == username {
+		this.Data["json"] = map[string]interface{}{"code": 0, "message": "请填写用户名"}
+		this.ServeJSON()
+	}
+
+	if "" == password {
+		this.Data["json"] = map[string]interface{}{"code": 0, "message": "请填写密码"}
+		this.ServeJSON()
+	}
+	err, users := LoginMobile(username, password)
+
+	if err == nil {
+
+		//this.SetSession("userPermissionModel", permission.Model)
+		//this.SetSession("userPermissionModelc", permission.Modelc)
+
+		this.Data["json"] = map[string]interface{}{"code": 1, "message": "贺喜你，登录成功", "data": users}
+	} else {
+		this.Data["json"] = map[string]interface{}{"code": 0, "message": "登录失败", "data": ""}
+	}
+	this.ServeJSON()
+}
+
 //退出
 type LogoutUserController struct {
 	controllers.BaseController
