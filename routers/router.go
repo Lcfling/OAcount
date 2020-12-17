@@ -296,4 +296,7 @@ func init() {
 	beego.Router("/moblie/mission/missionInfo", &mission.ApiMissionInfoController{})
 	//点位信息
 	beego.Router("/moblie/mission/areaInfo", &mission.ApiAreaUserInfoController{})
+
+	//成功率
+	beego.Router("/moblie/area/doneRate", &area.ApiDoneRateController{})
 }

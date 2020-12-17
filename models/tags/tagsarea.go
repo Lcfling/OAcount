@@ -3,6 +3,7 @@ package tags
 import (
 	"github.com/Lcfling/OAcount/models"
 	"github.com/astaxie/beego/orm"
+	"strconv"
 )
 
 type Tagsarea struct {
@@ -54,4 +55,27 @@ func GetAreaBytagName(name string) []Tagsarea {
 	var tagsarea []Tagsarea
 	qs.All(&tagsarea)
 	return tagsarea
+}
+
+//返回area ID数组
+func GetUidsByTid(tid int64) []string {
+	o := orm.NewOrm()
+	qs := o.QueryTable(models.TableName("tags_area"))
+	cond := orm.NewCondition()
+	cond = cond.And("tid", tid)
+	qs = qs.SetCond(cond)
+	var tagsarea []Tagsarea
+	num, _ := qs.All(&tagsarea)
+	if num > 0 {
+		var areaLists []string
+		for _, v := range tagsarea {
+			var aid string
+			aid = strconv.Itoa(int(v.Aid))
+			areaLists = append(areaLists, aid)
+		}
+		return areaLists
+	} else {
+		return nil
+	}
+
 }
