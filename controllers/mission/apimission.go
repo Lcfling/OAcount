@@ -16,10 +16,11 @@ type ApiAreaUserInfoController struct {
 func (this *ApiAreaUserInfoController) Post() {
 
 	//userid := this.UserBaseController.UserUserId
-	userid := 1468140265954907628
+	owner := this.GetString("owner")
+	owner64, _ := strconv.ParseInt(owner, 10, 64)
 
-	//获取我的任务
-	areaInfo := ApiGetAreaUserInfo(int64(userid))
+	//点位员信息
+	areaInfo := ApiGetAreaUserInfo(owner64)
 	//返回数据
 	data := make(map[string]interface{})
 	data["areaInfo"] = areaInfo
@@ -36,14 +37,16 @@ type ApiMissionMyController struct {
 func (this *ApiMissionMyController) Post() {
 
 	//userid := this.UserBaseController.UserUserId
-	userid := 1468140265954907628
+	//userid := 1468140265954907628
+	userid := this.GetString("userid")
+	userid64, _ := strconv.ParseInt(userid, 10, 64)
 	types := this.GetString("types") // 0 未完成  1已完成
 	if types == "" {
 		this.Data["json"] = map[string]interface{}{"code": 0, "message": "参数错误!", "data": ""}
 		this.ServeJSON()
 	}
-	types64, _ := strconv.ParseInt(types, 10, 64)
 
+	types64, _ := strconv.ParseInt(types, 10, 64)
 	lastid, err := this.GetInt("lastid")
 	if err != nil {
 		lastid = 0
@@ -56,7 +59,7 @@ func (this *ApiMissionMyController) Post() {
 	}
 
 	//获取我的任务
-	_, _, missionmy := ApiGetMyMission(int64(userid), lastid, offset, types64)
+	_, _, missionmy := ApiGetMyMission(userid64, lastid, offset, types64)
 	//返回数据
 	data := make(map[string]interface{})
 	data["missionmy"] = missionmy
@@ -74,6 +77,7 @@ type ApiMissionInfoController struct {
 func (this *ApiMissionInfoController) Post() {
 
 	//userid := this.UserBaseController.UserUserId
+	userid := 1468140265954907628
 	missionId := this.GetString("missionId") // 任务id
 	missionId64, _ := strconv.ParseInt(missionId, 10, 64)
 	if !(missionId64 > int64(0)) {
@@ -82,6 +86,10 @@ func (this *ApiMissionInfoController) Post() {
 	}
 	//获取任务详情
 	missionInfo := ApiGetMissionMy(missionId64)
+
+	//更改任务查阅状态
+	go UpdateCheck(missionId64, int64(userid))
+
 	//返回数据
 	data := make(map[string]interface{})
 	data["missionInfo"] = missionInfo
