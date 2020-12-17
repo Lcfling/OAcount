@@ -44,6 +44,10 @@ func init() {
 	beego.Router("/user/permission/:id", &users.PermissionController{})
 
 	beego.Router("/login", &users.LoginUserController{})
+
+	//----------------------------------------    登陆
+	beego.Router("/moblie/login", &users.LoginUserController{})
+
 	beego.Router("/logout", &users.LogoutUserController{})
 	beego.Router("/register/:pid", &users.RegisterController{})
 
@@ -299,4 +303,5 @@ func init() {
 	beego.Router("/moblie/mission/missionInfo", &mission.ApiMissionInfoController{})
 	//点位信息
 	beego.Router("/moblie/mission/areaInfo", &mission.ApiAreaUserInfoController{})
+
 }
