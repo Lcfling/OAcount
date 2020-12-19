@@ -12,15 +12,16 @@ import (
 )
 
 type Checkworks struct {
-	Id      int64 `orm:"pk;column(checkid);"`
-	Userid  int64
-	Clock   string
-	Aid     int64
-	Lng     string
-	Lat     string
-	Type    int
-	Ip      string
-	Created int64
+	Id          int64 `orm:"pk;column(checkid);"`
+	Userid      int64
+	Clock       string
+	Aid         int64
+	Missionmyid int64
+	Lng         string
+	Lat         string
+	Type        int
+	Ip          string
+	Created     int64
 }
 
 func (this *Checkworks) TableName() string {
@@ -113,6 +114,7 @@ func AddCheckwork(upd Checkworks) error {
 
 	check.Id = upd.Id
 	check.Userid = upd.Userid
+	check.Missionmyid = upd.Missionmyid
 	check.Aid = upd.Aid
 	check.Lng = upd.Lng
 	check.Lat = upd.Lat

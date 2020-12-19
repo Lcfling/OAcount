@@ -6,3 +6,6 @@
 <script src="/static/js/scripts.js"></script>
 <script src="/static/js/jquery.validate.js"></script>
 <script src="/static/js/opms.js"></script>
+        {{if .IsWebSocket}}
+<script src="/static/js/websocket.js"></script>
+        {{end}}

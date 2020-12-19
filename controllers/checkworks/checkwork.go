@@ -182,3 +182,55 @@ func (this *AjaxClockUserController) Post() {
 	}
 	this.ServeJSON()
 }
+
+//手机打卡
+type MobileClockUserController struct {
+	controllers.UserBaseController
+}
+
+func (this *MobileClockUserController) Post() {
+	clock := this.GetString("clock")
+	missionmyid, _ := this.GetInt64("mid")
+	if "" == clock {
+		this.Data["json"] = map[string]interface{}{"code": 0, "message": "参数出错"}
+		this.ServeJSON()
+		return
+	}
+	checkNum := CountClock(this.UserBaseController.UserUserId)
+	if checkNum >= 2 {
+		this.Data["json"] = map[string]interface{}{"code": 0, "message": "你今天打卡次数超过了2次"}
+		this.ServeJSON()
+		return
+	}
+	lng := this.GetString("lng")
+
+	lat := this.GetString("lat")
+	if "" == lng || "" == lat {
+		this.Data["json"] = map[string]interface{}{"code": 0, "message": "请传入位置信息"}
+		this.ServeJSON()
+		return
+	}
+
+	if missionmyid > 0 {
+		//Todo 判断打开位置和地图位置相差的距离
+	}
+	var check Checkworks
+	check.Id = utils.SnowFlakeId()
+	check.Userid = this.UserBaseController.UserUserId
+	check.Clock = clock
+	check.Missionmyid = missionmyid
+	check.Lng = lng
+	check.Lat = lat
+	check.Type = 3
+	check.Ip = this.Ctx.Input.IP()
+	err := AddCheckwork(check)
+
+	if err == nil {
+		//Todo 通知订阅
+
+		this.Data["json"] = map[string]interface{}{"code": 1, "message": "打卡成功"}
+	} else {
+		this.Data["json"] = map[string]interface{}{"code": 0, "message": "打卡失败"}
+	}
+	this.ServeJSON()
+}
