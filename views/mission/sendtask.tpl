@@ -54,7 +54,6 @@
                   </ul>
                   <ul class="list-unstyled pul" id="js-tags">
                     <li class="text-center">
-
                       <button type="submit"  class="btn btn-primary">任务下发</button>
                     </li>
                   </ul>
@@ -115,7 +114,7 @@ $(function(){
             html += '<li>';
             html += '<div class="form-group" data-id="' +arr2[j].Name+ '"> ';
             html += '<label class="checkbox-inline">';
-            html += '<input type="checkbox" name="checkareas[]" data-ename="' + arr2[j].Id + '" value="' + arr2[j].Id + '">';
+            html += '<input type="checkbox" name="checkareas" data-ename="' + arr2[j].Id + '" value="' + arr2[j].Id + '">';
             html += arr2[j].Name;
             html += '</label>';
             html += '</div>';
@@ -128,7 +127,7 @@ $(function(){
                   html += '<li>';
                   html += '<div class="form-group" data-id="' +arr3[k].Name+ '"> ';
                   html += '<label class="checkbox-inline">';
-                  html += '<input type="checkbox" name="checkareas[]" data-ename="' + arr3[k].Id +  '" value="' + arr2[j].Id + '">';
+                  html += '<input type="checkbox" name="checkareas" data-ename="' + arr3[k].Id +  '" value="' + arr3[k].Id + '">';
                   html += arr3[k].Name;
                   html += '</label>';
                   html += '</div>';
@@ -154,7 +153,7 @@ $(function(){
             html += '<li>';
             html += '<div class="form-group" data-id="' +tagsOb[k].Name+ '"> ';
             html += '<label class="checkbox-inline">';
-            html += '<input type="checkbox" name="tags[]" value="' + tagsOb[k].Id + '" data-ename="' + tagsOb[k].Name + '">';
+            html += '<input type="checkbox" name="tags" value="' + tagsOb[k].Id + '" data-ename="' + tagsOb[k].Name + '">';
             html += tagsOb[k].Name;
             html += '</label>';
             html += '</div>';
@@ -174,7 +173,8 @@ $(function(){
 			$(this).attr('checked', true)
 		}
 	});
-	
+
+
 	var leftnav = '';
 	var lefthtml = '';
 })

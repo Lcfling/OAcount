@@ -55,6 +55,7 @@ func (this *ManageProjectController) Get() {
 
 	countProject := CountProject(condArr)
 	paginator := pagination.SetPaginator(this.Ctx, offset, countProject)
+
 	_, _, projects := ListProject(condArr, page, offset)
 
 	this.Data["paginator"] = paginator

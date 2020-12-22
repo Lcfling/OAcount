@@ -37,7 +37,7 @@ func (this *SendTaskController) Post() {
 	all := this.GetString("all")
 	fmt.Println("全部:", all)
 
-	checkareas := this.GetString("checkareas")
+	checkareas := this.GetStrings("checkareas")
 	fmt.Println("人员:", checkareas)
 
 	tagss := this.GetStrings("tags")
@@ -47,64 +47,71 @@ func (this *SendTaskController) Post() {
 		fmt.Println("遍历社区:", value)
 	}
 
-	//---------------------------------------------------------------------------------
-	//全部下发   查询所有社区人员
-	err, AllArea := AllArea()
-	if err != nil {
-		fmt.Println("查询社区所有人员错误err:", err)
-	}
-	//对社区人员进行任务下发
-	for _, value := range AllArea {
-		if value.Owner > int64(0) {
-			//fmt.Println("社区人员ower:", value.Owner)
-			//插入任务
-			go AddMyMission(id64, value.Owner, value.Id)
-			//插入我的消息
-		}
+	for _, value := range checkareas {
+		fmt.Println("遍历人员:", value)
 	}
 
 	//---------------------------------------------------------------------------------
+	//判断是否全部下发
+	if !(all == "") {
+		//全部下发   查询所有社区人员
+		err, AllArea := AllArea()
+		if err == nil {
+			//对社区全部人员进行任务下发
+			for _, value := range AllArea {
+				if value.Owner > int64(0) {
+					//fmt.Println("社区人员ower:", value.Owner)
+					//插入任务
+					go AddMyMission(id64, value.Owner, value.Id)
+					//插入我的消息
+				}
+			}
+			this.Data["json"] = map[string]interface{}{"code": 1, "message": "success"}
+			this.ServeJSON()
+		}
+
+	}
+	//---------------------------------------------------------------------------------
+
 	//根据类型社区进行任务下发
-	tags := []string{"卫生站", "教育", "社区"}
-	//根据类型社会进行任务下发
-	for _, value := range tags {
-		err, TagsArea := TagsArea(value)
-		if err != nil {
-			fmt.Println("没有此类型社区")
-		}
-		//插入任务
-		for _, value := range TagsArea {
-			if value.Owner > int64(0) {
-				//对社区人员进行任务下发
-				//	fmt.Println("社区人员ower:", value.Owner)
+	if !(len(tagss) == 0) {
+		for _, v := range tagss {
+			v64, _ := strconv.ParseInt(v, 10, 64)
+			//查询对应的社区
+			err, TagsArea := TagsArea(v64)
+			if err == nil {
 				//插入任务
-				go AddMyMission(id64, value.Owner, value.Id)
-				//插入我的消息
+				for _, value := range TagsArea {
+					//查询对应的社区信息
+					AreaUser, _ := GetArea(value.Aid)
+					if AreaUser.Owner > int64(0) {
+						//插入任务
+						go AddMyMission(id64, AreaUser.Owner, value.Id)
+						//插入我的消息
+					}
+				}
 			}
 
 		}
 	}
-
 	//---------------------------------------------------------------------------------
-	// 单个社区进行下发
-	Area64 := []int64{1, 2, 3}
-	//根据类型社会进行任务下发
-	for _, value := range Area64 {
-		Area, err := GetArea(value)
-		if err != nil {
-			fmt.Println("没有此类型社区管理员")
-		} else {
-			//插入任务
-			if Area.Owner > int64(0) {
-				//对社区人员进行任务下发
-				//fmt.Println("社区人员ower:", Area.Owner)
+	// 单个人员进行下发
+	if len(checkareas) == 0 {
+		for _, value := range checkareas {
+			value64, _ := strconv.ParseInt(value, 10, 64)
+			Area, err := GetArea(value64)
+			if err == nil {
 				//插入任务
-				go AddMyMission(id64, Area.Owner, Area.Id)
-				//插入我的消息
-			}
-		}
+				if Area.Owner > int64(0) {
+					//插入任务
+					go AddMyMission(id64, Area.Owner, Area.Id)
 
+				}
+			}
+
+		}
 	}
+
 	//---------------------------------------------------------------------------------
 	this.Data["json"] = map[string]interface{}{"code": 1, "message": "success"}
 	this.ServeJSON()
