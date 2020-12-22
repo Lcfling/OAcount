@@ -96,7 +96,7 @@ func (this *SendTaskController) Post() {
 	}
 	//---------------------------------------------------------------------------------
 	// 单个人员进行下发
-	if len(checkareas) == 0 {
+	if !(len(checkareas) == 0) {
 		for _, value := range checkareas {
 			value64, _ := strconv.ParseInt(value, 10, 64)
 			Area, err := GetArea(value64)
