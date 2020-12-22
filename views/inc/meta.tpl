@@ -9,12 +9,4 @@
     <script src="/static/js/html5shiv.js"></script>
     <script src="/static/js/respond.min.js"></script>
 <![endif]-->
-<script>
-var _hmt = _hmt || [];
-(function() {
-var hm = document.createElement("script");
-hm.src = "//hm.baidu.com/hm.js?750463144f16fe69eb3ac11bea1c4436";
-var s = document.getElementsByTagName("script")[0];
-s.parentNode.insertBefore(hm, s);
-})();
-</script>
+

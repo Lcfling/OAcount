@@ -33,10 +33,19 @@ func (this *SendTaskController) Post() {
 	//任务id
 	id := this.Ctx.Input.Param(":id")
 	id64, _ := strconv.ParseInt(id, 10, 64)
-	//ares := this.GetString("checkareas")
-	tagss := this.GetStrings("tags")
 
-	fmt.Println("tagsssssss", tagss)
+	all := this.GetString("all")
+	fmt.Println("全部:", all)
+
+	checkareas := this.GetString("checkareas")
+	fmt.Println("人员:", checkareas)
+
+	tagss := this.GetStrings("tags")
+	fmt.Println("社区:", tagss)
+
+	for _, value := range tagss {
+		fmt.Println("遍历社区:", value)
+	}
 
 	//---------------------------------------------------------------------------------
 	//全部下发   查询所有社区人员
@@ -47,7 +56,7 @@ func (this *SendTaskController) Post() {
 	//对社区人员进行任务下发
 	for _, value := range AllArea {
 		if value.Owner > int64(0) {
-			fmt.Println("社区人员ower:", value.Owner)
+			//fmt.Println("社区人员ower:", value.Owner)
 			//插入任务
 			go AddMyMission(id64, value.Owner, value.Id)
 			//插入我的消息
@@ -67,7 +76,7 @@ func (this *SendTaskController) Post() {
 		for _, value := range TagsArea {
 			if value.Owner > int64(0) {
 				//对社区人员进行任务下发
-				fmt.Println("社区人员ower:", value.Owner)
+				//	fmt.Println("社区人员ower:", value.Owner)
 				//插入任务
 				go AddMyMission(id64, value.Owner, value.Id)
 				//插入我的消息
@@ -75,6 +84,7 @@ func (this *SendTaskController) Post() {
 
 		}
 	}
+
 	//---------------------------------------------------------------------------------
 	// 单个社区进行下发
 	Area64 := []int64{1, 2, 3}
@@ -87,7 +97,7 @@ func (this *SendTaskController) Post() {
 			//插入任务
 			if Area.Owner > int64(0) {
 				//对社区人员进行任务下发
-				fmt.Println("社区人员ower:", Area.Owner)
+				//fmt.Println("社区人员ower:", Area.Owner)
 				//插入任务
 				go AddMyMission(id64, Area.Owner, Area.Id)
 				//插入我的消息
