@@ -1,6 +1,7 @@
 package routers
 
 import (
+	"github.com/Lcfling/OAcount/controllers"
 	"github.com/Lcfling/OAcount/controllers/albums"
 	"github.com/Lcfling/OAcount/controllers/area"
 	"github.com/Lcfling/OAcount/controllers/businesstrips"
@@ -27,6 +28,10 @@ import (
 
 func init() {
 	beego.Router("/", &users.MainController{})
+
+	//websocket
+	beego.Router("/ws", &controllers.WebSocketController{})
+	beego.Router("/ws/join", &controllers.WebSocketController{}, "get:Join")
 
 	//用户
 	beego.Router("/user/manage", &users.ManageUserController{})

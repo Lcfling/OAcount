@@ -155,3 +155,17 @@ func (this *ListController) Post() {
 	this.Data["json"] = map[string]interface{}{"code": 1, "message": "消息列表", "data": programs}
 	this.ServeJSON()
 }
+
+//测评详情
+/*type DetailController struct {
+	controllers.IndexController
+}
+func (this *DetailController) Post() {
+	lastid, _ := this.GetInt("id")
+
+
+	//_, _, programs := ApiGetProgram(lastid, offset)
+
+	this.Data["json"] = map[string]interface{}{"code": 1, "message": "消息列表", "data": programs}
+	this.ServeJSON()
+}*/
