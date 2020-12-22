@@ -109,7 +109,9 @@
 
 
     </div>
-
+    <div class="modal-footer">
+      <input id="localname" value=""/><a id="jiansuo" class="btn btn-primary">检索</a>
+    </div>
     <div class="modal-footer">
       <a href="/project/manage" class="btn btn-primary">去设置管理</a>
     </div>
@@ -122,13 +124,15 @@
 
 var markergg;
 var map = new BMap.Map("allmap");
-var point = new BMap.Point(116.331398,39.897445);//地图初始位置
+var point = new BMap.Point(114.368061,36.099112);//地图初始位置
 map.centerAndZoom(point,12);//默认地图级别12级
 map.setDefaultCursor("url('bird.cur')");   //设置地图默认的鼠标指针样式
 function myFun(result){
   var cityName = result.name;
   map.setCenter(cityName);
 }
+//map.centerAndZoom(point,7);
+
 var myCity = new BMap.LocalCity(); //根据ip设置坐标初始位置
 myCity.get(myFun);
 
@@ -137,6 +141,10 @@ myCity.get(myFun);
 map.enableScrollWheelZoom();   //启用滚轮放大缩小，默认禁用
 map.enableContinuousZoom();    //启用地图惯性拖拽，默认禁用
 //单击获取点击的经纬度
+//map.search("北大街");
+//map.centerAndZoom(new BMap.Point(116.404, 39.915), 11);
+
+
 map.addEventListener("click",function(e){
 
   map.clearOverlays();
@@ -156,6 +164,13 @@ $(function(){
   $("#location").on("click",function () {
     //alert(1)
     $('#projectModal').modal('toggle').find('.modal-body').html();
+  })
+  $("#jiansuo").on("click",function () {
+    var lname=$("#localname").val()
+    var local = new BMap.LocalSearch(map, {
+      renderOptions:{map: map}
+    });
+    local.search(lname);
   })
 })
 

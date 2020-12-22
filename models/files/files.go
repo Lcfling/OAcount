@@ -104,3 +104,6 @@ func ListFiles(condArr map[string]interface{}, page int, offset int) (num int64,
 	num, err1 := qs.Limit(offset, start).All(&files)
 	return num, err1, files
 }
+func DeleteMissionmy(id int64) {
+
+}

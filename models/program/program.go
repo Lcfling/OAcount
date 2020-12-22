@@ -12,7 +12,7 @@ type Program struct {
 	Userid   int64
 	Title    string
 	Temps    string
-	Publish  string
+	Publish  int64
 	Pstatus  int
 	Counts   int64
 	Creatime int64
@@ -85,10 +85,18 @@ func CountProgram(condArr map[string]string) int64 {
 }
 func AddProgram(t string) (int64, error) {
 	o := orm.NewOrm()
-	var p Program
+	p := new(Program)
 	p.Title = t
 	p.Creatime = time.Now().Unix()
 	return o.Insert(p)
+}
+func UpdateProgram(id int64, t string) (int64, error) {
+	o := orm.NewOrm()
+	p := Program{Id: id}
+	o.Read(&p)
+	p.Title = t
+	p.Creatime = time.Now().Unix()
+	return o.Update(&p)
 }
 func GetProgram(id int64) (Program, error) {
 

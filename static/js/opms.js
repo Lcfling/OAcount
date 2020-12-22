@@ -1993,6 +1993,32 @@ $(function(){
 	});
 
 
+
+	//测评添加
+	$('#program-form').validate({
+		ignore:'',
+		rules : {
+		},
+		messages : {
+
+		},
+		submitHandler:function(form) {
+			$(form).ajaxSubmit({
+				type:'POST',
+				dataType:'json',
+				success:function(data) {
+
+					if (data.code) {
+						dialogInfo(data.message)
+						setTimeout(function(){window.location.href="/program/manage"}, 2000);
+					} else {
+						setTimeout(function(){ $('#dialogInfo').modal('hide'); }, 1000);
+					}
+				}
+			});
+		}
+	});
+
 });
 
 function dialogInfo(msg) {

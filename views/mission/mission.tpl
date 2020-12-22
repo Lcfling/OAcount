@@ -82,7 +82,7 @@
                       <td><div class="btn-group">
                           <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> 操作<span class="caret"></span> </button>
                           <ul class="dropdown-menu">
-                            <li><a href="/project/edit/{{$v.Id}}">编辑</a></li>
+                            <li><a href="/mission/edit/{{$v.Id}}">编辑</a></li>
                             <li role="separator" class="divider"></li>
                             <li><a href="javascript:;" class="js-mission-single" data-id="{{$v.Id}}" data-status="1">挂起</a></li>
                             <li><a href="javascript:;" class="js-mission-single" data-id="{{$v.Id}}" data-status="2">延期</a></li>
