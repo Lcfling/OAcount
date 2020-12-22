@@ -45,7 +45,7 @@ func (this *AreaMangerController) Get() {
 	this.Data["areas"] = areas
 	this.Data["countArea"] = CountArea
 	if parentid == "" {
-		this.Data["parentid"] = 0
+		this.Data["parentid"] = "0"
 	} else {
 		this.Data["parentid"] = parentid
 	}

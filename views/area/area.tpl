@@ -26,11 +26,11 @@
     <div class="page-heading">
       <h3> 区域管理 </h3>
       <ul class="breadcrumb pull-left">
-        <li> <a href="/user/show/{{.LoginUserid}}">OPMS</a> </li>
+        <li> <a href="/">首页</a> </li>
         <li> <a href="/permission/manage">区域管理</a> </li>
         <li class="active"> 区域 </li>
       </ul>
-      <div class="pull-right"> <a href="/area/add/0" class="btn btn-success">+新增一级区域</a> </div>
+      {{if eq .parentid "0"}}<div class="pull-right"> <a href="/area/add/0" class="btn btn-success">+新增一级区域</a> </div>{{else}}{{end}}
     </div>
     <!-- page heading end-->
     <!--body wrapper start-->

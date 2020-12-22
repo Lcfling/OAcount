@@ -43,7 +43,7 @@ func init() {
 	beego.Router("/user/show/:id", &users.ShowUserController{})
 	beego.Router("/my/manage", &users.ShowUserController{})
 	beego.Router("/user/profile", &users.EditUserProfileController{})
-	beego.Router("/mobile/user/profile", &users.UserProfileController{}) //手机用户信息完善
+
 	beego.Router("/user/password", &users.EditUserPasswordController{})
 
 	beego.Router("/user/permission/:id", &users.PermissionController{})
@@ -278,6 +278,8 @@ func init() {
 
 	//测评管理
 	beego.Router("/program/manage", &program.ProgramController{})
+	beego.Router("/program/add", &program.ProgramAddController{})
+	beego.Router("/program/edit/:id", &program.ProgramEditController{})
 	beego.Router("/program/index", &program.ProgramIndexController{})
 	beego.Router("/program/subjectlist/:pid", &program.SubjectListController{})
 	beego.Router("/addsubject", &program.SubjectAddController{})
@@ -310,5 +312,5 @@ func init() {
 	beego.Router("/moblie/mission/missionInfo", &mission.ApiMissionInfoController{})
 	//点位信息
 	beego.Router("/moblie/mission/areaInfo", &mission.ApiAreaUserInfoController{})
-
+	beego.Router("/mobile/user/profile", &users.UserProfileController{}) //手机用户信息完善
 }

@@ -64,9 +64,41 @@ func (this *ProgramAddController) Post() {
 		this.Data["json"] = map[string]interface{}{"code": 0, "message": "项目信息添加失败"}
 	}
 
+	this.ServeJSON()
 }
-func (this *ProgramAddController) Delete() {
 
+//添加项目
+type ProgramEditController struct {
+	controllers.BaseController
+}
+
+func (this *ProgramEditController) Get() {
+
+	idstr := this.Ctx.Input.Param(":id")
+	id, _ := strconv.ParseInt(idstr, 10, 64)
+	if !(id > 0) {
+		this.Data["json"] = map[string]interface{}{"code": 0, "message": "测评不存在"}
+		this.ServeJSON()
+	}
+	p, err := GetProgram(id)
+	if err != nil {
+		this.Ctx.Redirect(404, "/program/manage")
+	}
+	this.Data["program"] = p
+	this.TplName = "program/program-form.tpl"
+}
+func (this *ProgramEditController) Post() {
+	title := this.GetString("title")
+	idstr := this.Ctx.Input.Param(":id")
+	id, _ := strconv.ParseInt(idstr, 10, 64)
+	_, err := UpdateProgram(id, title)
+	if err == nil {
+		this.Data["json"] = map[string]interface{}{"code": 1, "message": "测评更新成功", "id": fmt.Sprintf("%d", id)}
+	} else {
+		this.Data["json"] = map[string]interface{}{"code": 0, "message": "测评更新失败"}
+	}
+
+	this.ServeJSON()
 }
 
 type ProgramIndexController struct {

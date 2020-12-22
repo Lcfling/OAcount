@@ -35,7 +35,7 @@
         <li> <a href="/project/manage">测评管理</a> </li>
         <li class="active"> 测评管理 </li>
       </ul>
-      <div class="pull-right"><a href="/project/add" class="btn btn-success">+新建测评</a></div>
+      <div class="pull-right"><a href="/program/add" class="btn btn-success">+新建测评</a></div>
     </div>
     <!-- page heading end-->
     <!--body wrapper start-->
@@ -63,14 +63,14 @@
                     
                     {{range $k,$v := .program}}
                     <tr>
-                      <td><a href="/program/subjectlist/{{$v.Id}}">{{$v.Title}}</a></td>
+                      <td><a href="/subject/edit?pid={{$v.Id}}">{{$v.Title}}</a></td>
                       <td>{{$v.Counts}}</td>
 					  <td>{{getDate $v.Creatime}}</td>
                       <td>{{if eq 1 $v.Pstatus}}发布{{else if eq 0 $v.Pstatus}}未发布{{end}}</td>
                       <td><div class="btn-group">
                           <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> 操作<span class="caret"></span> </button>
                           <ul class="dropdown-menu">
-                            <li><a href="/project/edit/{{$v.Id}}">编辑</a></li>
+                            <li><a href="/program/edit/{{$v.Id}}">编辑</a></li>
                             <li role="separator" class="divider"></li>
                             <li><a href="/subject/edit?pid={{$v.Id}}" data-status="1">查看题目</a></li>
                             <li role="separator" class="divider"></li>

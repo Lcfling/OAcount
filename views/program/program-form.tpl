@@ -35,7 +35,7 @@
                 <div class="form-group">
                   <label class="col-sm-2 col-sm-2 control-label"><span>*</span>测评名称</label>
                   <div class="col-sm-10">
-                    <input type="text" name="name" value="{{.program.Title}}" class="form-control" placeholder="请填写名称">
+                    <input type="text" name="title" value="{{.program.Title}}" class="form-control" placeholder="请填写名称">
                   </div>
                 </div>
                 <div class="form-group">
