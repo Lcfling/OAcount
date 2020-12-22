@@ -38,22 +38,34 @@
                     <input type="text"  disabled="disabled" name="name" value="{{.mission.Name}}" class="form-control" placeholder="请填写名称">
                   </div>
                 </div>
-                <div class="form-group">l
+                <div class="form-group">
                   <label class="col-sm-2 col-sm-2 control-label">任务类型</label>
                   <div class="col-sm-10">
                     <select name="types" class="form-control" id="types" disabled="disabled">
                       <option value="0" {{if eq 0 .mission.Types}}selected{{end}}>档案资料</option>
-                    <option value="1" {{if eq 1 .mission.Types}}selected{{end}}>实地考察</option>
-                  <option value="2" {{if eq 2 .mission.Types}}selected{{end}}>测评调查</option>
-                <option value="3" {{if eq 3 .mission.Types}}selected{{end}}>岗位打卡</option>
+                      <option value="1" {{if eq 1 .mission.Types}}selected{{end}}>实地考察</option>
+                      <option value="2" {{if eq 2 .mission.Types}}selected{{end}}>测评调查</option>
+                      <option value="3" {{if eq 3 .mission.Types}}selected{{end}}>岗位打卡</option>
 
-            </select>
-        </div>
-      </div>
+                    </select>
+                  </div>
+                </div>
+
+
 
       <div class="form-group">
         <label class="col-sm-2 col-sm-2 control-label">附件</label>
         <div class="col-sm-10">
+          {{range $k,$v:=.files}}
+
+          {{if eq $v.Types 1}}
+          <p><a target="_blank" href="{{$v.Path}}"><img width="225" src="{{$v.Path}}"/></a> <span data-id="{{$v.Id}}" class="delete-file fa-2x"> <i style="color: red" class="fa fa-trash-o"></i> </span></p>
+          {{else}}
+          <p><a target="_blank" href="{{$v.Path}}">{{$v.Oldname}}</a><span data-id="{{$v.Id}}" class="delete-file fa-2x"> <i style="color: red" class="fa fa-trash-o"></i> </span></p>
+          {{end}}
+          {{end}}
+
+
           <p><input type="file" name="attachment" multiple="multiple">
             <span> - </span><br/></p>
           <p><input type="file" name="attachment" multiple="multiple">
@@ -110,24 +122,7 @@
   </div>
   <!-- main content end-->
 </section>
-<div aria-hidden="true" aria-labelledby="projectModalLabel" role="dialog" tabindex="-1" id="projectModal" class="modal fade">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-            <h4 class="modal-title">新建项目成功，请先按项目流程设置</h4>
-          </div>
-          <div class="modal-body">
 
-
-
-          </div>
-          <div class="modal-footer">
-            <a href="/mission/manage" class="btn btn-primary">去设置管理</a>
-          </div>
-        </div>
-      </div>
-    </div>
 {{template "inc/foot.tpl" .}}
 <script src="/static/js/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
 <script src="/static/keditor/kindeditor-min.js"></script>

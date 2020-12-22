@@ -137,3 +137,37 @@ func (this *FilesUploadController) Post() {
 	this.ServeJSON()
 
 }
+
+//根据文件id删除文件
+type DeleteController struct {
+	controllers.BaseController
+}
+
+func (this *DeleteController) Post() {
+	id, _ := this.GetInt64("id")
+	err := DeleteFile(id)
+	if err != nil {
+		this.Data["json"] = map[string]interface{}{"code": 0, "message": err.Error(), "data": nil}
+	} else {
+		this.Data["json"] = map[string]interface{}{"code": 1, "message": "success", "data": nil}
+	}
+	this.ServeJSON()
+
+}
+
+//根据文件id删除文件
+type DeleteMobileController struct {
+	controllers.UserBaseController
+}
+
+func (this *DeleteMobileController) Post() {
+	id, _ := this.GetInt64("id")
+	err := DeleteFile(id)
+	if err != nil {
+		this.Data["json"] = map[string]interface{}{"code": 0, "message": err.Error(), "data": nil}
+	} else {
+		this.Data["json"] = map[string]interface{}{"code": 1, "message": "success", "data": nil}
+	}
+	this.ServeJSON()
+
+}
