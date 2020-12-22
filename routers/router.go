@@ -53,7 +53,7 @@ func init() {
 	beego.Router("/mobile/user/login", &users.MobileLoginController{}) //手机用户信息完善
 
 	//----------------------------------------    登陆
-	beego.Router("/moblie/login", &users.LoginUserController{})
+	beego.Router("/mobile/login", &users.LoginUserController{})
 
 	beego.Router("/logout", &users.LogoutUserController{})
 	beego.Router("/register/:pid", &users.RegisterController{})
@@ -299,22 +299,22 @@ func init() {
 
 	// API接口---------------------
 	//app 登录
-	beego.Router("/moblie/news/newsList", &news.ApiNewsController{})
+	beego.Router("/mobile/news/newsList", &news.ApiNewsController{})
 
 	//消息列表
-	beego.Router("/moblie/news/newsList", &news.ApiNewsController{})
+	beego.Router("/mobile/news/newsList", &news.ApiNewsController{})
 	//消息类型
-	beego.Router("/moblie/news/classicList", &news.ApiNewsClassicController{})
+	beego.Router("/mobile/news/classicList", &news.ApiNewsClassicController{})
 
 	//我的任务
-	beego.Router("/moblie/mission/missionMy", &mission.ApiMissionMyController{})
+	beego.Router("/mobile/mission/missionMy", &mission.ApiMissionMyController{})
 	//任务详情
-	beego.Router("/moblie/mission/missionInfo", &mission.ApiMissionInfoController{})
+	beego.Router("/mobile/mission/missionInfo", &mission.ApiMissionInfoController{})
 	//点位信息
-	beego.Router("/moblie/mission/areaInfo", &mission.ApiAreaUserInfoController{})
+	beego.Router("/mobile/mission/areaInfo", &mission.ApiAreaUserInfoController{})
 	beego.Router("/mobile/user/profile", &users.UserProfileController{}) //手机用户信息完善
 
 	//成功率
-	beego.Router("/moblie/area/doneRate", &area.ApiDoneRateController{})
+	beego.Router("/mobile/area/doneRate", &area.ApiDoneRateController{})
 
 }
