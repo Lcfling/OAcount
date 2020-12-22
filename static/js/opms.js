@@ -1946,7 +1946,53 @@ $(function(){
 			});
 		}
 	});
-	
+	//添加消息
+	$('#news-form').validate({
+		ignore:'',
+		rules : {
+		},
+		messages : {
+		},
+		submitHandler:function(form) {
+			$(form).ajaxSubmit({
+				type:'POST',
+				dataType:'json',
+				success:function(data) {
+					dialogInfo(data.message)
+					if (data.code) {
+						setTimeout(function(){window.location.href="/news/manage"}, 2000);
+					} else {
+						setTimeout(function(){ $('#dialogInfo').modal('hide'); }, 1000);
+					}
+				}
+			});
+		}
+	});
+
+	//添加消息类型
+	$('#classic-form').validate({
+		ignore:'',
+		rules : {
+		},
+		messages : {
+		},
+		submitHandler:function(form) {
+			$(form).ajaxSubmit({
+				type:'POST',
+				dataType:'json',
+				success:function(data) {
+					dialogInfo(data.message)
+					if (data.code) {
+						setTimeout(function(){window.location.href="/news/classic"}, 2000);
+					} else {
+						setTimeout(function(){ $('#dialogInfo').modal('hide'); }, 1000);
+					}
+				}
+			});
+		}
+	});
+
+
 });
 
 function dialogInfo(msg) {
