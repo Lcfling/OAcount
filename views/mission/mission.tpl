@@ -90,6 +90,7 @@
                             <li><a href="javascript:;" class="js-mission-single" data-id="{{$v.Id}}" data-status="3">进行</a></li>
                             <li><a href="javascript:;" class="js-mission-single" data-id="{{$v.Id}}" data-status="4">结束</a></li>
                             <li role="separator" class="divider"></li>
+                            <li><a href="/mission/perfect/{{$v.Id}}">完善任务</a></li>
                             <li><a href="/mission/sendtask/{{$v.Id}}">任务下发</a></li>
                             <li role="separator" class="divider"></li>
                             <li><a href="/mymission/arraignment/0">任务审核</a></li>

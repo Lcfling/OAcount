@@ -37,6 +37,11 @@ type AreaList struct {
 	Child     []AreaList
 }
 
+type TagsA struct {
+	Id  int64
+	Aid int64
+}
+
 func (this *Area) TableName() string {
 	return models.TableName("area")
 }
@@ -241,17 +246,17 @@ func AllArea() (error, []Area) {
 	return err, Area
 }
 
-//查询类型社区人员
-func TagsArea(tage string) (error, []Area) {
+//查询类型对应的社区
+func TagsArea(tage int64) (error, []TagsA) {
 
-	var Area []Area
+	var Tags []TagsA
 	qb, _ := orm.NewQueryBuilder("mysql")
 
-	qb.Select("p.id,p.owner").From("pms_area AS p").
-		Where("pn.tage=?")
+	qb.Select("p.aid").From("pms_tags_area AS p").
+		Where("p.tid=?")
 	sql := qb.String()
 	o := orm.NewOrm()
-	_, err := o.Raw(sql, tage, tage, tage).QueryRows(&Area)
-	return err, Area
+	_, err := o.Raw(sql, tage).QueryRows(&Tags)
+	return err, Tags
 
 }

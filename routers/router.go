@@ -313,4 +313,8 @@ func init() {
 	//点位信息
 	beego.Router("/moblie/mission/areaInfo", &mission.ApiAreaUserInfoController{})
 	beego.Router("/mobile/user/profile", &users.UserProfileController{}) //手机用户信息完善
+
+	//成功率
+	beego.Router("/moblie/area/doneRate", &area.ApiDoneRateController{})
+
 }

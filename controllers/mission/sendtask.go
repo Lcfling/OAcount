@@ -5,10 +5,8 @@ import (
 	"fmt"
 	"github.com/Lcfling/OAcount/controllers"
 	. "github.com/Lcfling/OAcount/models/area"
-	. "github.com/Lcfling/OAcount/models/messages"
 	. "github.com/Lcfling/OAcount/models/mission"
 	. "github.com/Lcfling/OAcount/models/tags"
-	"github.com/Lcfling/OAcount/utils"
 	"strconv"
 )
 
@@ -81,8 +79,7 @@ func (this *SendTaskController) Post() {
 				//	fmt.Println("社区人员ower:", value.Owner)
 				//插入任务
 				go AddMyMission(id64, value.Owner, value.Id)
-				//插入我的消息 lcfling
-
+				//插入我的消息
 			}
 
 		}
@@ -104,15 +101,6 @@ func (this *SendTaskController) Post() {
 				//插入任务
 				go AddMyMission(id64, Area.Owner, Area.Id)
 				//插入我的消息
-				var msg Messages
-				msg.Id = utils.SnowFlakeId()
-				msg.Userid = 0
-				msg.Touserid = Area.Owner
-				msg.Type = 5
-				msg.Subtype = 100
-				msg.Title = "新的任务"
-				msg.Url = "/mymission/manage/"
-				go AddMessages(msg)
 			}
 		}
 
