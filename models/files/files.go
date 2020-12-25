@@ -28,6 +28,8 @@ func init() {
 }
 
 func Addfile(Aid int64, missionmyid int64, types int, missionid int64, filename string, path string) (id int64, err error) {
+
+	fmt.Println("sssssss+", types, filename, path)
 	o := orm.NewOrm()
 	pro := new(Files)
 	//pro.Id = updPro.Id

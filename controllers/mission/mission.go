@@ -7,9 +7,11 @@ import (
 	. "github.com/Lcfling/OAcount/models/files"
 	. "github.com/Lcfling/OAcount/models/mission"
 	. "github.com/Lcfling/OAcount/models/program"
+	. "github.com/Lcfling/OAcount/models/users"
 	"github.com/Lcfling/OAcount/utils"
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/utils/pagination"
+	"io"
 	"os"
 	"path"
 	"strconv"
@@ -205,17 +207,22 @@ func (this *MissionMySubController) Post() {
 	id, _ := strconv.ParseInt(idstr, 10, 64)
 	//headers,err:=this.GetFiles("attachment")
 	headers, err := this.Ctx.Request.MultipartForm.File["attachment"]
+
 	//fmt
 	feedback := this.GetString("feedback")
 	detail := this.GetString("detail")
+	fmt.Println("tmp:++++++++++++++++++++++++++++++++++", len(headers))
 	if len(headers) > 0 {
-		var filepath string
+
 		for _, h := range headers {
+			tmp, err := h.Open()
+			fmt.Println("tmp:", tmp)
+			var filepath string
 			now := time.Now()
 			dir := "./static/uploadfile/" + strconv.Itoa(now.Year()) + "-" + strconv.Itoa(int(now.Month())) + "/" + strconv.Itoa(now.Day())
 			err1 := os.MkdirAll(dir, 0755)
 			if err1 != nil {
-				this.Data["json"] = map[string]interface{}{"code": 1, "message": "目录权限不够"}
+				this.Data["json"] = map[string]interface{}{"code": 0, "message": "目录权限不够"}
 				this.ServeJSON()
 				return
 			}
@@ -243,13 +250,21 @@ func (this *MissionMySubController) Post() {
 			time64 := time.Now().Unix()
 			timestr := strconv.FormatInt(time64, 10) + utils.RandChar(6)
 			newName := timestr + filename
-			if err != true {
+			if err != nil {
 				this.Data["json"] = map[string]interface{}{"code": 0, "message": err}
 				this.ServeJSON()
 				return
 			} else {
 				//this.SaveToFile("imgFile", "./static/uploadfile/"+h.Filename)
-				this.SaveToFile("attachment", dir+"/"+newName)
+				//this.SaveToFile("attachment", dir+"/"+newName)
+				f, err := os.OpenFile(dir+"/"+newName, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0666)
+				if err != nil {
+					this.Data["json"] = map[string]interface{}{"code": 0, "message": err}
+					this.ServeJSON()
+					return
+				}
+				defer f.Close()
+				io.Copy(f, tmp)
 				filepath = strings.Replace(dir, ".", "", 1) + "/" + newName
 				Addfile(0, id, fileType, 0, filename, filepath)
 			}
@@ -258,6 +273,131 @@ func (this *MissionMySubController) Post() {
 	var m MissionMy
 	m.Detail = detail
 	m.Feedback = feedback
+	err1 := UpdateMissionMy(m, id)
+	if err1 != nil {
+		this.Data["json"] = map[string]interface{}{"code": 0, "message": err}
+		this.ServeJSON()
+	} else {
+		this.Data["json"] = map[string]interface{}{"code": 1, "message": "success"}
+		this.ServeJSON()
+	}
+}
+
+type MissionMySubMobileController struct {
+	controllers.UserBaseController
+}
+
+func (this *MissionMySubMobileController) Get() {
+
+	//idstr := this.Ctx.Input.Param(":id")
+	idstr := this.GetString("id")
+	id, _ := strconv.ParseInt(idstr, 10, 64)
+	missionmy := GetMissionMy(id)
+	condArr := make(map[string]interface{})
+	condArr["keywords"] = ""
+	condArr["missionid"] = int64(0)
+	condArr["missionmyid"] = id
+	condArr["aid"] = int64(0)
+	condArr["types"] = 0
+	_, _, files := ListFiles(condArr, 1, 100)
+
+	condArr2 := make(map[string]interface{})
+	condArr2["keywords"] = ""
+	condArr2["missionid"] = missionmy.Missionid
+	condArr2["missionmyid"] = int64(0)
+	condArr2["aid"] = int64(0)
+	condArr2["types"] = 0
+	_, _, acmt := ListFiles(condArr2, 1, 100)
+
+	data := make(map[string]interface{})
+	data["missionmy"] = missionmy
+	data["files"] = files
+	data["acmt"] = acmt
+	user, _ := GetUser(missionmy.Userid)
+	data["owner"] = user
+
+	this.Data["json"] = map[string]interface{}{"code": 1, "message": "我的任务提交信息", "data": data}
+	this.ServeJSON()
+}
+func (this *MissionMySubMobileController) Post() {
+	idstr := this.GetString("id")
+	id, _ := strconv.ParseInt(idstr, 10, 64)
+	//headers,err:=this.GetFiles("attachment")
+	headers, err := this.Ctx.Request.MultipartForm.File["attachment"]
+	//fmt
+	//feedback := this.GetString("feedback")
+	//detail := this.GetString("detail")
+	if len(headers) > 0 {
+		fmt.Println("headers:len ", len(headers))
+		var filepath string
+		for _, h := range headers {
+
+			tmp, err := h.Open()
+			now := time.Now()
+			dir := "./static/uploadfile/" + strconv.Itoa(now.Year()) + "-" + strconv.Itoa(int(now.Month())) + "/" + strconv.Itoa(now.Day())
+			err1 := os.MkdirAll(dir, 0755)
+			if err1 != nil {
+				this.Data["json"] = map[string]interface{}{"code": 1, "message": "目录权限不够"}
+				this.ServeJSON()
+				return
+			}
+			//生成新的文件名
+			filename := h.Filename
+			fileExt := path.Ext(filename)
+			fmt.Println("fileExt+++++++++++++++++++", fileExt, "path:", filename)
+			var fileType int
+			switch fileExt {
+			case ".jpeg":
+				fileType = 0
+			case ".jpg":
+				fileType = 0
+			case ".png":
+				fileType = 0
+			case ".gif":
+				fileType = 0
+			case ".doc":
+				fileType = 1
+			case ".docx":
+				fileType = 1
+			default:
+				fileType = -1
+			}
+			//ext := utils.SubString(filename, strings.LastIndex(filename, "."), 5)
+			//filename = utils.GetGuid() + ext
+
+			time64 := time.Now().Unix()
+			timestr := strconv.FormatInt(time64, 10) + utils.RandChar(6)
+			newName := timestr + filename
+			if err != nil {
+				this.Data["json"] = map[string]interface{}{"code": 0, "message": err}
+				this.ServeJSON()
+				return
+			} else {
+				//this.SaveToFile("imgFile", "./static/uploadfile/"+h.Filename)
+
+				f, err := os.OpenFile(dir+"/"+newName, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0666)
+				if err != nil {
+					this.Data["json"] = map[string]interface{}{"code": 0, "message": err}
+					this.ServeJSON()
+					return
+				}
+				defer f.Close()
+				io.Copy(f, tmp)
+				fmt.Println("fileExt+++++++++++++++++++", fileExt, "path:", filename)
+				filepath = strings.Replace(dir, ".", "", 1) + "/" + newName
+				_, err = Addfile(0, id, fileType, 0, filename, filepath)
+				if err != nil {
+					this.Data["json"] = map[string]interface{}{"code": 0, "message": err}
+					this.ServeJSON()
+					return
+				}
+			}
+		}
+	}
+	var m MissionMy
+	m.Detail = ""
+	m.Feedback = ""
+	m.Status = 1
 	err1 := UpdateMissionMy(m, id)
 	if err1 != nil {
 		this.Data["json"] = map[string]interface{}{"code": 0, "message": err}
@@ -396,11 +536,13 @@ func (this *MissionPerfectController) Post() {
 	idstr := this.Ctx.Input.Param(":id")
 	id, _ := strconv.ParseInt(idstr, 10, 64)
 	//headers,err:=this.GetFiles("attachment")
-	headers, err := this.Ctx.Request.MultipartForm.File["attachment"]
+	headers, _ := this.Ctx.Request.MultipartForm.File["attachment"]
 	//fmt
 	if len(headers) > 0 {
 		var filepath string
 		for _, h := range headers {
+			tmp, err := h.Open()
+
 			now := time.Now()
 			dir := "./static/uploadfile/" + strconv.Itoa(now.Year()) + "-" + strconv.Itoa(int(now.Month())) + "/" + strconv.Itoa(now.Day())
 			err1 := os.MkdirAll(dir, 0755)
@@ -411,7 +553,9 @@ func (this *MissionPerfectController) Post() {
 			}
 			//生成新的文件名
 			filename := h.Filename
-			fileExt := path.Ext(filepath)
+			fileExt := path.Ext(filename)
+
+			fmt.Println("fileExt+++++++++++++++++++", fileExt)
 			var fileType int
 			switch fileExt {
 			case "jpg":
@@ -433,13 +577,22 @@ func (this *MissionPerfectController) Post() {
 			time64 := time.Now().Unix()
 			timestr := strconv.FormatInt(time64, 10) + utils.RandChar(6)
 			newName := timestr + filename
-			if err != true {
+			if err != nil {
 				this.Data["json"] = map[string]interface{}{"code": 0, "message": err}
 				this.ServeJSON()
 				return
 			} else {
 				//this.SaveToFile("imgFile", "./static/uploadfile/"+h.Filename)
-				this.SaveToFile("attachment", dir+"/"+newName)
+				//this.SaveToFile("attachment", dir+"/"+newName)
+				f, err := os.OpenFile(dir+"/"+newName, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0666)
+				if err != nil {
+					this.Data["json"] = map[string]interface{}{"code": 0, "message": err}
+					this.ServeJSON()
+					return
+				}
+				defer f.Close()
+				io.Copy(f, tmp)
+
 				filepath = strings.Replace(dir, ".", "", 1) + "/" + newName
 				Addfile(0, 0, fileType, id, filename, filepath)
 			}
