@@ -163,6 +163,15 @@ func (this *MissionDetailController) Get() {
 
 	}
 	this.Data["mission"] = mission
+
+	condArr := make(map[string]interface{})
+	condArr["keywords"] = ""
+	condArr["missionid"] = id64
+	condArr["missionmyid"] = int64(0)
+	condArr["aid"] = int64(0)
+	condArr["types"] = 0
+	_, _, files := ListFiles(condArr, 1, 100)
+	this.Data["files"] = files
 	this.TplName = "mission/mission-detail.tpl"
 }
 
@@ -368,8 +377,18 @@ func (this *MissionPerfectController) Get() {
 	}
 	this.Data["program"] = GetAllpro()
 	this.Data["mission"] = mission
+
+	condArr := make(map[string]interface{})
+	condArr["keywords"] = ""
+	condArr["missionid"] = id64
+	condArr["missionmyid"] = int64(0)
+	condArr["aid"] = int64(0)
+	condArr["types"] = 0
+	_, _, files := ListFiles(condArr, 1, 100)
+	this.Data["files"] = files
+
 	this.TplName = "mission/mission-perfect.tpl"
-	fmt.Println("Mission:", mission)
+	fmt.Println("Mission:", files)
 }
 
 //任务完善上传文件
@@ -411,17 +430,18 @@ func (this *MissionPerfectController) Post() {
 			//ext := utils.SubString(filename, strings.LastIndex(filename, "."), 5)
 			//filename = utils.GetGuid() + ext
 
+			time64 := time.Now().Unix()
+			timestr := strconv.FormatInt(time64, 10) + utils.RandChar(6)
+			newName := timestr + filename
 			if err != true {
 				this.Data["json"] = map[string]interface{}{"code": 0, "message": err}
 				this.ServeJSON()
 				return
 			} else {
 				//this.SaveToFile("imgFile", "./static/uploadfile/"+h.Filename)
-				this.SaveToFile("attachment", dir+"/"+filename)
-				filepath = strings.Replace(dir, ".", "", 1) + "/" + filename
-				fmt.Println("id:", id)
-				fmt.Println("fileType:", fileType)
-				//Addfile(0,id,fileType,0,filepath)
+				this.SaveToFile("attachment", dir+"/"+newName)
+				filepath = strings.Replace(dir, ".", "", 1) + "/" + newName
+				Addfile(0, 0, fileType, id, filename, filepath)
 			}
 		}
 	}

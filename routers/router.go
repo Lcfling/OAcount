@@ -288,6 +288,8 @@ func init() {
 
 	//文件管理
 	beego.Router("/files/manage", &files.FilesManageController{})
+	beego.Router("/files/delete", &files.DeleteController{})
+	beego.Router("/mobile/files/delete", &files.DeleteMobileController{})
 	//标签管理
 	beego.Router("/tags", &tags.TagsAllController{})
 

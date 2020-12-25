@@ -17,6 +17,7 @@ type Files struct {
 	Path        string
 	Missionid   int64
 	Creatime    int64
+	Status      int64
 }
 
 func (this *Files) TableName() string {
@@ -63,6 +64,7 @@ func CountFiles(condArr map[string]interface{}) int64 {
 		fmt.Println(condArr)
 		cond = cond.And("missionid", condArr["missionid"])
 	}
+	cond = cond.And("status", 0)
 	num, _ := qs.SetCond(cond).Count()
 	return num
 }
@@ -89,6 +91,7 @@ func ListFiles(condArr map[string]interface{}, page int, offset int) (num int64,
 		fmt.Println(condArr)
 		cond = cond.And("missionid", condArr["missionid"])
 	}
+	cond = cond.And("status", 0)
 	qs = qs.SetCond(cond)
 	if page < 1 {
 		page = 1
@@ -104,6 +107,15 @@ func ListFiles(condArr map[string]interface{}, page int, offset int) (num int64,
 	num, err1 := qs.Limit(offset, start).All(&files)
 	return num, err1, files
 }
-func DeleteMissionmy(id int64) {
-
+func DeleteFile(id int64) error {
+	var file Files
+	o := orm.NewOrm()
+	file = Files{Id: id}
+	err := o.Read(&file)
+	if err != nil {
+		return err
+	}
+	file.Status = 1
+	_, err = o.Update(&file)
+	return err
 }
