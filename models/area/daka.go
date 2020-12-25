@@ -3,25 +3,61 @@ package area
 import (
 	"github.com/Lcfling/OAcount/models"
 	. "github.com/Lcfling/OAcount/models/checkworks"
+	. "github.com/Lcfling/OAcount/models/mission"
 	"github.com/astaxie/beego/orm"
 	"time"
 )
 
 //获取今天区域打卡数据
-func GetAreaDaka() []Daka {
-	area := getArea()
-	daka := getTodayDaka()
-
-	for _, av := range area {
+func GetAreaDaka(mid int) []Daka {
+	var newArea []Daka        //最后的数据
+	area := getArea()         //全部数据
+	daka := getTodayDaka()    //打卡数据
+	aids := getAidsByMid(mid) //我的任务获取aids
+	for _, av1 := range area {
+		add := false
+		for _, v2 := range aids {
+			if v2 == av1.Id {
+				add = true
+			}
+		}
+		if add {
+			newArea = append(newArea, av1)
+		}
+	}
+	//根据aids详细区域点位，获取打卡数据
+	for _, av := range newArea {
 		for ak, dv := range daka {
 			if dv.Aid == av.Id {
-				area[ak].Daka = 1
+				newArea[ak].Daka = 1
 				continue
 			}
 		}
 	}
+	return newArea
+}
 
-	return area
+//根据missionID 获取aid 数组
+func getAidsByMid(mid int) []int64 {
+	o := orm.NewOrm()
+	o.Using("default")
+	qs := o.QueryTable(models.TableName("mission_my"))
+	cond := orm.NewCondition()
+	cond = cond.And("missionid", mid)
+	qs = qs.SetCond(cond)
+	var areas []MissionMy
+	num, _ := qs.All(&areas, "Areaid")
+	if num > 0 {
+		var aids []int64
+		for _, v := range areas {
+			var aid int64
+			aid = v.Areaid
+			aids = append(aids, aid)
+		}
+		return aids
+	} else {
+		return nil
+	}
 }
 
 //获取所有区域信息
@@ -32,7 +68,7 @@ func getArea() []Daka {
 	cond := orm.NewCondition()
 	qs = qs.SetCond(cond)
 	var areas []Area
-	num, _ := qs.All(&areas) //, "Id", "Parentid", "Jstatus", "Name", "Tags", "Locations", "Owner", "Coler", "Creatime")
+	num, _ := qs.All(&areas)
 	if num > 0 {
 		var areaLists []Daka
 		for _, v := range areas {

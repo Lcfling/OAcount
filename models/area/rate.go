@@ -40,7 +40,6 @@ func GetUidsByAids(aids []string) []string {
 	qs = qs.SetCond(cond)
 	var areas []Area
 	num, _ := qs.All(&areas)
-	fmt.Println("num", num)
 	if num > 0 {
 		var uids []string
 		for _, v := range areas {
