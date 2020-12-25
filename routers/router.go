@@ -317,4 +317,6 @@ func init() {
 	//成功率
 	beego.Router("/mobile/area/doneRate", &area.ApiDoneRateController{})
 
+	//点位打卡
+	beego.Router("/area/daka", &area.DakaController{})
 }

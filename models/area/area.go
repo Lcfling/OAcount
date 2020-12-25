@@ -37,6 +37,20 @@ type AreaList struct {
 	Child     []AreaList
 }
 
+//仅为打卡用
+type Daka struct {
+	Id        int64
+	Parentid  int64
+	Jstatus   int64
+	Name      string
+	Tags      string
+	Locations string
+	Owner     int64
+	Coler     string
+	Creatime  int64
+	Daka      int
+}
+
 type TagsA struct {
 	Id  int64
 	Aid int64
