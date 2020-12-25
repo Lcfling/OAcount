@@ -246,7 +246,13 @@ func (this *MobileClockUserController) Post() {
 		distence := utils.GetDistanceNone(lng, lat, locArr[0], locArr[1])
 
 		//200米范围内打卡
-		if distence*1000 > 200 {
+
+		fmt.Println("lng:", lng)
+		fmt.Println("lat:", lat)
+		fmt.Println("locArr[0]:", locArr[0])
+		fmt.Println("locArr[1]:", locArr[1])
+		fmt.Println("distence:", distence*1000)
+		if distence/10000*1000 > 200 {
 			this.Data["json"] = map[string]interface{}{"code": 0, "message": "请在指定范围200米内打卡", "data": nil}
 			this.ServeJSON()
 			return
