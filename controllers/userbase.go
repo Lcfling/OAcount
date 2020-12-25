@@ -43,3 +43,6 @@ func (this *UserBaseController) Prepare() {
 	}
 
 }
+func (this *UserBaseController) SendMsg(msg string) {
+	publish <- newEvent(4, "", msg)
+}

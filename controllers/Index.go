@@ -59,3 +59,6 @@ func (this *IndexController) Prepare() {
 	this.Data["IsLogin"] = this.IsLogin
 	//this.Data["IsLogin"] = this.IsLogin
 }
+func (this *IndexController) SendMsg(msg string) {
+	publish <- newEvent(4, "", msg)
+}

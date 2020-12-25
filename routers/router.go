@@ -56,7 +56,7 @@ func init() {
 	beego.Router("/mobile/login", &users.LoginUserController{})
 
 	beego.Router("/logout", &users.LogoutUserController{})
-	beego.Router("/register/:pid", &users.RegisterController{})
+	beego.Router("/register", &users.RegisterController{})
 
 	//部门
 	beego.Router("/department/manage", &users.ManageDepartmentController{})
@@ -273,6 +273,7 @@ func init() {
 	//my mission
 	beego.Router("/mymission/manage", &mission.MissionMyController{})
 	beego.Router("/mymission/sub/:id", &mission.MissionMySubController{})
+	beego.Router("/mobile/mymission/sub", &mission.MissionMySubMobileController{})
 	beego.Router("/mymission/arraignment/:types", &mission.ArraignmentController{})
 	beego.Router("/mymission/arraignmentsub/:id", &mission.ArraignmentSubController{})
 
@@ -318,5 +319,6 @@ func init() {
 
 	//成功率
 	beego.Router("/mobile/area/doneRate", &area.ApiDoneRateController{})
+	beego.Router("/mobile/checkworks", &checkworks.MobileClockUserController{})
 
 }

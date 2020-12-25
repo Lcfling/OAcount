@@ -151,6 +151,21 @@ func GetArea(id int64) (Area, error) {
 	}
 	return area, err
 }
+
+func GetUsersArea(userid int64) []Area {
+	o := orm.NewOrm()
+	o.Using("default")
+	qs := o.QueryTable(models.TableName("area"))
+	cond := orm.NewCondition()
+	cond = cond.And("userid", userid)
+	var areas []Area
+	_, errs := qs.All(&areas)
+	if errs != nil {
+		return nil
+	} else {
+		return areas
+	}
+}
 func UpdateArea(id int64, area Area) error {
 	var areaold Area
 	o := orm.NewOrm()

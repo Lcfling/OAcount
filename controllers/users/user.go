@@ -125,7 +125,7 @@ func (this *LogoutUserController) Get() {
 
 //注册
 type RegisterController struct {
-	controllers.BaseController
+	controllers.MobileController
 }
 
 func (this *RegisterController) Get() {
@@ -141,12 +141,7 @@ func (this *RegisterController) Get() {
 }
 
 func (this *RegisterController) Post() {
-	pidstring := this.Ctx.Input.Param(":pid")
-	if "" == pidstring {
-		this.Data["json"] = map[string]interface{}{"code": 0, "message": "请联系上级领导生成注册地址"}
-		this.ServeJSON()
-	}
-	pid, _ := strconv.ParseInt(pidstring, 10, 64)
+
 	username := this.GetString("username")
 	password := this.GetString("password")
 	repassword := this.GetString("repassword")
@@ -179,7 +174,7 @@ func (this *RegisterController) Post() {
 	id := utils.SnowFlakeId()
 	pro.Id = id
 	user.Id = id
-	user.Pid = pid
+	user.Pid = 0
 	user.Username = username
 	user.Password = password
 	err := AddUserProfile(user, pro)
