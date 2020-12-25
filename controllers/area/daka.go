@@ -3,6 +3,7 @@ package area
 import (
 	"github.com/Lcfling/OAcount/controllers"
 	. "github.com/Lcfling/OAcount/models/area"
+	"strconv"
 )
 
 //打卡数据
@@ -12,7 +13,9 @@ type DakaController struct {
 
 //区域任务成功率
 func (this *DakaController) Post() {
-	area := GetAreaDaka()
+	mid := this.GetString("missionid") //区域ID
+	missionId, _ := strconv.Atoi(mid)
+	area := GetAreaDaka(missionId)
 	//返回数据
 	data := make(map[string]interface{})
 	data["area"] = area
