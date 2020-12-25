@@ -321,4 +321,6 @@ func init() {
 	beego.Router("/mobile/area/doneRate", &area.ApiDoneRateController{})
 	beego.Router("/mobile/checkworks", &checkworks.MobileClockUserController{})
 
+	//点位打卡
+	beego.Router("/area/daka", &area.DakaController{})
 }
