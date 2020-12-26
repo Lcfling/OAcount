@@ -265,6 +265,7 @@ func init() {
 
 	//项目mission
 	beego.Router("/mission/manage", &mission.MissionManageController{})
+	beego.Router("/mission/list", &mission.MissionListController{})
 	beego.Router("/mission/add", &mission.MissionAddController{})
 	beego.Router("/mission/detail/:id", &mission.MissionDetailController{})
 	beego.Router("/mission/sendtask/:id", &mission.SendTaskController{})
@@ -311,6 +312,7 @@ func init() {
 
 	//我的任务
 	beego.Router("/mobile/mission/missionMy", &mission.ApiMissionMyController{})
+
 	//任务详情
 	beego.Router("/mobile/mission/missionInfo", &mission.ApiMissionInfoController{})
 	//点位信息
@@ -320,6 +322,8 @@ func init() {
 	//成功率
 	beego.Router("/mobile/area/doneRate", &area.ApiDoneRateController{})
 	beego.Router("/mobile/checkworks", &checkworks.MobileClockUserController{})
+
+	beego.Router("/mobile/user/info", &users.UserInfo{})
 
 	//点位打卡
 	beego.Router("/area/daka", &area.DakaController{})

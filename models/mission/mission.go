@@ -121,6 +121,9 @@ func ListMission(condArr map[string]string, page int, offset int) (num int64, er
 	if condArr["status"] != "" {
 		cond = cond.And("status", condArr["status"])
 	}
+	if condArr["types"] != "" {
+		cond = cond.And("types", condArr["types"])
+	}
 	qs = qs.SetCond(cond)
 	if page < 1 {
 		page = 1

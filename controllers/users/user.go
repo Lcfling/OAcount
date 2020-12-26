@@ -80,7 +80,7 @@ func (this *LoginUserController) Post() {
 
 //手机登录
 type MobileLoginController struct {
-	controllers.IndexController
+	controllers.MobileController
 }
 
 func (this *MobileLoginController) Post() {
@@ -993,5 +993,17 @@ func (this *PermissionController) Post() {
 		this.Data["json"] = map[string]interface{}{"code": 0, "message": "设置失败"}
 	}
 
+	this.ServeJSON()
+}
+
+type UserInfo struct {
+	controllers.UserBaseController
+}
+
+func (this *UserInfo) Get() {
+	data := make(map[string]interface{})
+
+	data["userInfo"], _ = GetUser(this.UserBaseController.UserUserId)
+	this.Data["json"] = map[string]interface{}{"code": 1, "message": "用户信息", "data": data}
 	this.ServeJSON()
 }

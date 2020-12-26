@@ -4,7 +4,6 @@ import (
 	//"github.com/virteman/OPMS/initial"
 
 	"fmt"
-	. "github.com/Lcfling/OAcount/models/groups"
 	. "github.com/Lcfling/OAcount/models/messages"
 	"github.com/astaxie/beego"
 	"strconv"
@@ -53,8 +52,8 @@ func (this *IndexController) Prepare() {
 
 		//fmt.Println(this.GetSession("userGroupid").(string))
 		//左侧导航
-		_, _, leftNav := ListGroupsUserPermission(this.GetSession("userGroupid").(string))
-		this.Data["leftNav"] = leftNav
+		//_, _, leftNav := ListGroupsUserPermission(this.GetSession("userGroupid").(string))
+		//this.Data["leftNav"] = leftNav
 	}
 	this.Data["IsLogin"] = this.IsLogin
 	//this.Data["IsLogin"] = this.IsLogin
