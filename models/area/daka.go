@@ -14,6 +14,7 @@ func GetAreaDaka(mid int) []Daka {
 	area := getArea()         //全部数据
 	daka := getTodayDaka()    //打卡数据
 	aids := getAidsByMid(mid) //我的任务获取aids
+	//任务aids数组，其数据
 	for _, av1 := range area {
 		add := false
 		for _, v2 := range aids {
@@ -26,8 +27,8 @@ func GetAreaDaka(mid int) []Daka {
 		}
 	}
 	//根据aids详细区域点位，获取打卡数据
-	for _, av := range newArea {
-		for ak, dv := range daka {
+	for ak, av := range newArea {
+		for _, dv := range daka {
 			if dv.Aid == av.Id {
 				newArea[ak].Daka = 1
 				continue
