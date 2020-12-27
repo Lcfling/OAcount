@@ -3,25 +3,10 @@ package area
 import (
 	"fmt"
 	"github.com/Lcfling/OAcount/models"
+	. "github.com/Lcfling/OAcount/models/program"
 	"github.com/astaxie/beego/orm"
 	"strconv"
 )
-
-//仅作统计用
-type Question struct {
-	Id        int64
-	Pid       int64
-	Area      int64
-	Office    int64
-	Community int64
-	Addr      string
-	Name      string
-	Mobile    string
-	Content   string
-	Creatime  int64
-	Status    int64
-	Score     float64
-}
 
 //根据aid返回区域问卷评价分数据
 func GetAreaQuestionAver(aid int) []Ques {
@@ -74,7 +59,7 @@ func getAverage(aids []string) float64 {
 	if count == 0 {
 		return 0
 	}
-	doneRate := float64(sum) / float64(count) * 100
+	doneRate := float64(sum) / float64(count)
 	value, _ := strconv.ParseFloat(fmt.Sprintf("%.2f", doneRate), 64)
 
 	return value
@@ -113,13 +98,13 @@ func questionList(aids []string) []Question {
 	cond := orm.NewCondition()
 	cond = cond.And("community__in", aids)
 	qs = qs.SetCond(cond)
-	var questions []Question
-	num, _ := qs.All(&questions)
+	var questions []Sub
+	num, _ := qs.All(&questions, "Score")
 	if num > 0 {
 		var questionLists []Question
 		for _, v := range questions {
 			var question Question
-			question.Score = v.Score
+			question.Score = float64(v.Score)
 			questionLists = append(questionLists, question)
 		}
 		return questionLists

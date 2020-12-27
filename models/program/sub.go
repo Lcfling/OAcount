@@ -20,6 +20,22 @@ type Sub struct {
 	Score     int64
 }
 
+//仅作统计用
+type Question struct {
+	Id        int64
+	Pid       int64
+	Area      int64
+	Office    int64
+	Community int64
+	Addr      string
+	Name      string
+	Mobile    string
+	Content   string
+	Creatime  int64
+	Status    int64
+	Score     float64
+}
+
 func (this *Sub) TableName() string {
 	return models.TableName("sub")
 }
