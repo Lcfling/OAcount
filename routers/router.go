@@ -323,4 +323,6 @@ func init() {
 
 	//点位打卡
 	beego.Router("/area/daka", &area.DakaController{})
+	//达标率
+	beego.Router("/area/passRate", &area.ApiPassRateController{})
 }

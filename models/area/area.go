@@ -51,6 +51,20 @@ type Daka struct {
 	Daka      int
 }
 
+//仅为达标率用
+type Pass struct {
+	Id        int64
+	Parentid  int64
+	Jstatus   int64
+	Name      string
+	Tags      string
+	Locations string
+	Owner     int64
+	Coler     string
+	Creatime  int64
+	PassRate  float64
+}
+
 type TagsA struct {
 	Id  int64
 	Aid int64
