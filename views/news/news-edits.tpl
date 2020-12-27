@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<title>{{config "String" "globaltitle" ""}}</title>
-{{template "inc/meta.tpl" .}}
-<link href="/static/js/bootstrap-datepicker/css/datepicker-custom.css" rel="stylesheet" />
+  <meta charset="utf-8">
+  <title>{{config "String" "globaltitle" ""}}</title>
+  {{template "inc/meta.tpl" .}}
+  <link href="/static/js/bootstrap-datepicker/css/datepicker-custom.css" rel="stylesheet" />
 </head><body class="sticky-header">
 <section> {{template "inc/left.tpl" .}}
   <!-- main content start-->
@@ -16,11 +16,11 @@
     <!-- header section end-->
     <!-- page heading start-->
     <div class="page-heading">
-      <h3> 项目管理 </h3>
+      <h3> 通知管理 </h3>
       <ul class="breadcrumb pull-left">
         <li> <a href="/user/show/{{.LoginUserid}}">OPMS</a> </li>
         <li> <a href="/news/manage">通知管理</a> </li>
-        <li class="active"> +新消息 </li>
+        <li class="active"> 编辑 </li>
       </ul>
     </div>
     <!-- page heading end-->
@@ -31,11 +31,13 @@
           <section class="panel">
             <header class="panel-heading"> {{.title}} </header>
             <div class="panel-body">
-              <form class="form-horizontal adminex-form" id="news-form">
+              <form class="form-horizontal adminex-form" id="news-edits">
                 <div class="form-group">
-                  <label class="col-sm-2 col-sm-2 control-label"><span>*</span>消息名称</label>
+                  <label class="col-sm-2 col-sm-2 control-label"><span>*</span>标题</label>
                   <div class="col-sm-10">
-                    <input type="text" name="title" value="" class="form-control" placeholder="请填写名称" autocomplete="off">
+                    {{range $newsK,$newsV:=.news}}
+                    <input type="text" name="title" value="{{$newsV.Title}}" class="form-control" placeholder="请填写名称" autocomplete="off">
+                    {{end}}
                   </div>
                 </div>
                 <div class="form-group">
@@ -48,10 +50,13 @@
                     </select>
                   </div>
                 </div>
+
                 <div class="form-group">
-                  <label class="col-sm-2 col-sm-2 control-label"><span>*</span>描述</label>
+                  <label class="col-sm-2 col-sm-2 control-label"><span>*</span>内容</label>
                   <div class="col-sm-10">
-                    <textarea name="desc" placeholder="请填写描述" style="height:300px;" class="form-control"></textarea>
+                    {{range $newsK,$newsV:=.news}}
+                    <textarea name="desc" placeholder="请填写内容" style="height:300px;" class="form-control">{{$newsV.Content}}</textarea>
+                    {{end}}
                   </div>
                 </div>
 
@@ -76,28 +81,25 @@
   <!-- main content end-->
 </section>
 <div aria-hidden="true" aria-labelledby="projectModalLabel" role="dialog" tabindex="-1" id="projectModal" class="modal fade">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-            <h4 class="modal-title">新建项目成功，请先按项目流程设置</h4>
-          </div>
-          <div class="modal-body">
-
-
-
-          </div>
-          <div class="modal-footer">
-            <a href="/mission/manage" class="btn btn-primary">去设置管理</a>
-          </div>
-        </div>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title">新建项目成功，请先按项目流程设置</h4>
+      </div>
+      <div class="modal-body">
+      </div>
+      <div class="modal-footer">
+        <a href="/mission/manage" class="btn btn-primary">去设置管理</a>
       </div>
     </div>
+  </div>
+</div>
 {{template "inc/foot.tpl" .}}
 <script src="/static/js/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
 <script src="/static/keditor/kindeditor-min.js"></script>
 <script>
-$(function(){
+  $(function(){
     $("#types").on("input",function () {
       //alert("dddd")
       console.log($(this))
@@ -108,39 +110,39 @@ $(function(){
         $("#pid").hide()
       }
     })
-	var editor = KindEditor.create('textarea[name="desc"]', {
-	    uploadJson: "/kindeditor/upload",
-	    allowFileManager: true,
-	    filterMode : false,
-	    afterBlur: function(){this.sync();}
-	});
+    var editor = KindEditor.create('textarea[name="desc"]', {
+      uploadJson: "/kindeditor/upload",
+      allowFileManager: true,
+      filterMode : false,
+      afterBlur: function(){this.sync();}
+    });
 
-	var nowTemp = new Date();
+    var nowTemp = new Date();
     var now = new Date(nowTemp.getFullYear(), nowTemp.getMonth(), nowTemp.getDate(), 0, 0, 0, 0);
 
     var checkin = $('.dpd1').datepicker({
-		 format: 'yyyy-mm-dd',
-        onRender: function(date) {
-            return date.valueOf() < now.valueOf() ? 'disabled' : '';
-        }
+      format: 'yyyy-mm-dd',
+      onRender: function(date) {
+        return date.valueOf() < now.valueOf() ? 'disabled' : '';
+      }
     }).on('changeDate', function(ev) {
-            if (ev.date.valueOf() > checkout.date.valueOf()) {
-                var newDate = new Date(ev.date)
-                newDate.setDate(newDate.getDate() + 1);
-                checkout.setValue(newDate);
-            }
-            checkin.hide();
-            $('.dpd2')[0].focus();
-        }).data('datepicker');
+      if (ev.date.valueOf() > checkout.date.valueOf()) {
+        var newDate = new Date(ev.date)
+        newDate.setDate(newDate.getDate() + 1);
+        checkout.setValue(newDate);
+      }
+      checkin.hide();
+      $('.dpd2')[0].focus();
+    }).data('datepicker');
     var checkout = $('.dpd2').datepicker({
-		 format: 'yyyy-mm-dd',
-        onRender: function(date) {
-            return date.valueOf() <= checkin.date.valueOf() ? 'disabled' : '';
-        }
+      format: 'yyyy-mm-dd',
+      onRender: function(date) {
+        return date.valueOf() <= checkin.date.valueOf() ? 'disabled' : '';
+      }
     }).on('changeDate', function(ev) {
-            checkout.hide();
-        }).data('datepicker');
-})
+      checkout.hide();
+    }).data('datepicker');
+  })
 </script>
 </body>
 </html>

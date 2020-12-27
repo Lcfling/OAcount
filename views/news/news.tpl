@@ -31,18 +31,18 @@
       <div class="row">
         <div class="col-sm-12">
           <section class="panel">
-            <header class="panel-heading"> 消息管理 / 总数：3 <span class="tools pull-right"><a href="javascript:;" class="fa fa-chevron-down"></a>
+            <header class="panel-heading"> 消息管理 / 总数：{{.countNews}}<span class="tools pull-right"><a href="javascript:;" class="fa fa-chevron-down"></a>
               <a href="javascript:;" class="fa fa-times"></a>
               </span> </header>
             <div class="panel-body">
               <section id="unseen">
                 <form id="project-form-list">
-                  <table class="table table-bordered table-striped table-condensed">
+                  <table class="table table-bordered table-striped table-condensed" style="table-layout: fixed;">
                     <thead>
                       <tr>
                         <th>消息类型</th>
                         <th>标题</th>
-                        <th>内容</th>
+                        <th style="width: 600px">内容</th>
                         <th>创建时间</th>
                         <th>操作</th>
                       </tr>
@@ -52,14 +52,14 @@
                     <tr>
                       <td>{{ $v.Classname}}</td>
                       <td>{{ $v.Title}}</td>
-                      <td>{{ $v.Content}}</td>
+                      <td style="white-space:nowrap;overflow:hidden;text-overflow: ellipsis;" title="{{ $v.Content}}">{{ $v.Content}}</td>
                       <td>{{ getDate $v.Creatime}}</td>
                       <td><div class="btn-group">
                           <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> 操作<span class="caret"></span> </button>
                           <ul class="dropdown-menu">
-                            <li><a href="/project/edit/{{$v.Id}}">编辑</a></li>
+                            <li><a href="/news/edits/{{$v.Id}}">编辑</a></li>
                             <li role="separator" class="divider"></li>
-                            <li><a href="javascript:;" data-id="{{$v.Id}}" data-status="1">删除</a></li>
+                            <li><a href="javascript:;"  class="js-news-delete" data-id="{{$v.Id}}" data-status="1">删除</a></li>
                             <li role="separator" class="divider"></li>
                           </ul>
                         </div></td>
@@ -69,7 +69,7 @@
                     
                   </table>
                 </form>
-<!--                {{template "inc/page.tpl" .}}-->
+                {{template "inc/page.tpl" .}}
 				 </section>
             </div>
           </section>
@@ -77,9 +77,9 @@
       </div>
     </div>
     <!--body wrapper end-->
-    <!--footer section start-->
+<!--    footer section start-->
     {{template "inc/foot-info.tpl" .}}
-    <!--footer section end-->
+<!--    footer section end-->
   </div>
   <!-- main content end-->
 </section>

@@ -283,10 +283,13 @@ func init() {
 	beego.Router("/program/add", &program.ProgramAddController{})
 	beego.Router("/program/edit/:id", &program.ProgramEditController{})
 	beego.Router("/program/index", &program.ProgramIndexController{})
+	beego.Router("/api/answer/list", &program.AnwserList{})
 	beego.Router("/program/subjectlist/:pid", &program.SubjectListController{})
 	beego.Router("/addsubject", &program.SubjectAddController{})
 	beego.Router("/subject/edit", &program.SubjectManageController{})
 	beego.Router("/mobile/program/list", &program.ListController{})
+	beego.Router("/mobile/program/share", &program.ShareController{})
+	beego.Router("/mobile/api/answer", &program.AnswerController{})
 
 	//文件管理
 	beego.Router("/files/manage", &files.FilesManageController{})
@@ -295,21 +298,28 @@ func init() {
 	//标签管理
 	beego.Router("/tags", &tags.TagsAllController{})
 
-	//通知管理
+	//通知管理 消息管理
 	beego.Router("/news/manage", &news.NewsManageController{})
 	beego.Router("/news/add", &news.NewsAddController{})
 	beego.Router("/news/classic", &news.NewsClassicController{})
+	beego.Router("/news/classicedit/:id", &news.NewsClassicEditController{})
 	beego.Router("/news/classicadd", &news.NewsClassicAddController{})
+	beego.Router("/news/edits/:id", &news.NewsEditsController{})
+	beego.Router("/news/ajax/delete", &news.NewsAjaxDeleteController{})
+	beego.Router("/news/ajax/classicdelete", &news.NewsAjaxClassicDeleteController{})
 
 	// API接口---------------------
-	//app 登录
-	beego.Router("/mobile/news/newsList", &news.ApiNewsController{})
 
+	//任务管理 单位列表
+	beego.Router("/mobile/news/areaList", &news.ApiAreaController{})
+	//任务管理 任务列表
+	beego.Router("/mobile/news/missionList", &news.ApiMissionController{})
+	//任务管理 任务详情
+	beego.Router("/mobile/news/missionInfo", &news.ApiMissionInfoController{})
 	//消息列表
 	beego.Router("/mobile/news/newsList", &news.ApiNewsController{})
 	//消息类型
 	beego.Router("/mobile/news/classicList", &news.ApiNewsClassicController{})
-
 	//我的任务
 	beego.Router("/mobile/mission/missionMy", &mission.ApiMissionMyController{})
 

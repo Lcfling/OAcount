@@ -11,16 +11,17 @@ import (
 )
 
 type Mission struct {
-	Id       int64
-	Userid   int64
-	Name     string
-	Types    int
-	Mid      int64
-	Started  int64
-	Ended    int64
-	Desc     string
-	Creatime int64
-	Status   int
+	Id        int64
+	Userid    int64
+	Name      string
+	Types     int
+	Mid       int64
+	Started   int64
+	Ended     int64
+	Desc      string
+	Creatime  int64
+	Programid int64
+	Status    int
 }
 type MissionMydata struct {
 	Id          int64
@@ -39,6 +40,7 @@ type MissionMydata struct {
 	Check       int
 	Checktime   int64
 	Arraignment int64
+	Programid   int64
 }
 type MissionMy struct {
 	Id          int64
@@ -53,6 +55,7 @@ type MissionMy struct {
 	Detail      string
 	Status      int
 	Arraignment int64
+	Programid   int64
 }
 
 func (this *Mission) TableName() string {
@@ -203,7 +206,7 @@ func GetMissionArraignment(types int64, page int, offset int, condArr map[string
 	start := (page - 1) * offset
 
 	qb, _ := orm.NewQueryBuilder("mysql")
-	qb.Select("t.id", "t.userid", "p.name", "t.missionid", "a.name as areaname", "p.started", "t.feedback", "t.detail", "p.ended", "p.desc", "p.creatime", "t.status", "t.check", "t.checktime", "t.arraignment").From("pms_mission_my AS t").
+	qb.Select("t.id", "t.userid", "p.name", "t.missionid", "a.name as areaname", "p.started", "t.feedback", "t.detail", "p.ended", "p.desc", "p.creatime", "t.status", "t.check", "t.checktime", "t.arraignment", "t.programid").From("pms_mission_my AS t").
 		LeftJoin("pms_mission AS p").On("p.id = t.missionid").
 		LeftJoin("pms_area AS a").On("a.id = t.areaid").
 		Where("t.arraignment=?" + where).
@@ -219,7 +222,7 @@ func GetMyMission(userId int64, page int, offset int) (num int64, err error, ops
 	var my []MissionMydata
 	start := (page - 1) * offset
 	qb, _ := orm.NewQueryBuilder("mysql")
-	qb.Select("t.id", "t.userid", "p.name", "t.missionid", "a.name as areaname", "t.types", "p.started", "p.ended", "p.desc", "p.creatime", "t.status", "t.check", "t.checktime", "t.arraignment").From("pms_mission_my AS t").
+	qb.Select("t.id", "t.userid", "p.name", "t.missionid", "a.name as areaname", "t.types", "p.started", "p.ended", "p.desc", "p.creatime", "t.status", "t.check", "t.checktime", "t.arraignment", "t.programid").From("pms_mission_my AS t").
 		LeftJoin("pms_mission AS p").On("p.id = t.missionid").
 		LeftJoin("pms_area AS a").On("a.id = t.areaid").
 		Where("t.userid=?").
@@ -234,7 +237,7 @@ func GetMyMission(userId int64, page int, offset int) (num int64, err error, ops
 func GetMissionMy(id int64) MissionMydata {
 	var my MissionMydata
 	qb, _ := orm.NewQueryBuilder("mysql")
-	qb.Select("t.id", "t.userid", "p.name", "t.missionid", "a.name as areaname", "t.types", "p.started", "p.ended", "p.desc", "p.creatime", "t.feedback", "t.detail", "t.status", "t.check", "t.checktime", "t.arraignment").From("pms_mission_my AS t").
+	qb.Select("t.id", "t.userid", "p.name", "t.missionid", "a.name as areaname", "t.types", "p.started", "p.ended", "p.desc", "p.creatime", "t.feedback", "t.detail", "t.status", "t.check", "t.checktime", "t.arraignment", "t.programid").From("pms_mission_my AS t").
 		LeftJoin("pms_mission AS p").On("p.id = t.missionid").
 		LeftJoin("pms_area AS a").On("a.id = t.areaid").
 		Where("t.id=?").
