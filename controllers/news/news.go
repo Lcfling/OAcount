@@ -26,7 +26,6 @@ func (this *NewsManageController) Get() {
 	}
 	// 统计消息数量
 	countNews := CountNews()
-	fmt.Println("countNews:", countNews)
 	paginator := pagination.SetPaginator(this.Ctx, offset, countNews)
 	//类型消息
 	_, news := ListNews(page, offset)
@@ -258,7 +257,6 @@ func (this *NewsClassicEditController) Get() {
 	id64, _ := strconv.ParseInt(id, 10, 64)
 	//类型消息
 	classic := GetClassicInfo(id64)
-	fmt.Println("news:", classic)
 	this.Data["classic"] = classic
 	this.TplName = "news/classic-edit.tpl"
 }

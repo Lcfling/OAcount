@@ -56,8 +56,6 @@ func (this *AreaMangerController) Get() {
 	condArrP["parentid"] = "0"
 	_, _, parentareas := ListArea(condArrP, 0, 100)
 	this.Data["parentareas"] = parentareas
-
-	fmt.Println(this.Data["myuser"], "dasdasdasdasdsad")
 	this.TplName = "area/area.tpl"
 }
 func (this *AreaMangerController) Post() {
@@ -231,11 +229,8 @@ func (this *GetAllAreaController) Get() {
 	arr := GetAllAreaIdByPid(s)
 	_, _, data := GetAllByArray(arr)
 
-	fmt.Println("tid:", tid)
-
 	Tas := GetAreaBytagid(tid)
 
-	fmt.Println("tag:", Tas)
 	var newData []Area
 	if len(Tas) > 0 {
 		for _, v := range data {

@@ -1,7 +1,6 @@
 package news
 
 import (
-	"fmt"
 	"github.com/Lcfling/OAcount/models"
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/orm"
@@ -48,7 +47,6 @@ func ListNews(page int, offset int) (error, []NewsList) {
 
 	var News []NewsList
 	o := orm.NewOrm()
-	fmt.Println("page:", page)
 	if page < 1 {
 		page = 1
 	}
