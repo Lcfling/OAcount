@@ -20,7 +20,6 @@ func GetPassRate(pid, kind int) []Pass {
 		}
 
 	}
-	fmt.Printf("area:%+v\n", area)
 	return area
 }
 

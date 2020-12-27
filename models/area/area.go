@@ -65,6 +65,20 @@ type Pass struct {
 	PassRate  float64
 }
 
+//仅为问卷调查用
+type Ques struct {
+	Id        int64
+	Parentid  int64
+	Jstatus   int64
+	Name      string
+	Tags      string
+	Locations string
+	Owner     int64
+	Coler     string
+	Creatime  int64
+	Question  float64
+}
+
 type TagsA struct {
 	Id  int64
 	Aid int64
