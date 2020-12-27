@@ -309,7 +309,7 @@
             let list = $("#list >div").eq(i).find('li');
             for (let j=0; j<list.length; j++){
                 if(list.eq(j).hasClass('active')){
-                    datalist[i].content.subject[j].check = 1;
+                    datalist[i].Content.Subject[j].Check = 1;
                 }
             }
 
@@ -325,19 +325,20 @@
         data.data = JSON.stringify(datalist);
         console.log(data)
         $.ajax({
-            url: 'http://wenjuan.webziti.com/api/answer',
+            url: 'http://127.0.0.1:8088/mobile/api/answer',
             data: data,
             type: 'post',
             dataType: 'json',
             success: function (res) {
                 console.log(res);
-                if(res.status == 1){
+                if(res.code == 1){
+                    alert(res.message);
                     subid = res.data.subid;
                     // location.href = 'result2.html?pid='+data.pid+ '&subid='+subid;
                     location.href = 'result2.html';
 
                 }else{
-                    alert(res.info);
+                    alert(res.message);
                 }
             }
         })

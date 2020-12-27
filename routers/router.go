@@ -289,6 +289,7 @@ func init() {
 	beego.Router("/subject/edit", &program.SubjectManageController{})
 	beego.Router("/mobile/program/list", &program.ListController{})
 	beego.Router("/mobile/program/share", &program.ShareController{})
+	beego.Router("/mobile/api/answer", &program.AnswerController{})
 
 	//文件管理
 	beego.Router("/files/manage", &files.FilesManageController{})
@@ -336,5 +337,7 @@ func init() {
 	beego.Router("/area/daka", &area.DakaController{})
 	//达标率
 	beego.Router("/area/passRate", &area.ApiPassRateController{})
+	//问卷调查
+	beego.Router("/area/question", &area.ApiQuestionController{})
 
 }

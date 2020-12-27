@@ -39,6 +39,7 @@ func GetAreaBytagid(id int64) []Tagsarea {
 	qs := o.QueryTable(models.TableName("tags_area"))
 	cond := orm.NewCondition()
 	cond = cond.And("tid", id)
+	qs = qs.SetCond(cond)
 	var tagsarea []Tagsarea
 	qs.All(&tagsarea)
 	return tagsarea
@@ -52,6 +53,7 @@ func GetAreaBytagName(name string) []Tagsarea {
 	qs := o.QueryTable(models.TableName("tags_area"))
 	cond := orm.NewCondition()
 	cond = cond.And("tid", id)
+	qs = qs.SetCond(cond)
 	var tagsarea []Tagsarea
 	qs.All(&tagsarea)
 	return tagsarea

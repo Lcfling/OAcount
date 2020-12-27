@@ -74,6 +74,23 @@ func (this *ApiPassRateController) Post() {
 	//返回数据
 	data := make(map[string]interface{})
 	data["pass"] = area
-	this.Data["json"] = map[string]interface{}{"code": 1, "message": "区域成功率", "data": data}
+	this.Data["json"] = map[string]interface{}{"code": 1, "message": "任务达标率", "data": data}
+	this.ServeJSON()
+}
+
+//问卷调查
+type ApiQuestionController struct {
+	controllers.IndexController
+}
+
+//区域 问卷平均分
+func (this *ApiQuestionController) Post() {
+	aid := this.GetString("pid") //区域D
+	areaid, _ := strconv.Atoi(aid)
+	area := GetAreaQuestionAver(areaid)
+	//返回数据
+	data := make(map[string]interface{})
+	data["question"] = area
+	this.Data["json"] = map[string]interface{}{"code": 1, "message": "问卷平均分", "data": data}
 	this.ServeJSON()
 }

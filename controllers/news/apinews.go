@@ -9,7 +9,7 @@ import (
 
 //首页轮播
 type ApiBannerClassicController struct {
-	controllers.UserBaseController
+	controllers.MobileController
 }
 
 //首页轮播
@@ -25,7 +25,7 @@ func (this *ApiBannerClassicController) Post() {
 
 //消息类型
 type ApiNewsClassicController struct {
-	controllers.UserBaseController
+	controllers.MobileController
 }
 
 //消息类型
@@ -41,7 +41,7 @@ func (this *ApiNewsClassicController) Post() {
 
 //消息列表
 type ApiNewsController struct {
-	controllers.UserBaseController
+	controllers.MobileController
 }
 
 //消息列表
@@ -76,7 +76,7 @@ func (this *ApiNewsController) Post() {
 
 // 任务单位
 type ApiAreaController struct {
-	controllers.UserBaseController
+	controllers.MobileController
 }
 
 //单位列表
@@ -94,7 +94,7 @@ func (this *ApiAreaController) Post() {
 
 //任务列表
 type ApiMissionController struct {
-	controllers.UserBaseController
+	controllers.MobileController
 }
 
 //任务列表
@@ -124,7 +124,7 @@ func (this *ApiMissionController) Post() {
 
 //任务详情
 type ApiMissionInfoController struct {
-	controllers.UserBaseController
+	controllers.MobileController
 }
 
 //任务详情

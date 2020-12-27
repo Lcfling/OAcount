@@ -1,13 +1,16 @@
 package program
 
 import (
+	"encoding/json"
 	"fmt"
 	"github.com/Lcfling/OAcount/controllers"
 	. "github.com/Lcfling/OAcount/models/area"
 	. "github.com/Lcfling/OAcount/models/program"
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/utils/pagination"
+	"github.com/bitly/go-simplejson"
 	"strconv"
+	"time"
 )
 
 //列表
@@ -241,5 +244,99 @@ func (this *AnwserList) Post() {
 	m["subject"] = s
 	m["area"] = GetChild(0, "0")
 	this.Data["json"] = map[string]interface{}{"code": 1, "message": "请填写项目名称", "data": m}
+	this.ServeJSON()
+}
+
+type AnswerController struct {
+	controllers.MobileController
+}
+
+func (this *AnswerController) Post() {
+
+	pid, err := this.GetInt64("pid")
+	if err != nil || !(pid > 0) {
+		this.Data["json"] = map[string]interface{}{"code": 0, "message": "获取测评失败"}
+	}
+	areaid, _ := this.GetInt64("area")
+	office, _ := this.GetInt64("office")
+	community, _ := this.GetInt64("community")
+	addr := this.GetString("addr")
+	name := this.GetString("name")
+	mobile := this.GetString("mobile")
+	if addr == "" {
+		this.Data["json"] = map[string]interface{}{"code": 0, "message": "请完善地址信息"}
+		this.ServeJSON()
+		return
+	}
+	if name == "" {
+		this.Data["json"] = map[string]interface{}{"code": 0, "message": "请完善姓名信息"}
+		this.ServeJSON()
+		return
+	}
+	if mobile == "" {
+		this.Data["json"] = map[string]interface{}{"code": 0, "message": "请完善手机信息"}
+		this.ServeJSON()
+		return
+	}
+	Content := this.GetString("data")
+	//var ContentJson map[string]interface{}
+
+	fmt.Println("string=======", Content)
+	//err = json.Unmarshal([]byte(Content), &ContentJson)
+
+	ContentJson, err := simplejson.NewJson([]byte(Content))
+	if err != nil {
+		this.Data["json"] = map[string]interface{}{"code": 0, "message": "答题数据解析失败+" + err.Error()}
+		this.ServeJSON()
+		return
+	}
+
+	arr, _ := ContentJson.Array()
+	var count int64
+	var sumscore int64
+
+	for _, v := range arr {
+		count += 1
+
+		//var Subject []interface{}
+		c := v.(map[string]interface{})
+		s := c["Content"]
+		Subject := s.(map[string]interface{})
+		arrS := Subject["Subject"]
+		arrSs := arrS.([]interface{})
+		for k, j := range arrSs {
+			state, _ := j.(map[string]interface{})["Check"].(json.Number).Int64()
+			if state == 1 {
+				sumscore += (4 - int64(k))
+			}
+		}
+	}
+	fmt.Println("count", count)
+	fmt.Println("sumscore", sumscore)
+	fmt.Println("最终得分:", 100*sumscore/(count*4))
+
+	pro := new(Sub)
+	pro.Area = areaid
+	pro.Office = office
+	pro.Community = community
+
+	pro.Score = 100 * sumscore / (count * 4)
+	if pro.Score >= 80 {
+		pro.Status = 1
+	} else {
+		pro.Status = 0
+	}
+	pro.Addr = addr
+	pro.Name = name
+	pro.Mobile = mobile
+	pro.Pid = pid
+	pro.Creatime = time.Now().Unix()
+	pro.Content = Content
+	_, err = AddSub(pro)
+	if err != nil {
+		this.Data["json"] = map[string]interface{}{"code": 0, "message": "入库失败：" + err.Error()}
+	} else {
+		this.Data["json"] = map[string]interface{}{"code": 0, "message": "提交成功"}
+	}
 	this.ServeJSON()
 }

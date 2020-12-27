@@ -66,6 +66,20 @@ type Pass struct {
 	PassRate  float64
 }
 
+//仅为问卷调查用
+type Ques struct {
+	Id        int64
+	Parentid  int64
+	Jstatus   int64
+	Name      string
+	Tags      string
+	Locations string
+	Owner     int64
+	Coler     string
+	Creatime  int64
+	Question  float64
+}
+
 type TagsA struct {
 	Id  int64
 	Aid int64
@@ -199,6 +213,7 @@ func UpdateArea(id int64, area Area) error {
 	var areaold Area
 	o := orm.NewOrm()
 	areaold = Area{Id: id}
+	o.Read(&areaold)
 	areaold.Name = area.Name
 	areaold.Jstatus = area.Jstatus
 	areaold.Locations = area.Locations
@@ -207,12 +222,36 @@ func UpdateArea(id int64, area Area) error {
 	areaold.Imgurl = area.Imgurl
 	var err error
 	_, err = o.Update(&areaold)
+	DeleteTagArea(id)
+
+	if id > 0 {
+		if area.Tags != "" {
+			taglist := strings.Split(area.Tags, ",")
+
+			for _, v := range taglist {
+				if v != "" {
+					tid, err := AddTags(v)
+					if err != nil {
+						continue
+					}
+					go AddTagsarea(id, tid)
+				}
+			}
+		}
+	}
+
 	return err
 }
 func DeleteArea(id int64) error {
 	o := orm.NewOrm()
 	ids := strconv.FormatInt(id, 10)
 	_, err := o.Raw("DELETE FROM " + models.TableName("area") + " WHERE id =" + ids + "").Exec()
+	return err
+}
+func DeleteTagArea(id int64) error {
+	o := orm.NewOrm()
+	ids := strconv.FormatInt(id, 10)
+	_, err := o.Raw("DELETE FROM " + models.TableName("tags_area") + " WHERE aid =" + ids + "").Exec()
 	return err
 }
 

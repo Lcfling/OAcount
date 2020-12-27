@@ -1,7 +1,6 @@
 package files
 
 import (
-	"fmt"
 	"github.com/Lcfling/OAcount/models"
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/orm"
@@ -29,7 +28,6 @@ func init() {
 
 func Addfile(Aid int64, missionmyid int64, types int, missionid int64, filename string, path string) (id int64, err error) {
 
-	fmt.Println("sssssss+", types, filename, path)
 	o := orm.NewOrm()
 	pro := new(Files)
 	//pro.Id = updPro.Id
@@ -49,7 +47,6 @@ func CountFiles(condArr map[string]interface{}) int64 {
 	qs := o.QueryTable(models.TableName("files"))
 	qs = qs.RelatedSel()
 	cond := orm.NewCondition()
-	fmt.Println(condArr)
 	if condArr["keywords"] != "" {
 		cond = cond.AndCond(cond.And("oldname__icontains", condArr["keywords"]))
 	}
@@ -63,7 +60,6 @@ func CountFiles(condArr map[string]interface{}) int64 {
 		cond = cond.And("aid", condArr["aid"])
 	}
 	if condArr["missionid"].(int64) != 0 {
-		fmt.Println(condArr)
 		cond = cond.And("missionid", condArr["missionid"])
 	}
 	cond = cond.And("status", 0)
@@ -90,7 +86,6 @@ func ListFiles(condArr map[string]interface{}, page int, offset int) (num int64,
 		cond = cond.And("aid", condArr["aid"])
 	}
 	if condArr["missionid"].(int64) != 0 {
-		fmt.Println(condArr)
 		cond = cond.And("missionid", condArr["missionid"])
 	}
 	cond = cond.And("status", 0)
