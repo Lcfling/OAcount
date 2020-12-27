@@ -23,10 +23,14 @@ type ApiMissionMydata struct {
 }
 
 type ApiMissionAreaInfo struct {
-	Id       int64
-	Name     string
-	Realname string
-	Phone    int64
+	Id           int64
+	Name         string
+	Realname     string
+	Phone        int64
+	Imgurl       string
+	MissionOver  int64
+	MissionCount int64
+	Position     string
 }
 
 func (this *ApiMissionMydata) TableName() string {
@@ -83,7 +87,7 @@ func ApiGetMissionMy(id int64) ApiMissionMydata {
 func ApiGetAreaUserInfo(owner int64) ApiMissionAreaInfo {
 	var my ApiMissionAreaInfo
 	qb, _ := orm.NewQueryBuilder("mysql")
-	qb.Select("a.name", "a.owner", "p.realname", "p.phone").From("pms_area AS a").
+	qb.Select("a.name", "a.owner", "p.realname", "p.phone", "p.imgurl").From("pms_area AS a").
 		LeftJoin("pms_users_profile AS p").On("a.owner = p.userid").
 		Where("a.owner=?").
 		Limit(1)
