@@ -65,7 +65,6 @@
                   <div class="col-sm-10">
                     {{$checkp:= .mission.Mid}}
                     <select name="programid" class="form-control">
-
                       {{range $k,$v:=.program}}
                       <option value="{{$v.Id}}" {{if eq $checkp $v.Id}}selected{{end}}>{{$v.Title}}</option>
                       {{end}}

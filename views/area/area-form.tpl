@@ -65,6 +65,14 @@
                 <input type="text" name="tags" value="{{.area.Tags}}" class="form-control" placeholder="标签">
               </div>
             </div>
+        <div class="form-group">
+          <label class="col-sm-2 col-sm-2 control-label"><span>*</span>地标图案</label>
+          <div class="col-sm-10">
+            <img src="{{.area.Imgurl}}"  id='preview' width='500px' height='400px' alt="地标图案" />
+            <p><input type="file" name="file"  id='file' multiple="multiple">
+              <span> - </span><br/></p>
+          </div>
+        </div>
             <div class="form-group">
               <label class="col-sm-2 col-sm-2 control-label"><span>*</span>坐标信息</label>
               <div class="col-sm-10">
@@ -104,8 +112,6 @@
     <div class="modal-body" style="height:600px">
       <div id="allmap">
       </div>
-
-
     </div>
     <div class="modal-footer">
       <input id="localname" value=""/><a id="jiansuo" class="btn btn-primary">检索</a>
@@ -171,6 +177,22 @@ $(function(){
     local.search(lname);
   })
 })
+
+document.querySelector('#file').onchange=function() {
+
+  //1.创建文件读取对象
+  var reader = new FileReader();
+  //2.读取用户选择的文件
+  reader.readAsDataURL(this.files[0]);
+  //3.监听文件下载(读取)状况
+  reader.onload = function () {
+    //输出文件的二进制编码
+    console.log(reader.result);
+    //把reader.result给img标签添加属性src
+    document.querySelector('#preview').src = reader.result;
+    //
+  }
+}
 
 //$('#projectModal').modal('toggle').find('.modal-body').html(html);
 </script>

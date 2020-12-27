@@ -22,17 +22,6 @@ type ApiMissionMydata struct {
 	Checktime int64
 }
 
-type ApiMissionAreaInfo struct {
-	Id           int64
-	Name         string
-	Realname     string
-	Phone        int64
-	Imgurl       string
-	MissionOver  int64
-	MissionCount int64
-	Position     string
-}
-
 func (this *ApiMissionMydata) TableName() string {
 	return models.TableName("mission_my")
 }
@@ -83,18 +72,31 @@ func ApiGetMissionMy(id int64) ApiMissionMydata {
 	return my
 }
 
-//点位员信息
-func ApiGetAreaUserInfo(owner int64) ApiMissionAreaInfo {
-	var my ApiMissionAreaInfo
+type ApiAreaInfo struct {
+	Id           int64
+	Name         string
+	Owner        int64
+	Locations    string
+	Imgurl       string
+	Realname     string
+	Positionid   int64
+	MissionOver  int64
+	MissionCount int64
+	Pname        string
+	Desc         string
+}
+
+//点位信息
+func ApiGetAreaInfo(aid int64) ApiAreaInfo {
+	var ApiAreaInfo ApiAreaInfo
 	qb, _ := orm.NewQueryBuilder("mysql")
-	qb.Select("a.name", "a.owner", "p.realname", "p.phone", "p.imgurl").From("pms_area AS a").
-		LeftJoin("pms_users_profile AS p").On("a.owner = p.userid").
-		Where("a.owner=?").
-		Limit(1)
+	qb.Select("a.id", "a.name", "a.owner", "a.locations", "a.imgurl", "p.realname", "p.positionid", "ps.name as pname", "ps.desc").From("pms_area AS a").
+		LeftJoin("pms_users_profile AS p").On("a.owner = p.userid").LeftJoin("pms_positions AS ps").On("p.positionid = ps.positionid").
+		Where("a.id=?").Limit(1)
 	sql := qb.String()
 	o := orm.NewOrm()
-	o.Raw(sql, owner).QueryRow(&my)
-	return my
+	o.Raw(sql, aid).QueryRow(&ApiAreaInfo)
+	return ApiAreaInfo
 }
 
 //更改我的任务查阅状态
@@ -103,4 +105,27 @@ func UpdateCheck(id int64, userid int64) error {
 	o := orm.NewOrm()
 	_, err := o.Raw("update  "+models.TableName("mission_my")+" SET `check`=1,checktime=?  WHERE id = ? AND userid=?", checktime, id, userid).Exec()
 	return err
+}
+
+// 点位任务数量
+func MissionCount(userid int64) int64 {
+	o := orm.NewOrm()
+	qs := o.QueryTable(models.TableName("mission_my"))
+	qs = qs.RelatedSel()
+	cond := orm.NewCondition()
+	cond = cond.And("userid", userid)
+	num, _ := qs.SetCond(cond).Count()
+	return num
+}
+
+// 点位已完成任务数量
+func MissionOverCount(userid int64) int64 {
+	o := orm.NewOrm()
+	qs := o.QueryTable(models.TableName("mission_my"))
+	qs = qs.RelatedSel()
+	cond := orm.NewCondition()
+	cond = cond.And("userid", userid)
+	cond = cond.And("status", 1)
+	num, _ := qs.SetCond(cond).Count()
+	return num
 }

@@ -60,11 +60,9 @@
                       <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> 操作<span class="caret"></span> </button>
                       <ul class="dropdown-menu">
                         <li><a href="/area/edit/{{$v.Id}}">编辑</a></li>
-
                         <li role="separator" class="divider"></li>
                         <li><a href="/area/manage/?parentid={{$v.Id}}">查看子区域</a></li>
                         <li role="separator" class="divider"></li>
-
                         <li><a href="/area/add/{{$v.Id}}">添加子区域</a></li>
                         <li role="separator" class="divider"></li>
                         <li><a href="javascript:;" class="js-permission-delete" data-op="delete" data-id="{{$v.Id}}">删除</a></li>

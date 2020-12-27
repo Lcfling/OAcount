@@ -7,19 +7,20 @@ import (
 	"strconv"
 )
 
-//我的信息
-type ApiAreaUserInfoController struct {
+//点位信息
+type ApiAreaInfoController struct {
 	controllers.UserBaseController
 }
 
-//我的信息
-func (this *ApiAreaUserInfoController) Post() {
+//点位信息
+func (this *ApiAreaInfoController) Post() {
 	//userid := this.UserBaseController.UserUserId
-	owner := this.GetString("owner")
-	owner64, _ := strconv.ParseInt(owner, 10, 64)
+	aid := this.GetString("aid")
+	aid64, _ := strconv.ParseInt(aid, 10, 64)
 	//点位员信息
-	areaInfo := ApiGetAreaUserInfo(owner64)
-	areaInfo.Position = "点位长"
+	areaInfo := ApiGetAreaInfo(aid64)
+	areaInfo.MissionCount = MissionCount(areaInfo.Owner)    //任务数量
+	areaInfo.MissionOver = MissionOverCount(areaInfo.Owner) //任务完成数量
 	//返回数据
 	data := make(map[string]interface{})
 	data["areaInfo"] = areaInfo
@@ -41,13 +42,11 @@ func (this *ApiMissionMyController) Post() {
 		this.Data["json"] = map[string]interface{}{"code": 0, "message": "参数错误!", "data": ""}
 		this.ServeJSON()
 	}
-
 	types64, _ := strconv.ParseInt(types, 10, 64)
 	lastid, err := this.GetInt("lastid")
 	if err != nil {
 		lastid = 0
 	}
-
 	// 每页显示数量
 	offset, err1 := beego.AppConfig.Int("pageoffset")
 	if err1 != nil {

@@ -22,6 +22,7 @@ type Area struct {
 	Owner     int64
 	Coler     string
 	Creatime  int64
+	Imgurl    string
 }
 
 type AreaList struct {
@@ -203,9 +204,9 @@ func UpdateArea(id int64, area Area) error {
 	areaold.Locations = area.Locations
 	areaold.Owner = area.Owner
 	areaold.Coler = area.Coler
+	areaold.Imgurl = area.Imgurl
 	var err error
 	_, err = o.Update(&areaold)
-
 	return err
 }
 func DeleteArea(id int64) error {

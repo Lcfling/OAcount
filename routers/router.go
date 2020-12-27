@@ -325,17 +325,16 @@ func init() {
 	//任务详情
 	beego.Router("/mobile/mission/missionInfo", &mission.ApiMissionInfoController{})
 	//点位信息
-	beego.Router("/mobile/mission/areaInfo", &mission.ApiAreaUserInfoController{})
+	beego.Router("/mobile/mission/areaInfo", &mission.ApiAreaInfoController{})
 	beego.Router("/mobile/user/profile", &users.UserProfileController{}) //手机用户信息完善
 
 	//成功率
 	beego.Router("/mobile/area/doneRate", &area.ApiDoneRateController{})
 	beego.Router("/mobile/checkworks", &checkworks.MobileClockUserController{})
-
 	beego.Router("/mobile/user/info", &users.UserInfo{})
-
 	//点位打卡
 	beego.Router("/area/daka", &area.DakaController{})
 	//达标率
 	beego.Router("/area/passRate", &area.ApiPassRateController{})
+
 }
