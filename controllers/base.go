@@ -62,3 +62,6 @@ func (this *BaseController) Prepare() {
 	}
 	this.Data["IsLogin"] = this.IsLogin
 }
+func (this *BaseController) SendMsg(msg string) {
+	publish <- newEvent(4, "", msg)
+}

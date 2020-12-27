@@ -44,6 +44,19 @@
                     {{str2html .mission.Desc}}
                   </div>
                 </div>
+                <div class="form-group">
+                  <label class="col-sm-2 col-sm-2 control-label">附件</label>
+                  <div class="col-sm-10">
+                    {{range $k,$v:=.files}}
+
+                    {{if eq $v.Types 1}}
+                    <p><a target="_blank" href="{{$v.Path}}"><img width="225" src="{{$v.Path}}"/></a></p>
+                    {{else}}
+                    <p><a target="_blank" href="{{$v.Path}}">{{$v.Oldname}}</a></p>
+                    {{end}}
+                    {{end}}
+                  </div>
+                </div>
 
               </form>
             </div>

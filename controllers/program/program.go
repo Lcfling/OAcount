@@ -3,6 +3,7 @@ package program
 import (
 	"fmt"
 	"github.com/Lcfling/OAcount/controllers"
+	. "github.com/Lcfling/OAcount/models/area"
 	. "github.com/Lcfling/OAcount/models/program"
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/utils/pagination"
@@ -188,6 +189,24 @@ func (this *ListController) Post() {
 	this.ServeJSON()
 }
 
+//列表
+type ShareController struct {
+	controllers.IndexController
+}
+
+func (this *ShareController) Get() {
+	id, _ := this.GetInt64("id")
+	_, err := GetProgram(id)
+	if err != nil {
+		this.Data["json"] = map[string]interface{}{"code": 0, "message": "获取内容失败"}
+	} else {
+		url := "http://192.168.0.116:8088/static/html/share.html?pid=" + strconv.FormatInt(id, 10)
+		//data:=map[string]string{}
+		this.Data["json"] = map[string]interface{}{"code": 1, "message": "success", "data": url}
+	}
+	this.ServeJSON()
+}
+
 //测评详情
 /*type DetailController struct {
 	controllers.IndexController
@@ -201,3 +220,26 @@ func (this *DetailController) Post() {
 	this.Data["json"] = map[string]interface{}{"code": 1, "message": "消息列表", "data": programs}
 	this.ServeJSON()
 }*/
+type AnwserList struct {
+	controllers.MobileController
+}
+
+func (this *AnwserList) Post() {
+	pidstr := this.GetString("pid")
+	pid, _ := strconv.ParseInt(pidstr, 10, 64)
+	program, err := GetProgram(pid)
+	if err != nil {
+		this.Data["json"] = map[string]interface{}{"code": 0, "message": "测评不存在", "data": ""}
+		this.ServeJSON()
+		return
+	}
+	_, s := GetList(pid)
+	//var m map[string]interface{}
+	m := make(map[string]interface{})
+
+	m["project"] = program
+	m["subject"] = s
+	m["area"] = GetChild(0, "0")
+	this.Data["json"] = map[string]interface{}{"code": 1, "message": "请填写项目名称", "data": m}
+	this.ServeJSON()
+}

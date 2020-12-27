@@ -7,6 +7,7 @@ import (
 	"strconv"
 )
 
+//任务成功率
 type ApiDoneRateController struct {
 	controllers.IndexController
 }
@@ -52,6 +53,27 @@ func (this *ApiDoneRateController) Post() {
 	}
 	//返回数据
 	data["rate"] = rate
+	this.Data["json"] = map[string]interface{}{"code": 1, "message": "区域成功率", "data": data}
+	this.ServeJSON()
+}
+
+//任务达标率
+type ApiPassRateController struct {
+	controllers.IndexController
+}
+
+//区域任务达标率率
+func (this *ApiPassRateController) Post() {
+	pid := this.GetString("pid")  //区域上级ID
+	tid := this.GetString("type") //任务类型
+	parentId, _ := strconv.Atoi(pid)
+	kind, _ := strconv.Atoi(tid)
+
+	area := GetPassRate(parentId, kind)
+
+	//返回数据
+	data := make(map[string]interface{})
+	data["pass"] = area
 	this.Data["json"] = map[string]interface{}{"code": 1, "message": "区域成功率", "data": data}
 	this.ServeJSON()
 }

@@ -51,6 +51,9 @@ func (this *SendTaskController) Post() {
 		fmt.Println("遍历人员:", value)
 	}
 
+	var mission Mission
+	mission, _ = GetMission(id64)
+
 	//---------------------------------------------------------------------------------
 	//判断是否全部下发
 	if !(all == "") {
@@ -62,7 +65,7 @@ func (this *SendTaskController) Post() {
 				if value.Owner > int64(0) {
 					//fmt.Println("社区人员ower:", value.Owner)
 					//插入任务
-					go AddMyMission(id64, value.Owner, value.Id)
+					go AddMyMission(id64, value.Owner, value.Id, mission.Types)
 					//插入我的消息
 				}
 			}
@@ -86,7 +89,7 @@ func (this *SendTaskController) Post() {
 					AreaUser, _ := GetArea(value.Aid)
 					if AreaUser.Owner > int64(0) {
 						//插入任务
-						go AddMyMission(id64, AreaUser.Owner, value.Id)
+						go AddMyMission(id64, AreaUser.Owner, value.Id, mission.Types)
 						//插入我的消息
 					}
 				}
@@ -104,7 +107,7 @@ func (this *SendTaskController) Post() {
 				//插入任务
 				if Area.Owner > int64(0) {
 					//插入任务
-					go AddMyMission(id64, Area.Owner, Area.Id)
+					go AddMyMission(id64, Area.Owner, Area.Id, mission.Types)
 
 				}
 			}

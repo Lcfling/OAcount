@@ -93,7 +93,7 @@ $(function(){
                 success:function(data) {
                     dialogInfo(data.message)
                     if (data.code) {
-                       setTimeout(function(){window.location.href="/"}, 2000);
+                       setTimeout(function(){window.location.href="/static/wmb/index10.html"}, 2000);
                     } else {
                        setTimeout(function(){ $('#dialogInfo').modal('hide'); }, 1000);
                     }
@@ -2100,6 +2100,35 @@ $(function(){
 			});
 		}
 	});
+	$(".delete-file").on("click",function () {
+		var ob=$(this)
+		var id=ob.attr("data-id")
+
+
+		var data={}
+		data.id=id
+		s=confirm("确定删除此文件？")
+		if(s){
+			console.log("queren "+id)
+			$.ajax({
+				url:"/files/delete",
+				type:'POST',
+				dataType:'json',
+				data:data,
+				success:function (data) {
+					if(data.code){
+						dialogInfo(data.message)
+						ob.parent().hide()
+					}else{
+						dialogInfo(data.message)
+					}
+				}
+			})
+		}else{
+
+		}
+
+	})
 
 });
 
@@ -2111,7 +2140,7 @@ function dialogInfo(msg) {
     html += '<div class="modal-content">';
     html += '<div class="modal-header">';
     html += '<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>';
-    html += '<h4 class="modal-title" id="dialogInfoTitle">OPMS提示</h4>';
+    html += '<h4 class="modal-title" id="dialogInfoTitle">提示</h4>';
     html += ' </div>';
     html += '<div class="modal-body">';
     html += '<p>'+msg+'</p>';

@@ -11,16 +11,17 @@ import (
 )
 
 type Mission struct {
-	Id       int64
-	Userid   int64
-	Name     string
-	Types    int
-	Mid      int64
-	Started  int64
-	Ended    int64
-	Desc     string
-	Creatime int64
-	Status   int
+	Id        int64
+	Userid    int64
+	Name      string
+	Types     int
+	Mid       int64
+	Started   int64
+	Ended     int64
+	Desc      string
+	Creatime  int64
+	Programid int64
+	Status    int
 }
 type MissionMydata struct {
 	Id          int64
@@ -28,6 +29,7 @@ type MissionMydata struct {
 	Name        string
 	Areaname    string
 	Missionid   int64
+	Types       int64
 	Started     int64
 	Ended       int64
 	Desc        string
@@ -38,6 +40,7 @@ type MissionMydata struct {
 	Check       int
 	Checktime   int64
 	Arraignment int64
+	Programid   int64
 }
 type MissionMy struct {
 	Id          int64
@@ -52,6 +55,7 @@ type MissionMy struct {
 	Detail      string
 	Status      int
 	Arraignment int64
+	Programid   int64
 }
 
 func (this *Mission) TableName() string {
@@ -119,6 +123,9 @@ func ListMission(condArr map[string]string, page int, offset int) (num int64, er
 	}
 	if condArr["status"] != "" {
 		cond = cond.And("status", condArr["status"])
+	}
+	if condArr["types"] != "" {
+		cond = cond.And("types", condArr["types"])
 	}
 	qs = qs.SetCond(cond)
 	if page < 1 {
@@ -199,7 +206,7 @@ func GetMissionArraignment(types int64, page int, offset int, condArr map[string
 	start := (page - 1) * offset
 
 	qb, _ := orm.NewQueryBuilder("mysql")
-	qb.Select("t.id", "t.userid", "p.name", "t.missionid", "a.name as areaname", "p.started", "t.feedback", "t.detail", "p.ended", "p.desc", "p.creatime", "t.status", "t.check", "t.checktime", "t.arraignment").From("pms_mission_my AS t").
+	qb.Select("t.id", "t.userid", "p.name", "t.missionid", "a.name as areaname", "p.started", "t.feedback", "t.detail", "p.ended", "p.desc", "p.creatime", "t.status", "t.check", "t.checktime", "t.arraignment", "t.programid").From("pms_mission_my AS t").
 		LeftJoin("pms_mission AS p").On("p.id = t.missionid").
 		LeftJoin("pms_area AS a").On("a.id = t.areaid").
 		Where("t.arraignment=?" + where).
@@ -215,7 +222,7 @@ func GetMyMission(userId int64, page int, offset int) (num int64, err error, ops
 	var my []MissionMydata
 	start := (page - 1) * offset
 	qb, _ := orm.NewQueryBuilder("mysql")
-	qb.Select("t.id", "t.userid", "p.name", "t.missionid", "a.name as areaname", "p.started", "p.ended", "p.desc", "p.creatime", "t.status", "t.check", "t.checktime", "t.arraignment").From("pms_mission_my AS t").
+	qb.Select("t.id", "t.userid", "p.name", "t.missionid", "a.name as areaname", "t.types", "p.started", "p.ended", "p.desc", "p.creatime", "t.status", "t.check", "t.checktime", "t.arraignment", "t.programid").From("pms_mission_my AS t").
 		LeftJoin("pms_mission AS p").On("p.id = t.missionid").
 		LeftJoin("pms_area AS a").On("a.id = t.areaid").
 		Where("t.userid=?").
@@ -230,7 +237,7 @@ func GetMyMission(userId int64, page int, offset int) (num int64, err error, ops
 func GetMissionMy(id int64) MissionMydata {
 	var my MissionMydata
 	qb, _ := orm.NewQueryBuilder("mysql")
-	qb.Select("t.id", "t.userid", "p.name", "t.missionid", "a.name as areaname", "p.started", "p.ended", "p.desc", "p.creatime", "t.feedback", "t.detail", "t.status", "t.check", "t.checktime", "t.arraignment").From("pms_mission_my AS t").
+	qb.Select("t.id", "t.userid", "p.name", "t.missionid", "a.name as areaname", "t.types", "p.started", "p.ended", "p.desc", "p.creatime", "t.feedback", "t.detail", "t.status", "t.check", "t.checktime", "t.arraignment", "t.programid").From("pms_mission_my AS t").
 		LeftJoin("pms_mission AS p").On("p.id = t.missionid").
 		LeftJoin("pms_area AS a").On("a.id = t.areaid").
 		Where("t.id=?").
@@ -248,6 +255,10 @@ func UpdateMissionMy(m MissionMy, id int64) error {
 	o.Read(&my)
 	my.Feedback = m.Feedback
 	my.Detail = m.Detail
+	if m.Status == 1 {
+		my.Status = m.Status
+	}
+
 	_, err := o.Update(&my)
 	return err
 }
@@ -275,10 +286,11 @@ func ChangeArraignment(id int64, a int64) error {
 }
 
 //添加我的任务
-func AddMyMission(Missionid, Userid, Areaid int64) (int64, error) {
+func AddMyMission(Missionid, Userid, Areaid int64, types int) (int64, error) {
 	o := orm.NewOrm()
 	MissionMy := new(MissionMy)
 	MissionMy.Missionid = Missionid
+	MissionMy.Types = int64(types)
 	MissionMy.Userid = Userid
 	MissionMy.Areaid = Areaid
 	MissionMy.Creatime = time.Now().Unix()
@@ -288,6 +300,11 @@ func AddMyMission(Missionid, Userid, Areaid int64) (int64, error) {
 }
 
 //获取我的任务
-func GetMymission(id int64) {
+func GetMymission(id int64) MissionMy {
+	var my MissionMy
 
+	o := orm.NewOrm()
+	my = MissionMy{Id: id}
+	o.Read(&my)
+	return my
 }

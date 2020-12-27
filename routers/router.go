@@ -56,7 +56,7 @@ func init() {
 	beego.Router("/mobile/login", &users.LoginUserController{})
 
 	beego.Router("/logout", &users.LogoutUserController{})
-	beego.Router("/register/:pid", &users.RegisterController{})
+	beego.Router("/register", &users.RegisterController{})
 
 	//部门
 	beego.Router("/department/manage", &users.ManageDepartmentController{})
@@ -265,6 +265,7 @@ func init() {
 
 	//项目mission
 	beego.Router("/mission/manage", &mission.MissionManageController{})
+	beego.Router("/mission/list", &mission.MissionListController{})
 	beego.Router("/mission/add", &mission.MissionAddController{})
 	beego.Router("/mission/detail/:id", &mission.MissionDetailController{})
 	beego.Router("/mission/sendtask/:id", &mission.SendTaskController{})
@@ -273,6 +274,7 @@ func init() {
 	//my mission
 	beego.Router("/mymission/manage", &mission.MissionMyController{})
 	beego.Router("/mymission/sub/:id", &mission.MissionMySubController{})
+	beego.Router("/mobile/mymission/sub", &mission.MissionMySubMobileController{})
 	beego.Router("/mymission/arraignment/:types", &mission.ArraignmentController{})
 	beego.Router("/mymission/arraignmentsub/:id", &mission.ArraignmentSubController{})
 
@@ -281,13 +283,17 @@ func init() {
 	beego.Router("/program/add", &program.ProgramAddController{})
 	beego.Router("/program/edit/:id", &program.ProgramEditController{})
 	beego.Router("/program/index", &program.ProgramIndexController{})
+	beego.Router("/api/answer/list", &program.AnwserList{})
 	beego.Router("/program/subjectlist/:pid", &program.SubjectListController{})
 	beego.Router("/addsubject", &program.SubjectAddController{})
 	beego.Router("/subject/edit", &program.SubjectManageController{})
 	beego.Router("/mobile/program/list", &program.ListController{})
+	beego.Router("/mobile/program/share", &program.ShareController{})
 
 	//文件管理
 	beego.Router("/files/manage", &files.FilesManageController{})
+	beego.Router("/files/delete", &files.DeleteController{})
+	beego.Router("/mobile/files/delete", &files.DeleteMobileController{})
 	//标签管理
 	beego.Router("/tags", &tags.TagsAllController{})
 
@@ -315,6 +321,7 @@ func init() {
 	beego.Router("/mobile/news/classicList", &news.ApiNewsClassicController{})
 	//我的任务
 	beego.Router("/mobile/mission/missionMy", &mission.ApiMissionMyController{})
+
 	//任务详情
 	beego.Router("/mobile/mission/missionInfo", &mission.ApiMissionInfoController{})
 	//点位信息
@@ -323,5 +330,12 @@ func init() {
 
 	//成功率
 	beego.Router("/mobile/area/doneRate", &area.ApiDoneRateController{})
+	beego.Router("/mobile/checkworks", &checkworks.MobileClockUserController{})
 
+	beego.Router("/mobile/user/info", &users.UserInfo{})
+
+	//点位打卡
+	beego.Router("/area/daka", &area.DakaController{})
+	//达标率
+	beego.Router("/area/passRate", &area.ApiPassRateController{})
 }

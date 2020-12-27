@@ -40,7 +40,6 @@ func GetUidsByAids(aids []string) []string {
 	qs = qs.SetCond(cond)
 	var areas []Area
 	num, _ := qs.All(&areas)
-	fmt.Println("num", num)
 	if num > 0 {
 		var uids []string
 		for _, v := range areas {
@@ -69,6 +68,10 @@ func GetMissionDoneRate(uids []string) float64 {
 	cond2 = cond2.And("status", 1) //已完成
 	cond2 = cond2.And("userid__in", uids)
 	done, _ = qs.SetCond(cond2).Count()
+
+	if none == 0 {
+		return 0
+	}
 
 	doneRate := float64(done) / float64(none) * 100
 	value, _ := strconv.ParseFloat(fmt.Sprintf("%.2f", doneRate), 64)

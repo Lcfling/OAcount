@@ -41,17 +41,13 @@
                     <input type="text" name="name" value="{{.area.Name}}" class="form-control" placeholder="请填写名称">
                   </div>
                 </div>
-                <div class="form-group">
-                  <label class="col-sm-2 col-sm-2 control-label">负责人</label>
-                  <div class="col-sm-10">
-                    <select name="owner" class="form-control">
-                      <option value="0" {{if eq 0 $.area.Owner}}selected{{end}}>无</option>
-                      {{range .myuser}}
-                      <option value="{{.Userid}}" {{if eq .Userid $.area.Owner}}selected{{end}}>{{.Realname}}</option>
-                      {{end}}
-                    </select>
-                  </div>
+              <div class="form-group">
+                <label class="col-sm-2 col-sm-2 control-label"><span>*</span>负责人</label>
+                <div class="col-sm-10">
+                  <input type="text" name="username" id="team-username" value="{{getRealname .area.Owner}}" class="form-control js-search-username" placeholder="请输入姓名或用户名匹配">
                 </div>
+              </div>
+
                 <div class="form-group">
                   <label class="col-sm-2 col-sm-2 control-label">是否局委</label>
                   <div class="col-sm-10">
@@ -78,6 +74,7 @@
                 <div class="form-group">
                   <label class="col-lg-2 col-sm-2 control-label"></label>
                   <div class="col-lg-10">
+                    <input type="hidden" name="owner" id="userid">
                     <input type="hidden" name="id" value="{{.area.Id}}">
                     <button type="submit" class="btn btn-primary">提 交</button>
                   </div>
@@ -96,6 +93,7 @@
   <!-- main content end-->
 </section>
 {{template "inc/foot.tpl" .}}
+<script src="/static/js/jquery-ui-1.10.3.min.js"></script>
 <div aria-hidden="true" aria-labelledby="projectModalLabel" role="dialog" tabindex="-1" id="projectModal" class="modal fade">
 <div class="modal-dialog">
   <div class="modal-content">

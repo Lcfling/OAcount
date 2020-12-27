@@ -1,10 +1,14 @@
 package checkworks
 
 import (
+	"encoding/json"
 	"fmt"
+	"strconv"
 
 	"github.com/Lcfling/OAcount/controllers"
+	. "github.com/Lcfling/OAcount/models/area"
 	. "github.com/Lcfling/OAcount/models/checkworks"
+	. "github.com/Lcfling/OAcount/models/mission"
 	"github.com/Lcfling/OAcount/utils"
 	//"os"
 	//"strconv"
@@ -188,20 +192,24 @@ type MobileClockUserController struct {
 	controllers.UserBaseController
 }
 
+func (this *MobileClockUserController) Get() {
+	area := GetUsersArea(this.UserUserId)
+	data := make(map[string]interface{})
+	data["area"] = area
+	this.Data["json"] = map[string]interface{}{"code": 1, "message": "打卡信息", "data": data}
+	this.ServeJSON()
+}
+
 func (this *MobileClockUserController) Post() {
-	clock := this.GetString("clock")
-	missionmyid, _ := this.GetInt64("mid")
-	if "" == clock {
-		this.Data["json"] = map[string]interface{}{"code": 0, "message": "参数出错"}
-		this.ServeJSON()
-		return
-	}
-	checkNum := CountClock(this.UserBaseController.UserUserId)
+	//clock := this.GetString("clock")
+	missionmyid, _ := this.GetInt64("id")
+
+	/*checkNum := CountClock(this.UserBaseController.UserUserId)
 	if checkNum >= 2 {
 		this.Data["json"] = map[string]interface{}{"code": 0, "message": "你今天打卡次数超过了2次"}
 		this.ServeJSON()
 		return
-	}
+	}*/
 	lng := this.GetString("lng")
 
 	lat := this.GetString("lat")
@@ -210,13 +218,57 @@ func (this *MobileClockUserController) Post() {
 		this.ServeJSON()
 		return
 	}
+	var missionmyData MissionMy
 
+	var aid = int64(0)
 	if missionmyid > 0 {
 		//Todo 判断打开位置和地图位置相差的距离
+
+		missionmyData = GetMymission(missionmyid)
+
+		locationid := missionmyData.Areaid
+
+		area, _ := GetArea(locationid)
+
+		location := area.Locations
+		if location == "" {
+			this.Data["json"] = map[string]interface{}{"code": 0, "message": "系统地址未绑定坐标信息", "data": nil}
+			this.ServeJSON()
+			return
+		}
+		locArr := strings.Split(location, ",")
+		if len(locArr) != 2 {
+			this.Data["json"] = map[string]interface{}{"code": 0, "message": "系统绑定坐标信息格式错误", "data": nil}
+			this.ServeJSON()
+			return
+		}
+
+		distence := utils.GetDistanceNone(lng, lat, locArr[0], locArr[1])
+
+		//200米范围内打卡
+
+		fmt.Println("lng:", lng)
+		fmt.Println("lat:", lat)
+		fmt.Println("locArr[0]:", locArr[0])
+		fmt.Println("locArr[1]:", locArr[1])
+		fmt.Println("distence:", distence*1000)
+		if distence/10000*1000 > 200 {
+			this.Data["json"] = map[string]interface{}{"code": 0, "message": "请在指定范围200米内打卡", "data": nil}
+			this.ServeJSON()
+			return
+		}
+
+		aid = area.Id
+
+	} else {
+		missionmyid = int64(0)
 	}
+	clocki := time.Now().Unix()
+	clock := strconv.FormatInt(clocki, 10)
 	var check Checkworks
 	check.Id = utils.SnowFlakeId()
 	check.Userid = this.UserBaseController.UserUserId
+	check.Aid = aid
 	check.Clock = clock
 	check.Missionmyid = missionmyid
 	check.Lng = lng
@@ -226,7 +278,9 @@ func (this *MobileClockUserController) Post() {
 	err := AddCheckwork(check)
 
 	if err == nil {
-		//Todo 通知订阅
+		//lcfling 通知订阅
+		c, _ := json.Marshal(check)
+		this.SendMsg(string(c))
 
 		this.Data["json"] = map[string]interface{}{"code": 1, "message": "打卡成功"}
 	} else {

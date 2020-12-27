@@ -105,7 +105,7 @@ $(function(){
 	
 	for(var i=0;i<jsonOb.length;i++) {
 		html +='<li data-id="'+jsonOb[i].Id+'" class="border">';
-		html += '<h4>'+jsonOb[i].Name+' <input type="checkbox" name="checkarea" ></h4>';
+		html += '<h4>'+jsonOb[i].Name+' <input type="checkbox" name="checkareas" value="' + jsonOb[i].Id + '"></h4>';
 		
 		html+='<ul class="cul">'
         if (jsonOb[i].Child!=null) {

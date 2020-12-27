@@ -37,6 +37,34 @@ type AreaList struct {
 	Child     []AreaList
 }
 
+//仅为打卡用
+type Daka struct {
+	Id        int64
+	Parentid  int64
+	Jstatus   int64
+	Name      string
+	Tags      string
+	Locations string
+	Owner     int64
+	Coler     string
+	Creatime  int64
+	Daka      int
+}
+
+//仅为达标率用
+type Pass struct {
+	Id        int64
+	Parentid  int64
+	Jstatus   int64
+	Name      string
+	Tags      string
+	Locations string
+	Owner     int64
+	Coler     string
+	Creatime  int64
+	PassRate  float64
+}
+
 type TagsA struct {
 	Id  int64
 	Aid int64
@@ -150,6 +178,21 @@ func GetArea(id int64) (Area, error) {
 		utils.SetCache("GetArea.id."+fmt.Sprintf("%d", id), area, cache_expire)
 	}
 	return area, err
+}
+
+func GetUsersArea(userid int64) []Area {
+	o := orm.NewOrm()
+	o.Using("default")
+	qs := o.QueryTable(models.TableName("area"))
+	cond := orm.NewCondition()
+	cond = cond.And("userid", userid)
+	var areas []Area
+	_, errs := qs.All(&areas)
+	if errs != nil {
+		return nil
+	} else {
+		return areas
+	}
 }
 func UpdateArea(id int64, area Area) error {
 	var areaold Area
