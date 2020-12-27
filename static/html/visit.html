@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <script src="/jquery-3.3.1.min.js?t=1"></script>
+    <script src="js/jquery-3.3.1.min.js?t=1"></script>
     <title>Document</title>
     <style>
         *{
@@ -203,19 +203,22 @@
     $(function () {
         $.ajax({
             type: 'post',
-            url: 'http://wenjuan.webziti.com/api/answer/list',
+            url: 'http://127.0.0.1:8088/api/answer/list',
             data: data,
             dataType: 'json',
             success: function (res) {
                 console.log(res);
-                if(res.status == 1){
+                if(res.code == 1){
                     datalist = res.data.subject;
                     publish = res.data.publish;
+                    console.log(datalist)
                     item(datalist,$('#list'));
                     area = res.data.area;
                     let a = '';
+
                     for (let i=0; i<area.length; i++){
-                        a += '<li>'+area[i].name+'</li>';
+                        console.log(area[i])
+                        a += '<li data-id="'+area[i].Id+'">'+area[i].Name+'</li>';
 
                     }
                     $('#info >div:nth-child(1) ul').html(a);
@@ -228,6 +231,8 @@
     $(document).on('click','#info li',function () {
         let val = $(this).text();
         $(this).parent().siblings('p').text(val);
+        let ids = $(this).attr("data-id");
+        $(this).parent().siblings('p').attr("data-ids",ids);
         let index = $(this).index();
         let id = $(this).parent().siblings('p').attr('data-id');
        arr[id] = index;
@@ -240,15 +245,16 @@
         let parent = $(this).parent().children('ul');
         let tit = $(this).parent().prev().find('p').text();
 
+        console.log("ddddd",arr,data)
             switch (data) {
                 case 'qu':
                     xiala(parent,area);
                     break;
                 case 'chu':
-                        xiala(parent,area[arr['qu']].children);
+                        xiala(parent,area[arr['qu']].Child);
                     break;
                 case 'she':
-                        xiala(parent,area[arr['qu']].children[arr['chu']].children);
+                        xiala(parent,area[arr['qu']].Child[arr['chu']].Child);
                     break;
             }
 
@@ -259,7 +265,7 @@
         if(!name) return;
         let li = '';
         for (let i=0; i<name.length; i++){
-            li += '<li>'+ name[i].name +'</li>' ;
+            li += '<li data-id="'+name[i].Id+'">'+ name[i].Name +'</li>' ;
         }
         parent.html(li).show();
     }
@@ -289,9 +295,9 @@
             alert('此问卷不存在');
             return;
         }
-        var area = $("#area").text();
-        var office = $("#office").text();
-        var community = $("#community").text();
+        var area = $("#area").attr("data-ids");
+        var office = $("#office").attr("data-ids");
+        var community = $("#community").attr("data-ids");
         var addr = $("#addr").val();
         var name = $("#name").val();
         var mobile = $("#mobile").val();
@@ -340,11 +346,12 @@
 
     function item(data,parent) {
         let item = '';
+        console.log("ssss")
         for (let i=0; i<data.length; i++){
-            item += '<div><h3>'+(i+1)+data[i].content.title+'</h3><ul data-type="'+data[i].content.type+'">';
+            item += '<div><h3>'+(i+1)+data[i].Content.Title+'</h3><ul data-type="'+data[i].Content.Type+'">';
             
-            for (let j=0; j<data[i].content.subject.length; j++){
-                item += '<li><span class="radio"></span>'+data[i].content.subject[j].content+'</li>';
+            for (let j=0; j<data[i].Content.Subject.length; j++){
+                item += '<li><span class="radio"></span>'+data[i].Content.Subject[j].Content+'</li>';
             }
             item += '</ul></div>';
         }

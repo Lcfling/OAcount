@@ -64,7 +64,7 @@ func (this *MissionManageController) Post() {
 }
 
 type MissionListController struct {
-	controllers.BaseController
+	controllers.IndexController
 }
 
 func (this *MissionListController) Get() {

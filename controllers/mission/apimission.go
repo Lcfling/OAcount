@@ -46,6 +46,12 @@ func (this *ApiMissionMyController) Post() {
 		this.ServeJSON()
 	}
 
+	//types := this.GetString("types") // 0 未完成  1已完成
+	if types == "" {
+		this.Data["json"] = map[string]interface{}{"code": 0, "message": "参数错误!", "data": ""}
+		this.ServeJSON()
+	}
+
 	types64, _ := strconv.ParseInt(types, 10, 64)
 	lastid, err := this.GetInt("lastid")
 	if err != nil {

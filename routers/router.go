@@ -283,10 +283,12 @@ func init() {
 	beego.Router("/program/add", &program.ProgramAddController{})
 	beego.Router("/program/edit/:id", &program.ProgramEditController{})
 	beego.Router("/program/index", &program.ProgramIndexController{})
+	beego.Router("/api/answer/list", &program.AnwserList{})
 	beego.Router("/program/subjectlist/:pid", &program.SubjectListController{})
 	beego.Router("/addsubject", &program.SubjectAddController{})
 	beego.Router("/subject/edit", &program.SubjectManageController{})
 	beego.Router("/mobile/program/list", &program.ListController{})
+	beego.Router("/mobile/program/share", &program.ShareController{})
 
 	//文件管理
 	beego.Router("/files/manage", &files.FilesManageController{})
