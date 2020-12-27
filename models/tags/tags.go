@@ -25,7 +25,15 @@ func GetTagsAll() []Tags {
 }
 func Isexsit(name string) (int64, bool) {
 
-	return 1, false
+	o := orm.NewOrm()
+	tag := Tags{Name: name}
+	o.Read(&tag, "name")
+	if tag.Id > 0 {
+		return tag.Id, true
+	} else {
+		return 0, false
+	}
+
 }
 func AddTags(name string) (id int64, err error) {
 	o := orm.NewOrm()

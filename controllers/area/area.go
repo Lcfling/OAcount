@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/Lcfling/OAcount/controllers"
 	. "github.com/Lcfling/OAcount/models/area"
+	. "github.com/Lcfling/OAcount/models/tags"
 	. "github.com/Lcfling/OAcount/models/users"
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/utils/pagination"
@@ -140,6 +141,7 @@ func (this *AreaEditController) Get() {
 func (this *AreaEditController) Post() {
 	id := this.Ctx.Input.Param(":id")
 	idp, _ := strconv.ParseInt(id, 10, 64)
+	tagstr := this.GetString("tags")
 	locations := this.GetString("locations")
 	name := this.GetString("name")
 	owner := this.GetString("owner")
@@ -159,6 +161,7 @@ func (this *AreaEditController) Post() {
 	area.Locations = locations
 	area.Owner = ownerid
 	area.Coler = coler
+	area.Tags = tagstr
 	err := UpdateArea(idp, area)
 	fmt.Println(err)
 	if err == nil {
@@ -222,11 +225,30 @@ type GetAllAreaController struct {
 func (this *GetAllAreaController) Get() {
 
 	pid, _ := this.GetInt64("pid")
+	tid, _ := this.GetInt64("tid")
+
 	s := GetChild(pid, "")
 	arr := GetAllAreaIdByPid(s)
 	_, _, data := GetAllByArray(arr)
 
-	this.Data["json"] = map[string]interface{}{"code": 1, "message": "success", "data": data}
+	fmt.Println("tid:", tid)
+
+	Tas := GetAreaBytagid(tid)
+
+	fmt.Println("tag:", Tas)
+	var newData []Area
+	if len(Tas) > 0 {
+		for _, v := range data {
+			for _, j := range Tas {
+				if j.Aid == v.Id {
+					newData = append(newData, v)
+				}
+			}
+		}
+		this.Data["json"] = map[string]interface{}{"code": 1, "message": "success", "data": newData}
+	} else {
+		this.Data["json"] = map[string]interface{}{"code": 1, "message": "success", "data": data}
+	}
 
 	this.ServeJSON()
 }

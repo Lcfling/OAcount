@@ -1802,7 +1802,7 @@ $(function(){
 
 					dialogInfo(data.message)
 					if (data.code) {
-						setTimeout(function(){window.location.href="/area/manage/?parentid="+data.pid}, 2000);
+						setTimeout(function(){history.go(-1)}, 2000);
 					} else {
 						setTimeout(function(){ $('#dialogInfo').modal('hide'); }, 1000);
 					}
