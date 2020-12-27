@@ -20,7 +20,7 @@
       <ul class="breadcrumb pull-left">
         <li> <a href="/user/show/{{.LoginUserid}}">OPMS</a> </li>
         <li> <a href="/news/manage">通知管理</a> </li>
-        <li class="active"> +新消息 </li>
+        <li class="active"> 消息类型编辑 </li>
       </ul>
     </div>
     <!-- page heading end-->
@@ -31,17 +31,19 @@
           <section class="panel">
             <header class="panel-heading"> {{.title}} </header>
             <div class="panel-body">
-              <form class="form-horizontal adminex-form" id="classic-form">
+              <form class="form-horizontal adminex-form" id="classic-edits">
                 <div class="form-group">
                   <label class="col-sm-2 col-sm-2 control-label"><span>*</span>消息类型</label>
                   <div class="col-sm-10">
-                    <input type="text"  name="classname" value=""  placeholder="请填写消息类型" autocomplete="off">
+                    {{range $k,$v:=.classic}}
+                    <input type="text" name="classname" value="{{$v.Classname}}"  placeholder="请填写消息类型" autocomplete="off">
+                    {{end}}
                   </div>
                 </div>
                 <div class="form-group">
                   <label class="col-lg-2 col-sm-2 control-label"></label>
                   <div class="col-lg-10">
-                    <input type="hidden" name="id" value="" >
+                    <input type="hidden" name="id" value="">
                     <button type="submit" class="btn btn-primary">提 交</button>
                   </div>
                 </div>
