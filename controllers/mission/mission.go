@@ -63,6 +63,43 @@ func (this *MissionManageController) Post() {
 
 }
 
+type MissionListController struct {
+	controllers.BaseController
+}
+
+func (this *MissionListController) Get() {
+	//权限检测
+
+	page, err := this.GetInt("p")
+	status := this.GetString("status")
+	keywords := this.GetString("keywords")
+	types := this.GetString("types")
+	if err != nil {
+		page = 1
+	}
+
+	offset, err1 := beego.AppConfig.Int("pageoffset")
+	if err1 != nil {
+		offset = 100
+	}
+
+	condArr := make(map[string]string)
+	condArr["status"] = status
+	condArr["keywords"] = keywords
+	condArr["types"] = types
+
+	_, _, missions := ListMission(condArr, page, offset)
+
+	fmt.Println("missions:", missions)
+
+	Data := make(map[string]interface{})
+
+	Data["missions"] = missions
+
+	this.Data["json"] = map[string]interface{}{"code": 0, "message": "请填写任务名称", "data": Data}
+	this.ServeJSON()
+}
+
 type MissionAddController struct {
 	controllers.BaseController
 }
