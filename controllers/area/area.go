@@ -221,7 +221,7 @@ type GetAllAreaController struct {
 
 func (this *GetAllAreaController) Get() {
 
-	pid, _ := this.GetInt64("aid")
+	pid, _ := this.GetInt64("pid")
 	s := GetChild(pid, "")
 	arr := GetAllAreaIdByPid(s)
 	_, _, data := GetAllByArray(arr)

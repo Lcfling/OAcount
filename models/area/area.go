@@ -198,6 +198,7 @@ func UpdateArea(id int64, area Area) error {
 	var areaold Area
 	o := orm.NewOrm()
 	areaold = Area{Id: id}
+	o.Read(&areaold)
 	areaold.Name = area.Name
 	areaold.Jstatus = area.Jstatus
 	areaold.Locations = area.Locations

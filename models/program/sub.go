@@ -1,5 +1,10 @@
 package program
 
+import (
+	"github.com/Lcfling/OAcount/models"
+	"github.com/astaxie/beego/orm"
+)
+
 type Sub struct {
 	Id        int64
 	Pid       int64
@@ -8,7 +13,23 @@ type Sub struct {
 	Community int64
 	Addr      string
 	Name      string
-	mobile    string
+	Mobile    string
 	Content   string
 	Creatime  int64
+	Status    int
+	Score     int64
+}
+
+func (this *Sub) TableName() string {
+	return models.TableName("sub")
+}
+func init() {
+	orm.RegisterModel(new(Sub))
+}
+
+func AddSub(pro *Sub) (int64, error) {
+	p := new(Sub)
+	p = pro
+	o := orm.NewOrm()
+	return o.Insert(p)
 }

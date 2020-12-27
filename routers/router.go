@@ -289,6 +289,7 @@ func init() {
 	beego.Router("/subject/edit", &program.SubjectManageController{})
 	beego.Router("/mobile/program/list", &program.ListController{})
 	beego.Router("/mobile/program/share", &program.ShareController{})
+	beego.Router("/mobile/api/answer", &program.AnswerController{})
 
 	//文件管理
 	beego.Router("/files/manage", &files.FilesManageController{})
