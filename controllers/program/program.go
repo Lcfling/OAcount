@@ -243,3 +243,31 @@ func (this *AnwserList) Post() {
 	this.Data["json"] = map[string]interface{}{"code": 1, "message": "请填写项目名称", "data": m}
 	this.ServeJSON()
 }
+
+type AnswerController struct {
+	controllers.MobileController
+}
+
+func (this *AnswerController) Post() {
+
+	pid, err := this.GetInt64("pid")
+	if err != nil || !(pid > 0) {
+		this.Data["json"] = map[string]interface{}{"code": 0, "message": "获取测评失败"}
+	}
+	areaid, _ := this.GetInt64("pid")
+	office, _ := this.GetInt64("office")
+	community, _ := this.GetInt64("community")
+	addr := this.GetString("addr")
+	name := this.GetString("name")
+	mobile := this.GetString("mobile")
+	if addr == "" {
+		this.Data["json"] = map[string]interface{}{"code": 0, "message": "请完善地址信息"}
+	}
+	if name == "" {
+		this.Data["json"] = map[string]interface{}{"code": 0, "message": "请完善姓名信息"}
+	}
+	if mobile == "" {
+		this.Data["json"] = map[string]interface{}{"code": 0, "message": "请完善手机信息"}
+	}
+
+}
