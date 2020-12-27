@@ -69,6 +69,10 @@ func GetMissionDoneRate(uids []string) float64 {
 	cond2 = cond2.And("userid__in", uids)
 	done, _ = qs.SetCond(cond2).Count()
 
+	if none == 0 {
+		return 0
+	}
+
 	doneRate := float64(done) / float64(none) * 100
 	value, _ := strconv.ParseFloat(fmt.Sprintf("%.2f", doneRate), 64)
 	return value
