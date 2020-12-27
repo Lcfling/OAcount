@@ -339,4 +339,6 @@ func init() {
 	beego.Router("/area/daka", &area.DakaController{})
 	//达标率
 	beego.Router("/area/passRate", &area.ApiPassRateController{})
+	//问卷调查
+	beego.Router("/area/question", &area.ApiQuestionController{})
 }
