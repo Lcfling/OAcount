@@ -136,7 +136,8 @@ func ApiGetMissionInfo(mid int64) (error, []ApiMissionInfo) {
 	var ApiMissionInfo []ApiMissionInfo
 	o := orm.NewOrm()
 	qb, _ := orm.NewQueryBuilder("mysql")
-	qb.Select("m.id,m.name,m.types,m.desc,m.userid,m.creatime").From("pms_mission AS m").Where("m.id=?")
+	qb.Select("my.id,m.name,my.types,m.desc,my.userid,m.creatime").From("pms_mission AS m").
+		InnerJoin("pms_mission_my AS my").On("my.missionid = m.id").Where("my.id=?")
 
 	sql := qb.String()
 	_, err := o.Raw(sql, mid).QueryRows(&ApiMissionInfo)
