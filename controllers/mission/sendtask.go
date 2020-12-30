@@ -2,9 +2,9 @@ package mission
 
 import (
 	"encoding/json"
-	"fmt"
 	"github.com/Lcfling/OAcount/controllers"
 	. "github.com/Lcfling/OAcount/models/area"
+	. "github.com/Lcfling/OAcount/models/files"
 	. "github.com/Lcfling/OAcount/models/mission"
 	. "github.com/Lcfling/OAcount/models/tags"
 	"strconv"
@@ -34,26 +34,16 @@ func (this *SendTaskController) Post() {
 	id := this.Ctx.Input.Param(":id")
 	id64, _ := strconv.ParseInt(id, 10, 64)
 
+	//全部
 	all := this.GetString("all")
-	fmt.Println("全部:", all)
-
+	//点位
 	checkareas := this.GetStrings("checkareas")
-	fmt.Println("人员:", checkareas)
-
+	//类型社区
 	tagss := this.GetStrings("tags")
-	fmt.Println("社区:", tagss)
 
-	for _, value := range tagss {
-		fmt.Println("遍历社区:", value)
-	}
-
-	for _, value := range checkareas {
-		fmt.Println("遍历人员:", value)
-	}
-
+	//获取任务信息
 	var mission Mission
 	mission, _ = GetMission(id64)
-
 	//---------------------------------------------------------------------------------
 	//判断是否全部下发
 	if !(all == "") {
@@ -80,6 +70,8 @@ func (this *SendTaskController) Post() {
 	if !(len(tagss) == 0) {
 		for _, v := range tagss {
 			v64, _ := strconv.ParseInt(v, 10, 64)
+			//查询任务相关的任务文件  进行绑定
+			go TageFile(v64, id64)
 			//查询对应的社区
 			err, TagsArea := TagsArea(v64)
 			if err == nil {

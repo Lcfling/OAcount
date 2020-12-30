@@ -116,3 +116,34 @@ func DeleteFile(id int64) error {
 	_, err = o.Update(&file)
 	return err
 }
+
+//根据任务获取对应的文件
+func MissionGetFile(condArr map[string]interface{}) (num int64, err error, user []Files) {
+
+	o := orm.NewOrm()
+	o.Using("default")
+	qs := o.QueryTable(models.TableName("files"))
+	cond := orm.NewCondition()
+	if condArr["missionmyid"].(int64) != 0 {
+		cond = cond.And("missionmyid", condArr["missionmyid"])
+	}
+	if condArr["aid"].(int64) != 0 {
+		cond = cond.And("aid", condArr["aid"])
+	}
+	cond = cond.And("status", 0)
+	qs = qs.SetCond(cond)
+
+	qs = qs.RelatedSel()
+	var files []Files
+	qs = qs.OrderBy("-id")
+	num, err1 := qs.Limit(1).All(&files)
+	return num, err1, files
+}
+
+//文件进行修改关联
+func TageFile(tid, missionid int64) error {
+	o := orm.NewOrm()
+	_, err := o.Raw("update  "+models.TableName("files")+" SET tid=?  WHERE missionid = ?", tid, missionid).Exec()
+	return err
+
+}
