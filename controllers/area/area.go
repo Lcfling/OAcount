@@ -6,10 +6,15 @@ import (
 	. "github.com/Lcfling/OAcount/models/area"
 	. "github.com/Lcfling/OAcount/models/tags"
 	. "github.com/Lcfling/OAcount/models/users"
+	"github.com/Lcfling/OAcount/utils"
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/utils/pagination"
+	"io"
+	"os"
+	"path"
 	"strconv"
 	"strings"
+	"time"
 )
 
 type AreaMangerController struct {
@@ -154,21 +159,57 @@ func (this *AreaEditController) Post() {
 		this.Data["json"] = map[string]interface{}{"code": 1, "message": "负责人不能为空", "id": fmt.Sprintf("%d", id)}
 	}
 	ownerid, _ := strconv.ParseInt(owner, 10, 64)
+	headers, _ := this.Ctx.Request.MultipartForm.File["file"]
+	//fmt
+	var filepath string
+	if len(headers) > 0 {
+		for _, h := range headers {
+			tmp, err := h.Open()
+			now := time.Now()
+			dir := "./static/uploadfile/" + strconv.Itoa(now.Year()) + "-" + strconv.Itoa(int(now.Month())) + "/" + strconv.Itoa(now.Day())
+			err1 := os.MkdirAll(dir, 0755)
+			if err1 != nil {
+				this.Data["json"] = map[string]interface{}{"code": 1, "message": "目录权限不够"}
+				this.ServeJSON()
+				return
+			}
+			//生成新的文件名
+			filename := h.Filename
+			fileExt := path.Ext(filename)
+			time64 := time.Now().Unix()
+			timestr := strconv.FormatInt(time64, 10) + utils.RandChar(6)
+			newName := timestr + fileExt
+			if err != nil {
+				this.Data["json"] = map[string]interface{}{"code": 0, "message": err}
+				this.ServeJSON()
+				return
+			} else {
+				f, err := os.OpenFile(dir+"/"+newName, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0666)
+				if err != nil {
+					this.Data["json"] = map[string]interface{}{"code": 0, "message": err}
+					this.ServeJSON()
+					return
+				}
+				defer f.Close()
+				io.Copy(f, tmp)
+				filepath = strings.Replace(dir, ".", "", 1) + "/" + newName
+			}
+		}
+	}
 	var area Area
 	area.Name = name
 	area.Locations = locations
 	area.Owner = ownerid
 	area.Coler = coler
 	area.Tags = tagstr
+	area.Imgurl = filepath
 	err := UpdateArea(idp, area)
-	fmt.Println(err)
 	if err == nil {
 		this.Data["json"] = map[string]interface{}{"code": 1, "message": "更新成功", "id": fmt.Sprintf("%d", idp)}
 	} else {
 		this.Data["json"] = map[string]interface{}{"code": 0, "message": "更新失败"}
 	}
 	this.ServeJSON()
-
 }
 
 //删除区域

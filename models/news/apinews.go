@@ -31,6 +31,12 @@ type ApiArea struct {
 	Owner    int64
 }
 
+//社区表
+type ApiTags struct {
+	Id   int64
+	Name string
+}
+
 //任务表
 type ApiMission struct {
 	Id        int64
@@ -84,15 +90,39 @@ func (this *ApiArea) TableName() string {
 	return models.TableName("area")
 }
 
-//获取任务单位
-func ApiGetArea() []ApiArea {
-	var ApiArea []ApiArea
+//获取社区单位
+func ApiGetTags() []ApiTags {
+	var ApiTags []ApiTags
 	o := orm.NewOrm()
 	qb, _ := orm.NewQueryBuilder("mysql")
-	qb.Select("c.id,c.parentid,c.name,c.owner").From("pms_area AS c").Where("c.parentid=?")
+	qb.Select("t.id,t.name").From("pms_tags AS t").OrderBy("id")
 	sql := qb.String()
-	_, _ = o.Raw(sql, 0).QueryRows(&ApiArea)
-	return ApiArea
+	_, _ = o.Raw(sql).QueryRows(&ApiTags)
+	return ApiTags
+}
+
+//社区任务文件表
+type ApiTageFile struct {
+	Id       int64
+	Tid      int64
+	Oldname  string
+	Path     string
+	Missonid int64
+	Name     string
+	Desc     string
+	Creatime int64
+}
+
+//根据社区单位获取对应的文件任务
+func TagsFile(tid int64) (error, []ApiTageFile) {
+	var ApiTageFile []ApiTageFile
+	o := orm.NewOrm()
+	qb, _ := orm.NewQueryBuilder("mysql")
+	qb.Select("f.id,f.tid,f.oldname,f.path,f.missionid,m.name,m.desc,m.creatime").From("pms_files AS f").
+		InnerJoin("pms_mission AS m").On("m.id = f.missionid").Where("f.tid=?")
+	sql := qb.String()
+	_, err := o.Raw(sql, tid).QueryRows(&ApiTageFile)
+	return err, ApiTageFile
 }
 
 func (this *ApiMission) TableName() string {
@@ -131,15 +161,14 @@ type ApiMissionInfo struct {
 }
 
 //任务详情
-func ApiGetMissionInfo(mid int64) (error, []ApiMissionInfo) {
+func ApiGetMissionInfo(tid int64) (error, []ApiTageFile) {
 
-	var ApiMissionInfo []ApiMissionInfo
+	var ApiTageFile []ApiTageFile
 	o := orm.NewOrm()
 	qb, _ := orm.NewQueryBuilder("mysql")
-	qb.Select("my.id,m.name,my.types,m.desc,my.userid,m.creatime").From("pms_mission AS m").
-		InnerJoin("pms_mission_my AS my").On("my.missionid = m.id").Where("my.id=?")
-
+	qb.Select("f.id,f.tid,f.oldname,f.path,f.missionid,m.name,m.desc,m.creatime").From("pms_files AS f").
+		InnerJoin("pms_mission AS m").On("m.id = f.missionid").Where("f.tid=?")
 	sql := qb.String()
-	_, err := o.Raw(sql, mid).QueryRows(&ApiMissionInfo)
-	return err, ApiMissionInfo
+	_, err := o.Raw(sql, tid).QueryRows(&ApiTageFile)
+	return err, ApiTageFile
 }

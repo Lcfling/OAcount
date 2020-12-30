@@ -9,7 +9,7 @@ import (
 
 //点位信息
 type ApiAreaInfoController struct {
-	controllers.UserBaseController
+	controllers.IndexController
 }
 
 //点位信息
