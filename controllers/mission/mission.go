@@ -595,15 +595,15 @@ func (this *MissionPerfectController) Post() {
 			fmt.Println("fileExt+++++++++++++++++++", fileExt)
 			var fileType int
 			switch fileExt {
-			case "jpg":
+			case ".jpg":
 				fileType = 0
-			case "png":
+			case ".png":
 				fileType = 0
-			case "gif":
+			case ".gif":
 				fileType = 0
-			case "doc":
+			case ".doc":
 				fileType = 1
-			case "docx":
+			case ".docx":
 				fileType = 1
 			default:
 				fileType = -1

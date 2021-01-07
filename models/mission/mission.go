@@ -302,9 +302,64 @@ func AddMyMission(Missionid, Userid, Areaid int64, types int) (int64, error) {
 //获取我的任务
 func GetMymission(id int64) MissionMy {
 	var my MissionMy
-
 	o := orm.NewOrm()
 	my = MissionMy{Id: id}
 	o.Read(&my)
 	return my
+}
+
+//获取我的任务
+func GetMymissionByType(userid int64, missionid int64, types int64) MissionMy {
+	var my MissionMy
+	o := orm.NewOrm()
+	my = MissionMy{Userid: userid, Types: types, Missionid: missionid}
+	o.Read(&my, "userid", "types", "missionid")
+	return my
+}
+
+//统计数量
+func CountMissionDocAudit(types int64, condArr map[string]string) int64 {
+
+	var my []MissionMydata
+	var where string
+	where = ""
+	if condArr["areaid"] != "" {
+		where += " and t.areaid in (" + condArr["areaid"] + ")"
+	}
+
+	qb, _ := orm.NewQueryBuilder("mysql")
+	qb.Select("t.id").From("pms_mission_my AS t").
+		Where("t.arraignment=?" + where)
+	sql := qb.String()
+	o := orm.NewOrm()
+	nums, _ := o.Raw(sql, types).QueryRows(&my)
+	return nums
+}
+
+//我的任务列表
+func GetMissionDocAudit(types int64, page int, offset int, condArr map[string]string) (num int64, err error, ops []MissionMydata) {
+	var my []MissionMydata
+	var where string
+	where = ""
+	if condArr["areaid"] != "" {
+		where += " and t.areaid in (" + condArr["areaid"] + ")"
+	}
+	if page < 1 {
+		page = 1
+	}
+	if offset < 1 {
+		offset, _ = beego.AppConfig.Int("pageoffset")
+	}
+	start := (page - 1) * offset
+
+	qb, _ := orm.NewQueryBuilder("mysql")
+	qb.Select("t.id", "t.userid", "p.name", "t.missionid", "a.name as areaname", "t.feedback", "t.detail", "p.creatime", "t.status", "t.check", "t.checktime", "t.arraignment", "t.programid").From("pms_mission_my AS t").
+		LeftJoin("pms_document AS p").On("p.id = t.missionid").
+		LeftJoin("pms_area AS a").On("a.id = t.areaid").
+		Where("t.arraignment=?" + where).
+		Limit(offset).Offset(start)
+	sql := qb.String()
+	o := orm.NewOrm()
+	nums, err := o.Raw(sql, types).QueryRows(&my)
+	return nums, err, my
 }
