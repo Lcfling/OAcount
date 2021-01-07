@@ -74,6 +74,23 @@ func (this *ApiNewsController) Post() {
 	this.ServeJSON()
 }
 
+//消息列表
+type ApiNewsInfoController struct {
+	controllers.MobileController
+}
+
+//消息详情
+func (this *ApiNewsInfoController) Post() {
+	id, _ := this.GetInt("id")
+	//类型消息
+	newsinfo := ApiGetNewsInfo(id)
+	//返回数据
+	data := make(map[string]interface{})
+	data["newsinfo"] = newsinfo
+	this.Data["json"] = map[string]interface{}{"code": 1, "message": "消息详情", "data": data}
+	this.ServeJSON()
+}
+
 // 任务单位
 type ApiAreaController struct {
 	controllers.MobileController

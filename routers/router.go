@@ -307,22 +307,22 @@ func init() {
 	beego.Router("/news/edits/:id", &news.NewsEditsController{})
 	beego.Router("/news/ajax/delete", &news.NewsAjaxDeleteController{})
 	beego.Router("/news/ajax/classicdelete", &news.NewsAjaxClassicDeleteController{})
-
 	// API接口---------------------
-
 	//任务管理 单位列表
 	beego.Router("/mobile/news/areaList", &news.ApiAreaController{})
 	//任务管理 任务列表
 	beego.Router("/mobile/news/missionList", &news.ApiMissionController{})
 	//任务管理 任务详情
 	beego.Router("/mobile/news/missionInfo", &news.ApiMissionInfoController{})
+
 	//消息列表
 	beego.Router("/mobile/news/newsList", &news.ApiNewsController{})
+	//消息详情
+	beego.Router("/mobile/news/newsinfo", &news.ApiNewsInfoController{})
 	//消息类型
 	beego.Router("/mobile/news/classicList", &news.ApiNewsClassicController{})
 	//我的任务
 	beego.Router("/mobile/mission/missionMy", &mission.ApiMissionMyController{})
-
 	//任务详情
 	beego.Router("/mobile/mission/missionInfo", &mission.ApiMissionInfoController{})
 	//点位信息
