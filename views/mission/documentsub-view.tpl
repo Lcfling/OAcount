@@ -291,8 +291,8 @@ $(function(){
 
   function getsubform(id,pid) {
     var data={}
-    data.pid=2
-    data.id=270
+    data.pid=pid
+    data.id=id
 
     $.ajax({
       type: 'GET',

@@ -283,7 +283,7 @@ func init() {
 	beego.Router("/document/add", &mission.DocumentAddController{})
 	beego.Router("/document/detail", &mission.DocumentDetail{})
 	beego.Router("/document/subtree", &mission.DocumentSubtree{})
-	beego.Router("/document/subview", &mission.DocumentSubview{})
+	beego.Router("/documentmy/manage", &mission.DocumentSubview{})
 	beego.Router("/document/audit", &mission.DocAudit{})
 	beego.Router("/document/audit/sub", &mission.DocumentArraignmentController{})
 	beego.Router("/document/sub", &mission.DocumentSub{})

@@ -93,7 +93,7 @@ $(function(){
                 success:function(data) {
                     dialogInfo(data.message)
                     if (data.code) {
-                       setTimeout(function(){window.location.href="/static/wmb/index10.html"}, 2000);
+                       setTimeout(function(){window.location.href=data.data.url}, 2000);
                     } else {
                        setTimeout(function(){ $('#dialogInfo').modal('hide'); }, 1000);
                     }
@@ -1721,7 +1721,7 @@ $(function(){
                 success:function(data) {
                     dialogInfo(data.message)
                     if (data.code) {
-						//setTimeout(function(){ window.location.href='/permission/manage'; }, 2000);
+						setTimeout(function(){ window.location.href=document.referrer; }, 2000);
                     } else {
                        setTimeout(function(){ $('#dialogInfo').modal('hide'); }, 1000);
                     }															
