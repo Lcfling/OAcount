@@ -270,13 +270,34 @@ func init() {
 	beego.Router("/mission/detail/:id", &mission.MissionDetailController{})
 	beego.Router("/mission/sendtask/:id", &mission.SendTaskController{})
 	beego.Router("/mission/perfect/:id", &mission.MissionPerfectController{}) //todo
-
+	beego.Router("/mission/sendtaskuni", &mission.SendTaskuniController{})
 	//my mission
 	beego.Router("/mymission/manage", &mission.MissionMyController{})
 	beego.Router("/mymission/sub/:id", &mission.MissionMySubController{})
 	beego.Router("/mobile/mymission/sub", &mission.MissionMySubMobileController{})
 	beego.Router("/mymission/arraignment/:types", &mission.ArraignmentController{})
 	beego.Router("/mymission/arraignmentsub/:id", &mission.ArraignmentSubController{})
+
+	//档案资料
+	beego.Router("/document/manage", &mission.DocumentManageController{})
+	beego.Router("/document/add", &mission.DocumentAddController{})
+	beego.Router("/document/detail", &mission.DocumentDetail{})
+	beego.Router("/document/subtree", &mission.DocumentSubtree{})
+	beego.Router("/document/subview", &mission.DocumentSubview{})
+	beego.Router("/document/audit", &mission.DocAudit{})
+	beego.Router("/document/audit/sub", &mission.DocumentArraignmentController{})
+	beego.Router("/document/sub", &mission.DocumentSub{})
+	beego.Router("/docclass/manage", &mission.DocClassManageController{})
+	beego.Router("/docclass/add", &mission.DocClassAddController{})
+	beego.Router("/docclass/list", &mission.DocclassTree{})
+
+	//实地考察
+	beego.Router("/examination/manage", &mission.ExaminationManageController{})
+	beego.Router("/examination/add", &mission.ExaminationAddController{})
+	beego.Router("/examination/list", &mission.ExaminationList{})
+	beego.Router("/exaclass/manage", &mission.ExaClassManageController{})
+	beego.Router("/exaclass/add", &mission.ExaClassAddController{})
+	beego.Router("/exaclass/list", &mission.ExaclassTree{})
 
 	//测评管理
 	beego.Router("/program/manage", &program.ProgramController{})

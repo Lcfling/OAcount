@@ -25,6 +25,8 @@ func InitTemplate() {
 	beego.AddFuncMap("getProjectname", projects.GetProjectName)
 	beego.AddFuncMap("getPermissionname", groups.GetPermissiontName)
 	beego.AddFuncMap("getAreaname", area.GetAreaName)
+	beego.AddFuncMap("GetDocclassName", mission.GetDocclassName)
+	beego.AddFuncMap("GetExaclassName", mission.GetExaclassName)
 	beego.AddFuncMap("getMissionname", mission.GetMissionName)
 	beego.AddFuncMap("Ratio", utils.Ratio)
 	beego.AddFuncMap("getLeaveProcess", leaves.ListLeaveApproverProcessHtml)

@@ -37,6 +37,9 @@ type Classic struct {
 func (this *News) TableName() string {
 	return models.TableName("news")
 }
+func (this *Classic) TableName() string {
+	return models.TableName("classic")
+}
 
 func init() {
 	orm.RegisterModel(new(News), new(Classic))

@@ -1937,7 +1937,8 @@ $(function(){
 				success:function(data) {
 					dialogInfo(data.message)
 					if (data.code) {
-						setTimeout(function(){window.location.href="/mission/manage"}, 2000);
+
+						setTimeout(function(){window.location.href=document.referrer}, 2000);
 					} else {
 						setTimeout(function(){ $('#dialogInfo').modal('hide'); }, 1000);
 					}
@@ -2073,7 +2074,81 @@ $(function(){
 	});
 
 
+	//测评添加
+	$('#docclass-form').validate({
+		ignore:'',
+		rules : {
+		},
+		messages : {
 
+		},
+		submitHandler:function(form) {
+			$(form).ajaxSubmit({
+				type:'POST',
+				dataType:'json',
+				success:function(data) {
+
+					if (data.code) {
+						dialogInfo(data.message)
+						setTimeout(function(){window.location.href=document.referrer}, 2000);
+					} else {
+						dialogInfo(data.message)
+						setTimeout(function(){ $('#dialogInfo').modal('hide'); }, 1000);
+					}
+				}
+			});
+		}
+	});
+	//档案添加
+	$('#document-form').validate({
+		ignore:'',
+		rules : {
+		},
+		messages : {
+
+		},
+		submitHandler:function(form) {
+			$(form).ajaxSubmit({
+				type:'POST',
+				dataType:'json',
+				success:function(data) {
+
+					if (data.code) {
+						dialogInfo(data.message)
+						setTimeout(function(){window.location.href=document.referrer}, 2000);
+					} else {
+						dialogInfo(data.message)
+						setTimeout(function(){ $('#dialogInfo').modal('hide'); }, 1000);
+					}
+				}
+			});
+		}
+	});
+	//档案添加
+	$('#documentsub-form').validate({
+		ignore:'',
+		rules : {
+		},
+		messages : {
+
+		},
+		submitHandler:function(form) {
+			$(form).ajaxSubmit({
+				type:'POST',
+				dataType:'json',
+				success:function(data) {
+
+					if (data.code) {
+						dialogInfo(data.message)
+						setTimeout(function(){window.location.href=document.referrer}, 2000);
+					} else {
+						dialogInfo(data.message)
+						setTimeout(function(){ $('#dialogInfo').modal('hide'); }, 1000);
+					}
+				}
+			});
+		}
+	});
 
 
 	//测评添加
