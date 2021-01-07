@@ -75,6 +75,17 @@ func ApiGetPageNews(condArr map[string]string, lastid int, offset int) (int64, e
 }
 
 //获取消息类型列表
+func ApiGetNewsInfo(id int) []ApiNews {
+	var ApiNews []ApiNews
+	o := orm.NewOrm()
+	qb, _ := orm.NewQueryBuilder("mysql")
+	qb.Select("c.id,c.classid,c.title,c.content,c.creatime").From("pms_news AS c").Where("c.id=?")
+	sql := qb.String()
+	_, _ = o.Raw(sql, id).QueryRows(&ApiNews)
+	return ApiNews
+}
+
+//获取消息类型列表
 func ApiGetClassic() []ApiClassic {
 	var Classic []ApiClassic
 	o := orm.NewOrm()
